@@ -288,9 +288,10 @@ $this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_
 			    		),
                );
          // $this->dbforge->add_field('id');
+$this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
           $this->dbforge->add_field($fields);
+
           $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
-          $this->dbforge->add_field("`login_attempts_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
           $this->dbforge->create_table('login_attempts');
 
 

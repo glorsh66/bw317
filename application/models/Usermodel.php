@@ -26,6 +26,10 @@ class Usermodel extends CI_Model {
       return SELF::$test_int++;
     }
 
+
+
+
+
 //раздел группы пользователей
 
 //Вставляет новую группу пользователей
@@ -120,6 +124,28 @@ $data = array(
 'login_attempts_user_id'=> $id,
 );
 $this->db->insert(SELF::$users_login_attemts, $data);
+}
+
+
+//Считаем колличенство попыток входа и удаляем старые
+public function count_login_attempts_and_delte_old_entries($userid)
+{
+$deleted_rows=0;
+$tries=0;
+//Удаляем старые записи из таблицы
+//Хотя скорее всего лучше это дело перенести в отдельный скрипт который будет раз
+//в одну минуту запускаться
+ $query = $this->db->query('delete FROM '. SELF::$users_login_attemts .
+' WHERE login_attempts_time < NOW() - INTERVAL 1 MINUTE;');
+$deleted_rows =  $this->db->affected_rows();
+
+
+  //Делаем запрос на колличество попыток входа
+  $this->db->where('login_attempts_user_id',$userid);
+  $query = $this->db->get(SELF::$users_login_attemts);
+  $tries = $query->num_rows();
+
+  return array($deleted_rows,$tries);
 }
 
 

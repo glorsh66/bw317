@@ -13,13 +13,18 @@ class user_login_emulation extends CI_Controller {
 
 		//Данные которые пришли с формы
 		$user_form = "user1";
-		$password_from_form = "test55";
+		$password_from_form = "test551";
+		$number_of_tries = 0;
 
 		//Ищем пользователя с таким именем
 		$user_data= $this->Usermodel->find_user_exist_and_return_user_data($user_form);
 	//Проверям не вернулся ли фалс
 	if ($user_data) {
 		//Проверям сходится ли пароль
+		//Смотрим сколько было попыток захода
+		 list($deleted_rows,$tries)= $this->Usermodel->count_login_attempts_and_delte_old_entries($user_data['id']);
+
+
 		if (password_verify($password_from_form,$user_data["password"])) {
 
 			//Генерируем временные данные для сессии
@@ -125,9 +130,15 @@ $this->Usermodel->delete_old_sessions();
 
 }// конец иф, если не верный пароль
 		else {
-//Добавляем инфу о попытке захода пользователя
+			//Добавляем инфу о попытке захода пользователя
 $this->Usermodel->insert_login_attempts($user_data["id"],$this->input->ip_address());
 echo "Пароль не верный";
+echo "<br>";
+echo '$deleted_rows '.$deleted_rows;
+echo "<br>";
+echo '$tries '.$tries;
+
+
 		}
 	} //конец иф, если не найден пользователь
 	 else {
