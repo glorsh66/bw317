@@ -112,6 +112,8 @@ echo $this->Usermodel->get_int_with_increment();
 echo "<br>";
 echo "<br>";
 
+echo "Test_2";
+
 
 
 
