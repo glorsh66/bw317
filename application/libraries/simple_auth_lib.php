@@ -3,13 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class simple_auth_lib {
 
-        protected $CI;
-        protected $iflogginned;
-        public $user_id;
-        public $user_name;
-        public $user_group;
-
-
+  private static $test_int = 1;
+  public $glob_var=0;
         // We'll use a constructor, as you can't directly call a function
         // from a property definition.
         public function __construct()
@@ -18,44 +13,28 @@ class simple_auth_lib {
                 $this->CI =& get_instance();
                 $this->CI->load->helper('url');
                 $this->CI->load->model('Usermodel');
+                $this->glob_var++;
+                SELF::$test_int++;
+
+        }
+
+
+        public function get_int()
+        {
+          return SELF::$test_int;
+        }
+
+        public function get_int_with_increment()
+        {
+          return SELF::$test_int++;
         }
 
 
 
 
-        public function user_login($user_name_or_email,$password)
-        {
-
-        $user_q= $this->CI->Usermodel->find_user_whith_pass_exist_and_return_all_data($user_name_or_email,$password);
-
-
-        if ($user_q)
-        {
-		return $user_q->id;
-		}
-		else
-		{
 
 
 
-		return FALSE;
-
-
-		}
-
-
-		}
-
-
-
-
-
-
-
-       public function get_class_data()
-       {
-
-	   }
 
 
 

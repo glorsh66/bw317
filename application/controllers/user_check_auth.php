@@ -92,6 +92,9 @@ echo "<br>";
 echo "Селектор "  . $test_user_selector;
 echo "<br>";
 
+
+
+
 echo "<br>";
 echo "<br>";
 echo "<br>";
@@ -112,11 +115,59 @@ echo $this->Usermodel->get_int_with_increment();
 echo "<br>";
 echo "<br>";
 
-echo "Test_2";
-echo "Test_3";
 
 
 
+
+
+//Тест либы
+$this->load->library("simple_auth_lib");
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "Тест либы";
+echo $this->simple_auth_lib->get_int();
+$this->load->library("simple_auth_lib");
+echo "<br>";
+echo $this->simple_auth_lib->get_int();
+echo "<br>";
+echo "с инкрементом";
+echo "<br>";
+$this->load->library("simple_auth_lib");
+echo $this->simple_auth_lib->get_int_with_increment();
+echo "<br>";
+echo $this->simple_auth_lib->get_int_with_increment();
+echo "<br>";
+echo $this->simple_auth_lib->get_int_with_increment();
+echo "<br>";
+echo "<br>";
+
+
+
+
+
+
+
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "<br>";
+echo "Тест моделей";
+echo $this->Usermodel->get_int();
+$this->load->model("Usermodel");
+echo "<br>";
+echo $this->Usermodel->get_int();
+echo "<br>";
+echo "с инкрементом";
+echo "<br>";
+echo $this->Usermodel->get_int_with_increment();
+echo "<br>";
+echo $this->Usermodel->get_int_with_increment();
+echo "<br>";
+echo $this->Usermodel->get_int_with_increment();
+echo "<br>";
+echo "<br>";
 
 
 }

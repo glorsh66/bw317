@@ -9,21 +9,26 @@ class Usermodel extends CI_Model {
     private static $users_login_attemts = 'login_attempts'; //Попытки захода пользователйе
     private static $this_user_groups = 'user_groups';
     private static $test_int = 1;
+    public $glob_var=0;
 
     function __construct()
     {
         parent::__construct();
+    //    $this->glob_var=0;
       //  SELF::$test_int++;
+      $this->glob_var++;
     }
 
     public function get_int()
     {
-      return SELF::$test_int;
+
+      return $this->glob_var;
     }
 
     public function get_int_with_increment()
     {
-      return SELF::$test_int++;
+      SELF::$test_int++;
+      return ++$this->glob_var;
     }
 
 
@@ -142,9 +147,7 @@ $deleted_rows =  $this->db->affected_rows();
 
   //Делаем запрос на колличество попыток входа
   $this->db->where('login_attempts_user_id',$userid);
-  $query = $this->db->get(SELF::$users_login_attemts);
-  $tries = $query->num_rows();
-
+  $tries = $this->db->count_all_results(SELF::$users_login_attemts);
   return array($deleted_rows,$tries);
 }
 
