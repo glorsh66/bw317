@@ -64,6 +64,16 @@ $this->db->insert(SELF::$users_sessions_table_name, $data);
 }
 
 
+//Удаляет конкретную запись из сессии
+//с конкретной кукой
+public function delete_one_user_session($selector)
+{
+  $this->db->where('users_sessions_selector',$selector);
+  $this->db->limit(1);
+  $this->db->delete(SELF::$users_sessions_table_name);
+}
+
+
 //Функция для того что бы исключь коллизию с одинаковым селектором
 //Не нашли - возвращаем FALSE
 //Нашли - возвращаем TRUE
@@ -98,10 +108,13 @@ $ses = $query->row_array();
     $this->db->where('users_sessions_selector',$user_selector);
     $this->db->limit(1);
     $this->db->delete(SELF::$users_sessions_table_name);
-      return false;}
+      return false;
+    }
 }
 else
-{return false;}}
+{return false; // Не нашли строку (нет такого селектора)
+}
+}//Конец функции
 
 
 
@@ -133,6 +146,7 @@ $this->db->insert(SELF::$users_login_attemts, $data);
 
 
 //Считаем колличенство попыток входа и удаляем старые
+//TODO:Убрать удаление в отдельный файл которй будет запускатсья регулярно
 public function count_login_attempts_and_delte_old_entries($userid)
 {
 $deleted_rows=0;

@@ -47,6 +47,8 @@ class user_check_auth extends CI_Controller {
 		//1) Запись удалена так как старая
 		//2) Попытка взлома (в даном случае модель убирает запись из базы)
 		if (!$user_id) {
+
+
 			delete_cookie('user_selector');
 			delete_cookie('user_validator');
 		}
@@ -168,6 +170,27 @@ echo "<br>";
 echo $this->Usermodel->get_int_with_increment();
 echo "<br>";
 echo "<br>";
+
+
+$my_array = array(5 => 'bar',
+                  6 => 'foo');
+echo $my_array[5];
+// Начали транзакцию
+
+
+$this->db->trans_start();
+$this->Usermodel->insert_user_registration_form("user12","user12@mail.ru","test55");
+$this->Usermodel->insert_user_registration_form("user13","user13@mail.ru","test55");
+if ($this->db->trans_status() === FALSE)
+{
+        $this->db->trans_rollback();
+}
+else
+{
+        $this->db->trans_commit();
+}
+
+
 
 
 }

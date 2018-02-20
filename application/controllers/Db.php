@@ -15,6 +15,8 @@ class Db extends CI_Controller {
 
 	        public function createdb()
         {
+          //грузим либы
+          $this->load->helper('url');
 
         	//Создаем таблицу пользователей
 
@@ -268,19 +270,11 @@ $this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_
 
           $this->dbforge->drop_table('login_attempts',true); //Удаляем есои есть
            $fields = array(
-                    'id' => array( //К сожалению можно только ID называть, хотя это не удобгно для дальнейшего Join, но codeigniter, к сожалению просто без id не
-	          					   // не работает втроеные ORM он требует обязательно наличия поля id
-	                'type' => 'INT',
-	                'constraint' => 9,
-	                'unsigned' => TRUE,
-	                'auto_increment' => TRUE
-	        			),
                           'ip_address' => array(
                           'type' => 'VARCHAR',
                           'constraint' => '50',
                           'COLLATE' => 'utf8_bin',
                   ),
-
 			    		 'login_attempts_user_id' => array(
 					    'type' => 'INT',
 					     'constraint' => 9,
@@ -291,7 +285,7 @@ $this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_
 $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
           $this->dbforge->add_field($fields);
 
-          $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
+        //  $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
           $this->dbforge->create_table('login_attempts');
 
 
@@ -305,13 +299,6 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 
           $this->dbforge->drop_table('users_sessions',true); //Удаляем есои есть
            $fields = array(
-                    'id' => array( //К сожалению можно только ID называть, хотя это не удобгно для дальнейшего Join, но codeigniter, к сожалению просто без id не
-	          					   // не работает втроеные ORM он требует обязательно наличия поля id
-	                'type' => 'BIGINT',
-	              //  'constraint' => 9,
-	                'unsigned' => TRUE,
-	                'auto_increment' => TRUE
-	        			),
                'users_sessions_selector' => array(
               'type' => 'VARCHAR',
               'constraint' => '60',
@@ -331,7 +318,7 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
          // $this->dbforge->add_field('id');
           $this->dbforge->add_field($fields);
           $this->dbforge->add_field("`users_sessions_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
-          $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
+          $this->dbforge->add_key('users_sessions_selector',TRUE);//Делаем ID основным ключем
           $this->dbforge->create_table('users_sessions');
 
 
@@ -962,6 +949,11 @@ $this->Usermodel->insert_user_registration_form("user11","user11@mail.ru","test5
 
 
 
+//Делаем ссылку для возврата на главную страницу
+$site_url = site_url();
+echo "Все ваши базы захвачены";
+echo "<br>";
+echo "<p><a href=$site_url>Вернуться на главную страницу</a></p>";
 
 		    }
 
