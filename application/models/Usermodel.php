@@ -105,10 +105,8 @@ $ses = $query->row_array();
   }
   //Если вдруг по какой то причине (что скорее всего попытка взлома) валадиатор не подошел удаляем запись с текущим селектором и возвращаем false
   else {
-    $this->db->where('users_sessions_selector',$user_selector);
-    $this->db->limit(1);
-    $this->db->delete(SELF::$users_sessions_table_name);
-      return false;
+     $this->delete_one_user_session($user_selector);
+     return false;
     }
 }
 else

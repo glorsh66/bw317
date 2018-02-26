@@ -882,6 +882,57 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 
 
 
+ //** -----------------------------------------------------------------------------------------------------------------------------------------------
+           //Создаем  таблицу mail
+
+           $this->dbforge->drop_table('mail',true); //Удаляем есои есть
+            $fields = array(
+                     'id' => array( //К сожалению можно только ID называть, хотя это не удобгно для дальнейшего Join, но codeigniter, к сожалению просто без id не
+ 	          					   // не работает втроеные ORM он требует обязательно наличия поля id
+ 	                'type' => 'INT',
+ 	                'unsigned' => TRUE,
+ 	                'auto_increment' => TRUE
+ 	        			),
+
+ 			    		 'mail_from' => array(
+                           'type' =>'VARCHAR',
+                           'null' => FALSE, // NOT Null
+                           'constraint' => '255',
+                          ),
+
+              'mail_to' => array(
+                          'type' =>'VARCHAR',
+                          'null' => FALSE, // NOT Null
+                          'constraint' => '255',
+              ),
+
+              'mail_subject' => array(
+                          'type' =>'VARCHAR',
+                          'null' => FALSE, // NOT Null
+                          'constraint' => '255',
+              ),
+
+              'mail_text' => array(
+                          'type' =>'VARCHAR',
+                          'null' => FALSE,
+                          'constraint' => '21000'
+
+              ),
+             );
+          // $this->dbforge->add_field('id');
+           $this->dbforge->add_field("`mail_timestamp_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+           $this->dbforge->add_field("`mail_timestamp_has_sent` timestamp ON UPDATE CURRENT_TIMESTAMP");
+           $this->dbforge->add_field("`mail_has_been_sent` TINYINT NOT NULL DEFAULT 0");
+           $this->dbforge->add_field($fields);
+           $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
+           $this->dbforge->create_table('mail');
+
+
+
+
+  //** ----------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 

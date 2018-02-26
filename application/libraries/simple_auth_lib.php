@@ -11,12 +11,18 @@ class simple_auth_lib {
   public $user_data = null;
   public $is_user_loggined = FALSE;
 
+
   //Переменные для заполнения ошибками (когда пользователь заходит на сайт)
+  //Ошибки - user_login_from_form
   public $error_user_name_or_email_form_is_empty = null; //Возвращается если строка переданная дял юзера пустая
   public $error_password_from_form = null; // возвращается если пароль пустой
   public $error_limit_for_login_attemts_with_wrong_password_is_exceeded = null; //возвращается если колличество попыток захода к данному пользователю с неправильным пароле превысило максимальные допустимое значение
   public $error_password_is_wrong = null;
   public $error_user_is_not_found = null;
+
+  //Переменные для теста
+  public $already_logged = FALSE;
+  public $logged_otkuda = "";
 
   //Переменные для класса
   const  max_tries_with_incorrect_password = 10;
@@ -32,6 +38,7 @@ class simple_auth_lib {
                 $this->CI->load->helper('url');
                 $this->CI->load->helper('cookie');
                 $this->CI->load->model('Usermodel');
+                $this->CI->load->library('session');
                 $this->glob_var++;
                 SELF::$test_int++;
 
@@ -118,11 +125,14 @@ public function user_login_from_form(string $user_name_or_email_form, string $pa
       'value'  => $random_validator,
       'expire' => '5184000'); //Колличество секунд в двух месяцах. В одном - 2592000
       $this->CI->input->set_cookie($cookie);
-  }else
+  }else //Окончание If remember me
   {
     //Удаляем куки на всякий случай если они были включены
     //Но не сработали по какой то причине
-
+  if (!is_null(get_cookie('user_selector')))
+  {
+   $this->CI->Usermodel->delete_one_user_session(get_cookie('user_selector',TRUE));
+  }
     delete_cookie('user_selector');
     delete_cookie('user_validator');
   }  //Конец блока if для remeber_me
@@ -179,7 +189,89 @@ public function user_login_from_form(string $user_name_or_email_form, string $pa
 
 
 
+//Функция которая проверят залогинен ли пользователь
+//Вначале проверям переменную (данные пользователя), что бы не вызывать функцию по 10 раз
+//Если функция пустая, то проверям вначале сессиию
+//А потом уже проверям куки. (И если кукисы сработали, то мы пересоздаем сессиию, что бы с неё брать инфу)
 
+//Данные о пользовтеле притаскивают из базы данных каждый раз (так как он может быть забанен)
+public function check_if_user_is_loggined(): bool
+{
+
+//Если пользовтель уже залогинен
+if ((!is_null($this->user_data) && ($this->user_loggined==true)))
+{
+$this->already_logged = TRUE;
+return true;
+}
+
+  //Проверям существует ли сессия
+  if($this->CI->session->userdata('user_logged_id'))
+  {
+  $user_id = $this->CI->session->userdata('user_logged_id');
+  $this->logged_otkuda = 'Из сессии';
+  }
+  //Проверяем если ли две куки
+  elseif(get_cookie('user_selector') && get_cookie('user_validator'))
+  {
+  $user_selector = get_cookie('user_selector',TRUE);
+  $user_validator = get_cookie('user_validator',TRUE);
+  $user_id = $this->CI->Usermodel->check_cookie_and_return_id($user_selector,$user_validator);
+  $this->logged_otkuda = 'Из кукисов';
+
+  //Если вернулся false удаляем текущие куки
+  //Это могло быть по двум причинам
+  //1) Запись удалена так как старая
+  //2) Попытка взлома (в даном случае модель убирает запись из базы)
+  if (!$user_id) {
+    delete_cookie('user_validator');
+    delete_cookie('user_selector');
+    return false;
+                 }
+  }else {
+    return FALSE; // Если не нашли не в куке, не в сессии
+  }
+
+
+  //Проверяем не false ли user_id из сессии или куки
+  //Если нет значит пользователь не зарегестрирован
+  if ($user_id)
+  {
+  $this->user_data = $this->_get_user_data_and_update_last_activity($user_id);
+  //Существует ли такой пользователь
+  //Если существует то мы обновим сессию на всякий случай
+  if ($this->user_data)
+  {
+  $this->CI->session->set_userdata('user_logged_id', $this->user_data["id"]);
+  $this->CI->session->set_userdata('user_logged_name', $this->user_data["user_name"]);
+  $this->CI->session->set_userdata('user_logged_email', $this->user_data["user_email"]);
+  $this->CI->session->set_userdata('user_logged_group_id', $this->user_data["group_id"]);
+  return TRUE;
+} else { //Если не вернул данных для польхователей из базы
+  return FALSE;}
+} else {return false;} //Не в сессии не в куках не нашлось USER_ID
+
+return FALSE; // Если по какой то причине дошли до этой строки
+}
+
+
+//Функция которая возвращает данные юзера
+//А также обновляет последнюю активность пользователя в базе данных
+private function _get_user_data_and_update_last_activity($input_id)
+{
+$user_data= $this->CI->Usermodel->find_user_exist_and_return_user_data_by_id($input_id);
+//Проверяем не пустой ли массив с юзером вернули.
+if ($user_data)
+{
+//Поскольку мы обновляем это число нам нужно его поменять и в массиве
+$user_user_last_active_date = $this->CI->Usermodel->update_user_last_activity($input_id);
+$user_data['user_last_active_date2'] = $user_user_last_active_date;
+return $user_data;
+}
+else {
+return false;
+}
+}
 
 
 

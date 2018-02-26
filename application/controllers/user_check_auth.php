@@ -38,8 +38,8 @@ class user_check_auth extends CI_Controller {
 
 		elseif(get_cookie('user_selector') && get_cookie('user_validator'))
 		{
-		$user_selector = get_cookie('user_selector');
-		$user_validator = get_cookie('user_validator');
+		$user_selector = get_cookie('user_selector',TRUE);
+		$user_validator = get_cookie('user_validator',TRUE);
 		$user_id = $this->Usermodel->check_cookie_and_return_id($user_selector,$user_validator);
 		$outkuda = 'Из кукисов';
 		//Если вернулся false удаляем текущие куки
