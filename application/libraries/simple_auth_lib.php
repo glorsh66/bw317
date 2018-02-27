@@ -251,6 +251,33 @@ return FALSE; // Если по какой то причине дошли до э
 }
 
 
+//Функция для регистрации пользователя
+//После успешной регистрации пользовтеля отправляем письмо
+public function register($user_name,$user_email,$password)
+{
+$this->CI->load->library('simple_mail_lib');
+//Проверям правильности всех полей
+$this->CI->session->Usermodel->insert_user_registration($user_name,$user_email,$password);
+//Отправляем письмо
+
+
+
+
+$from = $this->CI->simple_mail_lib->global_from;
+$to = $this->CI->simple_mail_lib->global_name;
+
+$subject = "Welcome to our site! It's a quite nice place to be";
+$text = "Hello our new dear friend " . $user_name . " take a look and be like home!";
+
+
+
+}
+
+
+
+
+
+
 //Функция которая возвращает данные юзера
 //А также обновляет последнюю активность пользователя в базе данных
 private function _get_user_data_and_update_last_activity($input_id)
@@ -268,6 +295,8 @@ else {
 return false;
 }
 }
+
+
 
 
 

@@ -979,20 +979,18 @@ $this->Usermodel->insert_user_group("users","Just a regual Joe. Nothing special"
 $this->Usermodel->insert_user_group("shop-keepers","Guys who use site quite intensively.");
 
 		//Добавляем Users
-
-
-$this->Usermodel->insert_user_registration_form_with_id("admin","admin@admin.com","test55",1);
-$this->Usermodel->insert_user_registration_form("user1","user1@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user2","user2@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user3","user3@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user4","user4@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user5","user5@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user6","user6@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user7","user7@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user8","user8@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user9","user9@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user10","user10@mail.ru","test55");
-$this->Usermodel->insert_user_registration_form("user11","user11@mail.ru","test55");
+$this->Usermodel->insert_user_registration_with_any_user_group("admin","admin@admin.com","test55",1);
+$this->Usermodel->insert_user_registration("user1","user1@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user2","user2@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user3","user3@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user4","user4@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user5","user5@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user6","user6@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user7","user7@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user8","user8@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user9","user9@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user10","user10@mail.ru","test55");
+$this->Usermodel->insert_user_registration("user11","user11@mail.ru","test55");
 
 
 

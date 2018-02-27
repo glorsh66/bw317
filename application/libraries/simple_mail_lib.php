@@ -4,7 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class simple_mail_lib {
 public $error_send = "";
 
-
+//Глобальные переменные
+$global_from = "admin@bw317.ru";
+$global_name = "Glav_Admin";
 
 //Тестовые переменные
 public $ammount_of_processed_mails = 0;
@@ -62,7 +64,7 @@ $sended_mails = 0;
 
 foreach ($mails as $mail)
 {
-$this->CI->email->from($mail['mail_from'], 'Your Name');
+$this->CI->email->from($mail['mail_from'], $this->global_name);
 $this->CI->email->to($mail['mail_to']);
 $this->CI->email->subject($mail['mail_subject']);
 $this->CI->email->message($mail['mail_text']);

@@ -189,7 +189,7 @@ return date("Y-m-d H:i:s");
 	   		//Вставляем пользователя после регистрации
 	   		//В качестве ответа получаем Id вставленной строки
 
-	    public function insert_user_registration_form($user_name,$user_email,$password)
+	    public function insert_user_registration($user_name,$user_email,$password)
         {
         		//$site_users_obj = new site_users_class;
         		//$site_users_obj->user_name = $user_name;
@@ -216,7 +216,7 @@ return date("Y-m-d H:i:s");
 
 
 
-         public function insert_user_registration_form_with_id($user_name,$user_email,$password,$user_group_id)
+         public function insert_user_registration_with_any_user_group($user_name,$user_email,$password,$user_group_id)
         {
         		//$site_users_obj = new site_users_class;
         		//$site_users_obj->user_name = $user_name;
