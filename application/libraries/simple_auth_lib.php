@@ -27,8 +27,6 @@ class simple_auth_lib {
   //Переменные для класса
   const  max_tries_with_incorrect_password = 10;
 
-  private static $test_int = 1;
-  public $glob_var=0;
         // We'll use a constructor, as you can't directly call a function
         // from a property definition.
         public function __construct()
@@ -39,8 +37,6 @@ class simple_auth_lib {
                 $this->CI->load->helper('cookie');
                 $this->CI->load->model('Usermodel');
                 $this->CI->load->library('session');
-                $this->glob_var++;
-                SELF::$test_int++;
 
         }
 
