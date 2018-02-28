@@ -276,7 +276,6 @@ if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sen
 
 //TODO: Добавить проверку уникальности введеного имени и email
 
-
 //Грубая проверка данных что бы не допустить значений которые база не может принять
 //Проверям пустые ли строки
 if (empty($user_name)){$this->error = "User_name is empty"; return FALSE;}
@@ -297,15 +296,12 @@ $this->CI->load->library('simple_mail_lib');
 
 $this->CI->session->Usermodel->insert_user_registration($user_name,$user_email,$password);
 
-<<<<<<< HEAD
 
 $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password);
 
 
 //После проверки правильности если все прошло можно уже загрузить и либу для почты
 $this->CI->load->library('simple_mail_lib');
-=======
->>>>>>> a5172c80c2dd0121838abb64d8b5e5f6a5e5e785
 //Определяем параметры для отправки письма
 $from = $this->CI->simple_mail_lib->global_from;
 $to = $user_email;
