@@ -315,8 +315,8 @@ $text = "Hello our new dear friend " . $user_name . " take a look and be like ho
 //Как обрабатывать ошибку
 if (!$this->CI->simple_mail_lib->send_mail($from,$to,$subject,$text))
 {
-  echo "Error while sendind mail: " . $this->CI->simple_mail_lib->error_send;
-  die();
+
+
 }
 return true;
 
