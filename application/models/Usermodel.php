@@ -270,6 +270,23 @@ return date("Y-m-d H:i:s");
 
 
 
+//Функция найти пользователя по имени (для опредлеения дупликатов)
+public function if_user_exist_by_name(string $name):bool
+{
+$this->db->where('user_name',$selector);
+$result_int = $this->db->count_all_results(SELF::$users_sessions_table_name);
+return ($result_int == 0) ? FALSE : TRUE;
+}
+
+//Функция найти пользователя email (для опредлеения дупликатов)
+public function if_user_exist_by_email(string $name):bool
+{
+$this->db->where('user_name',$selector);
+$result_int = $this->db->count_all_results(SELF::$users_sessions_table_name);
+return ($result_int == 0) ? FALSE : TRUE;
+}
+
+
 
         public function find_user_whith_pass_exist_true_or_false($user_name_or_password,$password)
         {
