@@ -259,7 +259,6 @@ return FALSE; // Если по какой то причине дошли до э
 //После успешной регистрации пользовтеля отправляем письмо
 public function register($user_name,$user_email,$password):bool
 {
-
 //Грубая проверка данных что бы не допустить значений которые база не может принять
 //Проверям пустые ли строки
 if (empty($user_name)){$this->error = "User_name is empty"; return FALSE;}
@@ -274,19 +273,34 @@ if (strlen($password)>255){$this->error = "Password is more than 255 characters"
 //Проверям правильность email
 if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sender adress is invalid email adress"; return FALSE;}
 
+
+//TODO: Добавить проверку уникальности введеного имени и email
+
+
+
+
+$this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password);
+
+
 //После проверки правильности если все прошло можно уже загрузить и либу для почты
 $this->CI->load->library('simple_mail_lib');
-
-
-$this->CI->session->Usermodel->insert_user_registration($user_name,$user_email,$password);
-
 //Определяем параметры для отправки письма
 $from = $this->CI->simple_mail_lib->global_from;
-$to = $this->CI->simple_mail_lib->global_name;
+$to = $user_email;
+
+
 
 $subject = "Welcome to our site! It's a quite nice place to be";
 $text = "Hello our new dear friend " . $user_name . " take a look and be like home!";
 
+//Если вдруг не получилось отправить письмо.
+//Как обрабатывать ошибку
+if (!$this->CI->simple_mail_lib->send_mail($from,$to,$subject,$text))
+{
+  echo "Error while sendind mail: " . $this->CI->simple_mail_lib->error_send;
+  die();
+}
+return true;
 
 
 }

@@ -5,8 +5,8 @@ class simple_mail_lib {
 public $error_send = "";
 
 //Глобальные переменные
-$global_from = "admin@bw317.ru";
-$global_name = "Glav_Admin";
+public $global_from = "admin@bw317.ru";
+public $global_name = "Glav_Admin";
 
 //Тестовые переменные
 public $ammount_of_processed_mails = 0;
