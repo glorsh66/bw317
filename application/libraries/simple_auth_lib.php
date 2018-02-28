@@ -6,6 +6,8 @@ class simple_auth_lib {
   public $user_cause_of_error = "";
   private   $number_of_tries = 0;
 
+  public $error = "";
+
 
   //основные переменные
   public $user_data = null;
@@ -251,18 +253,34 @@ return FALSE; // Если по какой то причине дошли до э
 }
 
 
+
+
 //Функция для регистрации пользователя
 //После успешной регистрации пользовтеля отправляем письмо
-public function register($user_name,$user_email,$password)
+public function register($user_name,$user_email,$password):bool
 {
+
+//Грубая проверка данных что бы не допустить значений которые база не может принять
+//Проверям пустые ли строки
+if (empty($user_name)){$this->error = "User_name is empty"; return FALSE;}
+if (empty($user_email)){$this->error = "Email is empty"; return FALSE;}
+if (empty($password)){$this->error = "Password is empty"; return FALSE;}
+
+//Проверяем длинну строк
+if (strlen($user_name)>255){$this->error = "User_name is more than 255 characters"; return FALSE;}
+if (strlen($user_email)>255){$this->error = "Email is more than 255 characters"; return FALSE;}
+if (strlen($password)>255){$this->error = "Password is more than 255 characters"; return FALSE;}
+
+//Проверям правильность email
+if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sender adress is invalid email adress"; return FALSE;}
+
+//После проверки правильности если все прошло можно уже загрузить и либу для почты
 $this->CI->load->library('simple_mail_lib');
-//Проверям правильности всех полей
+
+
 $this->CI->session->Usermodel->insert_user_registration($user_name,$user_email,$password);
-//Отправляем письмо
 
-
-
-
+//Определяем параметры для отправки письма
 $from = $this->CI->simple_mail_lib->global_from;
 $to = $this->CI->simple_mail_lib->global_name;
 
