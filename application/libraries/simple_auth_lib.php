@@ -279,6 +279,8 @@ if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sen
 
 
 
+
+
 $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password);
 
 
