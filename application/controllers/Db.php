@@ -26,13 +26,15 @@ class Db extends CI_Controller {
 
 
 
-//Убираем форен кеи
+Убираем форен кеи
 $this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
 $this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
 $this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
 $this->db->query("ALTER TABLE `users_tokens` DROP FOREIGN KEY `FK_login_users_tokens_user_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_id_reciver`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_id_sender` ;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_greater_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_lesser_id` ;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_to_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_from_id` ;");
 $this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_advets_user_id` ;");
 $this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_categoty_id` ;");
 $this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur1_id` ;");
@@ -370,47 +372,46 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
                     'id' => array( //К сожалению можно только ID называть, хотя это не удобгно для дальнейшего Join, но codeigniter, к сожалению просто без id не
 	          					   // не работает втроеные ORM он требует обязательно наличия поля id
 	                'type' => 'INT',
-	                'constraint' => 9,
 	                'unsigned' => TRUE,
 	                'auto_increment' => TRUE
 	        			),
 
-				          'users_tokens_token' => array(
-                          'type' => 'VARCHAR',
-                          'constraint' => '50',
-                          'COLLATE' => 'utf8_bin',
-                  ),
-
-
-				        'sender_id' => array(
-					    'type' => 'INT',
-					     'constraint' => 9,
+				    'from_id' => array(
+					  'type' => 'INT',
 						'unsigned' => TRUE,
 			    		),
-			    		 'reciver_id' => array(
-					    'type' => 'INT',
-					     'constraint' => 9,
+			    	'to_id' => array(
+					  'type' => 'INT',
 						'unsigned' => TRUE,
 			    		),
 
-			    		 'pm_message' => array(
-                          'type' =>'TEXT',
-                  		  ),
+              'lesser_id' => array(
+              'type' => 'INT',
+              'unsigned' => TRUE,
+                ),
 
+              'greater_id' => array(
+              'type' => 'INT',
+              'unsigned' => TRUE,
+                ),
 
-                          'ip_address' => array(
-                          'type' => 'VARCHAR',
-                          'constraint' => '50',
-                          'COLLATE' => 'utf8_bin',
-                  ),
-
-
-                  'time_of_try' => array(
-                          'type' =>'timestamp',
-                  ), );
+              'ip_address' => array(
+              'type' => 'VARCHAR',
+              'constraint' => '50',
+              'COLLATE' => 'utf8_bin',
+              ),
+              'pm_text' => array(
+                          'type' =>'VARCHAR',
+                          'null' => FALSE,
+                          'constraint' => '21000'
+              ),
+ );
          // $this->dbforge->add_field('id');
+          $this->dbforge->add_field("`PM_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP");
+          $this->dbforge->add_field("`has_been_read` TINYINT NOT NULL DEFAULT 0");
           $this->dbforge->add_field($fields);
           $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
+          $this->dbforge->add_key(array('lesser_id', 'greater_id'));
           $this->dbforge->create_table('private_messages');
 
 
@@ -945,8 +946,10 @@ $this->db->query("ALTER TABLE `site_users` ADD CONSTRAINT `FK_site_users_user_gr
 $this->db->query("ALTER TABLE `login_attempts` ADD CONSTRAINT `FK_login_attempts_users` FOREIGN KEY (`login_attempts_user_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `users_sessions` ADD CONSTRAINT `FK_users_sessions_users` FOREIGN KEY (`users_sessions_user_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `users_tokens` ADD CONSTRAINT `FK_login_users_tokens_user_id` FOREIGN KEY (`login_users_tokens_user_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_id_reciver` FOREIGN KEY (`reciver_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_id_sender` FOREIGN KEY (`sender_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_to_id` FOREIGN KEY (`to_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_from_id` FOREIGN KEY (`from_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_advets_user_id` FOREIGN KEY (`advets_user_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_categoty_id` FOREIGN KEY (`ad_categoty_id`) REFERENCES `ad_categories` (`id`);");
 $this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur1_id` FOREIGN KEY (`ad_cur1_id`) REFERENCES `crypto_currencies` (`id`);");
