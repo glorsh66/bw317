@@ -14,6 +14,7 @@ class mail_test extends CI_Controller {
 
 		for ($i=0; $i < 100; $i++) {
 			$this->simple_mail_lib->send_mail("from@ee.e","to@e.ru","fdf","ed");
+
 		}
 
 echo "amount of processed mails: ". $this->simple_mail_lib->actually_send_mail(1,1) . "<br>";

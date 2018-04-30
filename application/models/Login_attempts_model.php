@@ -1,6 +1,6 @@
 <?php
 class Login_attempts_model extends CI_Model {
- private static $this_table_name = 'login_attempts'; //название текущей таблицы, что бы менять в одном месте
+ private static $this_table_name = 'login_attempts';
  
   
   		
@@ -13,7 +13,7 @@ public function insert_new_entry($name)
         'login_attempts_ip_address_if_proxy'=> getenv('HTTP_X_FORWARDED_FOR'),                    
         );        
         $this->db->insert(SELF::$this_table_name, $data);
-        return $this->db->insert_id();             
+        return $this->db->insert_id();
 }
   
   

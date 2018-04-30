@@ -8,6 +8,11 @@ class sha256_test extends CI_Controller {
 	{
 
 
+
+// Some code happens here
+
+
+
 $time_start = microtime(true);
 
 $random_hash = bin2hex(random_bytes(100));
@@ -41,8 +46,6 @@ echo "Ничего не делал $time секунд\n";
 echo "<br>";
 //$mulw = gmp_mul("12345678", "2000");
 //echo gmp_strval($mulw);
-
-
 
 
 	}

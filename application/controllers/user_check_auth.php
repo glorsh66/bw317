@@ -91,7 +91,7 @@ echo "User_id " . $user_id . " и получили мы это дело из " .
 echo "<br>";
 echo "Данные из кук: " . " Валидатор: " . $test_user_validator;
 echo "<br>";
-echo "Селектор "  . $test_user_selector;
+echo $test_user_selector . "Селектор ";
 echo "<br>";
 
 

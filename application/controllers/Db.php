@@ -26,7 +26,7 @@ class Db extends CI_Controller {
 
 
 
-Убираем форен кеи
+//Убираем форен кеи
 $this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
 $this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
 $this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
@@ -46,6 +46,17 @@ $this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_id`;");
 $this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_rat_user_id_sender` ;");
 $this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_user_rat_user_id_reciver`;");
 $this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_sender`;");
+
+$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_lesser_id`;");
+$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_greater_id`;");
+
+$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_owner`;");
+$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_banned`;");
+
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_from_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_to_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_lesser_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_greater_id`;");
 
 
 
@@ -364,6 +375,11 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 
 
 
+
+
+
+
+
 //** -----------------------------------------------------------------------------------------------------------------------------------------------
           //Создаем  таблицу private_messages
 
@@ -417,6 +433,75 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 
 
 
+ //** ----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ //** -----------------------------------------------------------------------------------------------------------------------------------------------
+ //Создаем  таблицу PM_blacklist
+          $this->dbforge->drop_table('PM_blacklist',true); //Удаляем есои есть
+           $fields = array(
+                    'id' => array( //К сожалению можно только ID называть, хотя это не удобгно для дальнейшего Join, но codeigniter, к сожалению просто без id не
+	          					   // не работает втроеные ORM он требует обязательно наличия поля id
+	                'type' => 'INT',
+	                'unsigned' => TRUE,
+	                'auto_increment' => TRUE
+	        			),
+
+				    'owner' => array(
+					  'type' => 'INT',
+						'unsigned' => TRUE,
+			    		),
+			    	'banned' => array(
+					  'type' => 'INT',
+						'unsigned' => TRUE,
+			    		), );
+         // $this->dbforge->add_field('id');
+          $this->dbforge->add_field("`PMBL_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP");
+          $this->dbforge->add_field($fields);
+          $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
+          $this->dbforge->create_table('PM_blacklist');
+ //** ----------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ //** -----------------------------------------------------------------------------------------------------------------------------------------------
+ //Создаем  таблицу PM_board
+          $this->dbforge->drop_table('PM_board',true); //Удаляем есои есть
+           $fields = array(
+               'lesser_id' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'greater_id' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'all_count' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'lesser_count' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'greater_count' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'lesser_unread' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'greater_unread' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ),
+               'last_message' => array(
+                   'type' => 'INT',
+                   'unsigned' => TRUE,
+               ), );
+          $this->dbforge->add_field($fields);
+          $this->dbforge->add_key(array('lesser_id', 'greater_id'),true);
+          $this->dbforge->create_table('PM_board');
  //** ----------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -962,10 +1047,16 @@ $this->db->query("ALTER TABLE `ad_rat` ADD CONSTRAINT `FK_ad_rat_user_id_sender`
 $this->db->query("ALTER TABLE `user_rat` ADD CONSTRAINT `FK_user_rat_user_id_reciver` FOREIGN KEY (`us_rat_reciver_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `user_rat` ADD CONSTRAINT `FK_puser_rat_user_id_sender` FOREIGN KEY (`us_rat_sender_id`) REFERENCES `site_users` (`id`);");
 
+$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
 
+$this->db->query("ALTER TABLE `PM_blacklist` ADD CONSTRAINT `FK_PM_blacklist_owner` FOREIGN KEY (`owner`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `PM_blacklist` ADD CONSTRAINT `FK_PM_blacklist_banned` FOREIGN KEY (`banned`) REFERENCES `site_users` (`id`);");
 
-
-
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_from_id` FOREIGN KEY (`from_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_to_id` FOREIGN KEY (`to_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
 
 
 

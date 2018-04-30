@@ -11,6 +11,7 @@ class suath_login_form_test extends CI_Controller {
 		$this->load->library('simple_auth_lib');
 		$this->load->model("Usermodel");
 
+
 		$user_name_or_email_form = "user2";
 		$password_from_form = "test55";
 

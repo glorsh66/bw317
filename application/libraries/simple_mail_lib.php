@@ -54,7 +54,8 @@ return TRUE;
 
 //Данная функция будет скорее всего вызываться через консоль
 //Что бы не увеличивать время отклика
-public function actually_send_mail(int $ammount, float $max_time)
+
+public function actually_send_mail(int $ammount, float $max_time): int
 {
 $start = microtime(true); //Замеряем время выполнения скрипта
 $this->CI->load->library('email'); //Она нужна толкько в этой функции

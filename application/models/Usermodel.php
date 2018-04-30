@@ -9,6 +9,7 @@ class Usermodel extends CI_Model {
     private static $users_login_attemts = 'login_attempts'; //Попытки захода пользователйе
     private static $this_user_groups = 'user_groups';
     private static $test_int = 1;
+    public $test_globa = 100;
     public $glob_var=0;
 
     function __construct()
@@ -315,22 +316,39 @@ return ($result_int == 0) ? FALSE : TRUE;
 		}
 
 
-        public function find_user_exist($user_name_or_email)
-        {
+    /**
+	 * Function looks for a match by using username or email (both must be unique)
+	 * Return true or false
+	 * 	 *
+     * @param string $user_name_or_email
+     * @return bool
+	 *
+     */
+    public function find_user_exist(string $user_name_or_email): bool        {
         	$this->db->where('user_name',$user_name_or_email);
 			$this->db->or_where('user_email',$user_name_or_email);
-			$query = $this->db->get('site_users');
-
-			if ($query->num_rows() > 0)
-			{
-				return TRUE;
-
-			} else
-			{
-				return FALSE;
-			}
-
+			$num_ret = $this->db->count_all_results('site_users');
+			return $num_ret > 0 ? TRUE : FALSE; //Больше нуля возвращаем TRUE
 		}
+
+
+    /**
+	 * Function looks for a match by using ID
+	 * Return true or false
+	 *
+     * @param int $id  UserID - только инты
+     * @return bool User is found or not
+     */
+    public function find_user_exist_by_id(int $id): bool        {
+        	$this->db->where('id',$id);
+			$num_ret = $this->db->count_all_results('site_users');
+			return $num_ret > 0 ? TRUE : FALSE; //Больше нуля возвращаем TRUE
+		}
+
+
+
+
+
 
 
     //Функция - находит пользователя

@@ -6,6 +6,9 @@ class simple_auth_lib {
   public $user_cause_of_error = "";
   private   $number_of_tries = 0;
 
+  /**
+   * test var
+   * @var string */
   public $error = "";
 
 
@@ -39,6 +42,7 @@ class simple_auth_lib {
                 $this->CI->load->helper('cookie');
                 $this->CI->load->model('Usermodel');
                 $this->CI->load->library('session');
+                
 
         }
 

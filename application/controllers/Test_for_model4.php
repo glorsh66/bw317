@@ -6,22 +6,36 @@ class Test_for_model4 extends CI_Controller {
 
 	public function index()
 	{
-	$this->load->model('User_groups_model');	
-	$this->load->library("simple_auth_lib");
-	$this->load->model("Login_attempts_model");
-	
-	
-	$this->Login_attempts_model->insert_new_entry("test_guy");
-	$this->Login_attempts_model->insert_new_entry("test_guy");
-	$this->Login_attempts_model->insert_new_entry("test_guy");
-	$this->Login_attempts_model->insert_new_entry("test_guy");
-	$this->Login_attempts_model->insert_new_entry("test_guy");
-	$this->Login_attempts_model->insert_new_entry("test_guy");
-	
-	
 
-	
-	   
+
+ $sql="DROP PROCEDURE IF EXISTS GetAllProducts";
+     $this->db->query($sql);
+$sql="CREATE DEFINER=`root`@`%` PROCEDURE `sp_user_login`(
+  IN loc_username VARCHAR(255),
+  IN loc_password VARCHAR(255)
+)
+BEGIN
+
+  SELECT user_id,
+         user_name,
+         user_emailid,
+         user_profileimage,
+         last_update
+    FROM tbl_user
+   WHERE user_name = loc_username
+     AND password = loc_password
+     AND status = 1;
+
+END";
+$this->db->query($sql);
+
+$sql='DROP PROCEDURE IF EXISTS GetAllProducts; CREATE PROCEDURE GetAllProducts()
+   BEGIN
+   SELECT *  FROM private_messages;
+   END';
+
+echo $this->db->simple_query($sql);
+
 	}
 
 
