@@ -355,7 +355,7 @@ return ($result_int == 0) ? FALSE : TRUE;
     //И возвращает только одну строку данных пользователя
     public function find_user_exist_and_return_user_data($user_name_or_email)
         {
-      $this->db->where('user_name',$user_name_or_email);
+            $this->db->where('user_name',$user_name_or_email);
 			$this->db->or_where('user_email',$user_name_or_email);
 			$query = $this->db->get('site_users');
 
