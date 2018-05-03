@@ -90,7 +90,8 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
 
     /**
      * Функция возвращает всю переписку для конкретного пользователя, с другим пользователем.
-     * Также отмечает сообщения как прочитанные
+     * Также отмечает сообщения как прочитанные (в борде, и все отдельные сообщения для конкретных пользователей)
+     * Ворзвращает = $messages['messages'], ['board']
      * !!!Внимание - функция не берет из таблицы данные о другом пользователе. Т.к. мы и так знаем первого пользователя
      * (владельца письма) и нужно всего один раз взять информацию о втором пользователе, вместо того что бы делать LEFT
      * JOIN. Это нужно делать в контроллере или библиотеке
@@ -98,12 +99,49 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
      * @param $second_user_id
      * @return array|bool
      */
-    public function get_message_thread($owner_id, $second_user_id)
+    public function get_message_thread($owner_id, $second_user_id) //Ворзвращает = $messages['messages'], ['board']
 {
     $lesser = min($owner_id,$second_user_id);
     $greater = max($owner_id,$second_user_id);
-    $query = $this->db->where('lesser_id',$lesser)->or_where('greater_id',$greater)->get($this->pm_table);
-    return $query->num_rows() > 0? $query->result_array():FALSE;
+
+    $owner_is_lesser = $owner_id===$lesser?TRUE:FALSE; // Определяем владелеца
+
+    //Вначале ищем борду сообщений
+    $query = $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
+        ->limit(1)->get($this->board_table);
+    if (!($query->num_rows() > 0)) return false;// У нас нет такой борды. Значит и нет никаких сообщений между
+    // пользователями. Закрываем функцию возвращаем FALSE
+
+    //создаем переменную
+    $messages['board'] =  $query->row_array();
+
+    //Берем все сообщения для пользователя
+    $query = $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
+        ->order_by('id','DESC')->get($this->pm_table);
+    if (!($query->num_rows() > 0)) return false;//Если по какой то причине (удалились сообщения, а в борде об этом нет
+    //информации то выходим из функции
+    $messages['messages'] = $query->result_array(); //Берем сообщения. В них еще указанно, прочитанно сообщение или нет.
+
+    //Если нужно обнулять
+    $number_of_not_readed = $owner_is_lesser?$messages['board']['lesser_unread']:$messages['board']['greater_unread'];
+    if ($number_of_not_readed===0) return $messages; //Если непрочитанных сообщений 0, то просто возвращаем массив
+
+    //Если нет то тогда нужно обнулить значений везде (в борде и в самих сообщениях)
+    //Обнуляем непрочитанные в борде
+    if ($owner_is_lesser) $this->db->set('lesser_unread',0);
+    else $this->db->set('greater_unread',0);
+    $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)->limit(1);
+    $this->db->update($this->board_table);
+
+    //Обнуляем непрочитанные в сообщениях
+    if ($owner_is_lesser) $this->db->where('to_id',$lesser);
+    else $this->db->where(to_id,$greater);
+    $this->db->where('lesser_id',$lesser)->where('greater_id',$greater);
+    $this->db->set('has_been_read',1);
+    $this->db->update($this->pm_table);
+
+    return $messages; //Ворзвращает = $messages['messages'], ['board']
+
 }
 
 
