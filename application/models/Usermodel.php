@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * Class Usermodel
+ */
 class Usermodel extends CI_Model {
 
       //Статические
@@ -481,7 +484,5 @@ return ($result_int == 0) ? FALSE : TRUE;
         }
 
 }
-
-
 
 ?>

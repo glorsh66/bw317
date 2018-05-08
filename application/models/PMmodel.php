@@ -109,7 +109,7 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
     //Вначале ищем борду сообщений
     $query = $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
         ->limit(1)->get($this->board_table);
-    if (!($query->num_rows() > 0)) return false;// У нас нет такой борды. Значит и нет никаких сообщений между
+    if (!($query->num_rows() > 0)) return FALSE;// У нас нет такой борды. Значит и нет никаких сообщений между
     // пользователями. Закрываем функцию возвращаем FALSE
 
     //создаем переменную
@@ -118,7 +118,7 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
     //Берем все сообщения для пользователя
     $query = $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
         ->order_by('id','DESC')->get($this->pm_table);
-    if (!($query->num_rows() > 0)) return false;//Если по какой то причине (удалились сообщения, а в борде об этом нет
+    if (!($query->num_rows() > 0)) return FALSE;//Если по какой то причине (удалились сообщения, а в борде об этом нет
     //информации то выходим из функции
     $messages['messages'] = $query->result_array(); //Берем сообщения. В них еще указанно, прочитанно сообщение или нет.
 
@@ -135,7 +135,7 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
 
     //Обнуляем непрочитанные в сообщениях
     if ($owner_is_lesser) $this->db->where('to_id',$lesser);
-    else $this->db->where(to_id,$greater);
+    else $this->db->where('to_id',$greater);
     $this->db->where('lesser_id',$lesser)->where('greater_id',$greater);
     $this->db->set('has_been_read',1);
     $this->db->update($this->pm_table);
