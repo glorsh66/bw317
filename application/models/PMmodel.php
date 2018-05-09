@@ -33,7 +33,8 @@ private $users_table = 'site_users';
         'to_id' => $to,
         'lesser_id' => $lesser,
         'greater_id' => $greater,
-        'ip_address' => $_SERVER['REMOTE_ADDR'],
+        'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,50),
+//        'ip_address' => $_SERVER['REMOTE_ADDR'],
         'pm_text' => $pm);
 
         //Начинаем транзакцию
@@ -55,6 +56,10 @@ private $users_table = 'site_users';
      * Функция возвращает борду пользователей
      * Возможно с лимитом на число выводимых строк и оффсетом (для пагинации)
      * На выходе возвращает либо массив строк, либо FALSE если у пользователя еще нет никаких активных переписок.
+     * Возвращает массив ['lesser_id'] ['greater_id'] ['all_count'] ['lesser_count'] ['greater_count'] ['lesser_unread']
+     * ['greater_unread'] ['last_message'] ['from_id'] ['to_id'] ['PM_timestamp'] ['has_been_read'] ['pm_text']
+     * ['user_name'] ['user_last_active_date'] ['isactivated']
+     *
      * @param int $me_id
      * @param int $limit
      * @param int $offset
@@ -70,7 +75,7 @@ from '.$this->board_table.' as pb
 left join '.$this->pm_table.' as pm on pb.last_message = pm.id
 left join '.$this->users_table.' as su on pm.from_id=su.id
 where pb.lesser_id ='.$me_id.' or pb.greater_id='.$me_id.' order by pb.last_message DESC ';
-if ($limit  >0 && $offset > 0) $sql .="limit $limit offset $offset";
+if ($limit  >0) $sql .="limit $limit offset $offset";
  //Выполняем запрос
 $query =  $this->db->query($sql);
 return $query->num_rows() > 0? $query->result_array():FALSE;
@@ -99,32 +104,55 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
      * @param $second_user_id
      * @return array|bool
      */
-    public function get_message_thread($owner_id, $second_user_id) //Ворзвращает = $messages['messages'], ['board']
+    public function get_message_thread($owner_id, $second_user_id,int $limit=0, int $offset=0) //Ворзвращает = $messages['messages'], ['board']
 {
     $lesser = min($owner_id,$second_user_id);
     $greater = max($owner_id,$second_user_id);
+
+    //Временная переменная для отладки
+    $messages['q'][]="";
 
     $owner_is_lesser = $owner_id===$lesser?TRUE:FALSE; // Определяем владелеца
 
     //Вначале ищем борду сообщений
     $query = $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
         ->limit(1)->get($this->board_table);
+
+    $messages['q'][]= $this->db->last_query(); //временная для отладки
+
     if (!($query->num_rows() > 0)) return FALSE;// У нас нет такой борды. Значит и нет никаких сообщений между
     // пользователями. Закрываем функцию возвращаем FALSE
 
     //создаем переменную
     $messages['board'] =  $query->row_array();
 
-    //Берем все сообщения для пользователя
-    $query = $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
-        ->order_by('id','DESC')->get($this->pm_table);
+//Берем все сообщения для пользователя
+//Проводим оптимизацию для использования OFFSET иначе может сильно тупить
+        if ($limit  >0 ) //Если у нас есть в запросе pagination
+        {
+$sql = "select * from (select id from {$this->pm_table} where lesser_id={$lesser} and greater_id={$greater} order by id desc
+ limit {$limit} offset {$offset}) as t
+join {$this->pm_table} as pm on pm.id=t.id order by pm.id desc"; //Используем оптимизацию
+$query = $this->db->query($sql);
+
+//Не эффективный метод При большом оффсете значительно дольше срабатывает.
+//$query=$this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
+//->order_by('id','DESC')->limit($limit)->offset($offset)->get($this->pm_table);
+        } else // иначе мы берем все записи без оффсета
+        {
+$query=$this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
+    ->order_by('id','DESC')->get($this->pm_table);
+        }
+
+        $messages['q'][]= $this->db->last_query(); //временная для отладки
+
     if (!($query->num_rows() > 0)) return FALSE;//Если по какой то причине (удалились сообщения, а в борде об этом нет
     //информации то выходим из функции
     $messages['messages'] = $query->result_array(); //Берем сообщения. В них еще указанно, прочитанно сообщение или нет.
 
     //Если нужно обнулять
     $number_of_not_readed = $owner_is_lesser?$messages['board']['lesser_unread']:$messages['board']['greater_unread'];
-    if ($number_of_not_readed===0) return $messages; //Если непрочитанных сообщений 0, то просто возвращаем массив
+    if (((int)$number_of_not_readed)===0) return $messages; //Если непрочитанных сообщений 0, то просто возвращаем массив
 
     //Если нет то тогда нужно обнулить значений везде (в борде и в самих сообщениях)
     //Обнуляем непрочитанные в борде
@@ -133,17 +161,33 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
     $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)->limit(1);
     $this->db->update($this->board_table);
 
+    $messages['q'][]= $this->db->last_query(); //временная для отладки
+
     //Обнуляем непрочитанные в сообщениях
     if ($owner_is_lesser) $this->db->where('to_id',$lesser);
     else $this->db->where('to_id',$greater);
-    $this->db->where('lesser_id',$lesser)->where('greater_id',$greater);
+    if ($owner_is_lesser) $this->db->where('from_id',$greater);
+    else $this->db->where('from_id',$lesser);
+    $this->db->where('has_been_read',0);
+   // $this->db->where('from_id',$lesser)->where('greater_id',$greater)->where('has_been_read',0);
     $this->db->set('has_been_read',1);
     $this->db->update($this->pm_table);
+
+    $messages['q'][]= $this->db->last_query(); //временная для отладки
 
     return $messages; //Ворзвращает = $messages['messages'], ['board']
 
 }
 
+public function count_all_messages(int $owner): int
+{
+    return $this->db->where('lesser_id',$owner)->or_where('greater_id',$owner)->count_all_results($this->pm_table);
+}
+
+public function count_all_unred_messages(int $owner): int
+{
+    return $this->db->where('to_id',$owner)->where('has_been_read',0)->count_all_results($this->pm_table);
+}
 
 
 

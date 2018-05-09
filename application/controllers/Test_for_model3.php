@@ -10,6 +10,7 @@ class Test_for_model3 extends CI_Controller {
 	$this->benchmark->mark('start');
 	$this->load->library("simple_auth_lib");
 	$this->load->model("PMmodel");
+	$this->load->model('Usermodel');
 
 //	$this->PMmodel->insert_message(2,1,'otvetka');
 //	$this->PMmodel->insert_message(3,1,'otvetka');
@@ -37,13 +38,22 @@ class Test_for_model3 extends CI_Controller {
 ////    $this->PMmodel->insert_message(1,2,'2 to 1');
 //    $this->PMmodel->insert_message(1,2,'2 to 1');
 //        for ($i=0;$i<100000;$i++) {
-//            $this->PMmodel->insert_message(1, 2, '2 to 1');
+//            $this->PMmodel->insert_message(5, 6, '5 to 6');
 //        }
 
-    //Берем сообщения
-	$ar = $this->PMmodel->get_message_thread(1,2);
-	$owner = 1;
-	$second =2;
+        $this->PMmodel->insert_message(5,6,'5 to 6');
+        $this->PMmodel->insert_message(6,5,'6 to 5');
+    $owner = 6;
+    $second =5;
+        //Берем сообщения
+	$ar = $this->PMmodel->get_message_thread($owner,$second,10,100001);
+
+        var_dump($this->Usermodel->find_user_exist_and_return_user_data_by_id($second)['user_name']);
+
+	echo "Owner is: " . $owner. " name: " . $this->Usermodel->find_user_exist_and_return_user_data_by_id($owner)['user_name'];
+	echo '<br>';
+	echo 'second users is: ' . $second . " name: " . $this->Usermodel->find_user_exist_and_return_user_data_by_id($second)['user_name'];
+	echo '<br>';
 
 
 
@@ -115,7 +125,23 @@ class Test_for_model3 extends CI_Controller {
     echo "</table><br>";
       "<td>pm_text</td>".
     $this->benchmark->mark('stop');
-	echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+
+
+      echo "всего сообщений для пользователя {$owner}: ". $this->PMmodel->count_all_messages($second);
+
+      echo '<br>';
+      echo "всего непрочитанных для пользователя {$owner}: ". $this->PMmodel->count_all_unred_messages($owner);
+
+        echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+	echo '<br>';
+
+    $ar_k = array_keys($ar['messages'][0]);
+    $ar_res = array_map(function ($v){return "['{$v}']";},$ar_k);
+    foreach($ar_res as $r)
+    echo $r.' ';
+
+    foreach($ar['q'] as $r)
+            echo '<br>'.$r.'<br>';
 
 
 	//var_dump($ar);
