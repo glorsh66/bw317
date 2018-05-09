@@ -68,8 +68,8 @@ $sql='select pb.*, pm.from_id,pm.to_id,pm.PM_timestamp,pm.has_been_read,pm.pm_te
 su.user_name,su.user_last_active_date,su.isactivated
 from '.$this->board_table.' as pb
 left join '.$this->pm_table.' as pm on pb.last_message = pm.id
-left join '.$this->pm_table.' as su on pm.from_id=su.id
-where pb.lesser_id ='.$me_id.' or pb.greater_id='.$me_id.'order by pb.last_message DESC';
+left join '.$this->users_table.' as su on pm.from_id=su.id
+where pb.lesser_id ='.$me_id.' or pb.greater_id='.$me_id.' order by pb.last_message DESC ';
 if ($limit  >0 && $offset > 0) $sql .="limit $limit offset $offset";
  //Выполняем запрос
 $query =  $this->db->query($sql);
