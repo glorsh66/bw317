@@ -1,4 +1,4 @@
-<?php
+<?php added some junk on noutebook
 /**
  * CodeIgniter
  *
