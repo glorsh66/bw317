@@ -164,10 +164,9 @@ $query=$this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
     $messages['q'][]= $this->db->last_query(); //временная для отладки
 
     //Обнуляем непрочитанные в сообщениях
-    if ($owner_is_lesser) $this->db->where('to_id',$lesser);
-    else $this->db->where('to_id',$greater);
-    if ($owner_is_lesser) $this->db->where('from_id',$greater);
-    else $this->db->where('from_id',$lesser);
+    $this->db->where('to_id',$owner_id);
+    $this->db->where('from_id',$second_user_id);
+
     $this->db->where('has_been_read',0);
    // $this->db->where('from_id',$lesser)->where('greater_id',$greater)->where('has_been_read',0);
     $this->db->set('has_been_read',1);
