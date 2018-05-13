@@ -33,12 +33,11 @@ private $users_table = 'site_users';
         'to_id' => $to,
         'lesser_id' => $lesser,
         'greater_id' => $greater,
-        'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,50),
-//        'ip_address' => $_SERVER['REMOTE_ADDR'],
+        'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,50), //Обре
         'pm_text' => $pm);
 
         //Начинаем транзакцию
-        $this->db->trans_begin();
+//        $this->db->trans_begin();
         $this->db->insert($this->pm_table,$data);
         $insertId = $this->db->insert_id();
 
@@ -48,7 +47,7 @@ private $users_table = 'site_users';
         "all_count=all_count+1,lesser_count=lesser_count+$tolesser,greater_count=greater_count+$togreater,lesser_unread=lesser_unread+$tolesser,".
         "greater_unread=greater_unread+$togreater,last_message=$insertId;";
         $query = $this->db->query($sql_q,array($lesser,$greater));
-        $this->db->trans_complete(); //закрыли транзакцию
+//       $this->db->trans_complete(); //закрыли транзакцию
     }
 
 
@@ -81,17 +80,6 @@ $query =  $this->db->query($sql);
 return $query->num_rows() > 0? $query->result_array():FALSE;
 }
 
-    /**
-     * Функция возвращает колличетсво текущих веток переписки для конкретного пользователя
-     * возвращает просто значение в int
-     * @param int $me_id
-     * @return int
-     */
-    public function count_board(int $me_id): int
-{
-    return $this->db->where('lesser_id',$me_id)->or_where('greater_id',$me_id)
-        ->count_all_result($this->board_table);
-}
 
     /**
      * Функция возвращает всю переписку для конкретного пользователя, с другим пользователем.
@@ -131,7 +119,7 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
         if ($limit  >0 ) //Если у нас есть в запросе pagination
         {
 $sql = "select * from (select id from {$this->pm_table} where lesser_id={$lesser} and greater_id={$greater} order by id desc
- limit {$limit} offset {$offset}) as t
+ limit {$limit} offset {$offset}) as t 
 join {$this->pm_table} as pm on pm.id=t.id order by pm.id desc"; //Используем оптимизацию
 $query = $this->db->query($sql);
 
@@ -178,14 +166,96 @@ $query=$this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
 
 }
 
-public function count_all_messages(int $owner): int
+
+
+
+    /**
+     * Функция возвращает колличетсво текущих веток переписки для конкретного пользователя
+     * возвращает просто значение в int
+     * @param int $me_id
+     * @return int
+     */
+    public function count_board(int $me_id): int
 {
-    return $this->db->where('lesser_id',$owner)->or_where('greater_id',$owner)->count_all_results($this->pm_table);
+    return $this->db->where('lesser_id',$me_id)->or_where('greater_id',$me_id)
+        ->count_all_result($this->board_table);
 }
 
-public function count_all_unred_messages(int $owner): int
+    /**
+     * @param int $owner
+     * @param int $second
+     * @return int
+     */
+public function count_all_messages(int $owner, int $second): int
 {
-    return $this->db->where('to_id',$owner)->where('has_been_read',0)->count_all_results($this->pm_table);
+$lesser = min($owner,$second);
+$greater = max($owner,$second);
+return $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)->count_all_results($this->pm_table);
+}
+
+public function count_ammount_of_sended_in_x_minutes(int $from, int $minutes):int
+{
+$date = new DateTime();
+$date->modify("-{$minutes} minutes");
+$date_str = $date->format('Y-m-d H:i:s');
+
+return $this->db->where('from_id',$from)->where('PM_timestamp >',$date_str)->count_all_results($this->pm_table);
+}
+
+
+    /**
+     * Функция обощает данные из таблицы PM_board (не пересчитывая их реально из таблицы private_messages)
+     * Используется оптимизация запроса через union
+     * Возвращает массив int ['unread']['messages']['all_messages']['threads']['unread_threads']
+     * Или FALSE в случае если нет таких сообщений
+     *
+     * @param itn $owner
+     * @return array|bool
+     */
+    public function count_all_new_messages_from_board(int $owner)
+{
+//Используеи UNIOUN оптимизацию, что бы оптимально использовать индексы.
+$query = $this->db->query("SELECT * FROM `PM_board` WHERE `lesser_id` ={$owner}
+UNION
+SELECT * FROM `PM_board` WHERE `greater_id` = {$owner}");
+
+if (!($query->num_rows() > 0)) return FALSE;
+
+$res = $query->result_array();
+$len = count($res);
+if (!is_array($res) or !($len>0)) return false;
+
+$sum_unread=0;
+$sum_messages=0;
+$sum_all_mess=0;
+$sum_threads=$len;
+$sum_threads_with_new=0;
+
+for ($i=0;$i<$len;$i++)
+{
+$lesser = (int)$res[$i]['lesser_id'];
+if ($lesser===$owner)
+    {
+        $sum_unread  +=(int)$res[$i]['lesser_unread'];
+        $sum_messages+=(int)$res[$i]['lesser_count'];
+        if ((int)$res[$i]['lesser_unread']>0) $sum_threads_with_new++;
+    }
+else {
+       $sum_unread  +=(int)$res[$i]['greater_unread'];
+       $sum_messages+=(int)$res[$i]['greater_count'];
+       if ((int)$res[$i]['greater_unread']>0) $sum_threads_with_new++;
+}
+$sum_all_mess+=(int)$res[$i]['all_count'];
+
+}
+$ret = array();
+$ret['unread']=$sum_unread;
+$ret['messages']=$sum_messages;
+$ret['all_messages']=$sum_all_mess;
+$ret['threads']=$sum_threads;
+$ret['unread_threads']=$sum_threads_with_new;
+
+return $ret;
 }
 
 

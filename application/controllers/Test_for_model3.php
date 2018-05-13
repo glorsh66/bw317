@@ -45,19 +45,29 @@ class Test_for_model3 extends CI_Controller {
 //            $this->PMmodel->insert_message(5, 2, '5 to 2');
 //            $this->PMmodel->insert_message(5, 2, '5 to 2');
 //        }
-////
-                for ($i=0;$i<50;$i++) {
+//////
+                for ($i=0;$i<2000;$i++) {
             $this->PMmodel->insert_message(2, 4, '3 to 1');
             $this->PMmodel->insert_message(4, 2, '4 to 2');
+            $this->PMmodel->insert_message(2, 5, '3 to 1');
+            $this->PMmodel->insert_message(5, 2, '4 to 2');
+            $this->PMmodel->insert_message(5, 2, '4 to 2');
         }
 
 
-    $owner = 4;
+
+
+    $owner = 5;
     $second =2;
         //Берем сообщения
-	$ar = $this->PMmodel->get_message_thread($owner,$second,10,0);
+	$ar = $this->PMmodel->get_message_thread($owner,$second,10,122);
 
-        var_dump($this->Usermodel->find_user_exist_and_return_user_data_by_id($second)['user_name']);
+	 $this->benchmark->mark('stop');
+	 echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+
+
+	 $this->benchmark->mark('start');
+	 var_dump($this->Usermodel->find_user_exist_and_return_user_data_by_id($second)['user_name']);
 
 	echo "Owner is: " . $owner. " name: " . $this->Usermodel->find_user_exist_and_return_user_data_by_id($owner)['user_name'];
 	echo '<br>';
@@ -132,8 +142,8 @@ class Test_for_model3 extends CI_Controller {
     }
 
     echo "</table><br>";
-      "<td>pm_text</td>".
-    $this->benchmark->mark('stop');
+
+
 
 
     //  echo "всего сообщений для пользователя {$owner}: ". $this->PMmodel->count_all_messages($second);
@@ -141,7 +151,7 @@ class Test_for_model3 extends CI_Controller {
       echo '<br>';
    //   echo "всего непрочитанных для пользователя {$owner}: ". $this->PMmodel->count_all_unred_messages($owner);
 
-        echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+
 	echo '<br>';
 
     $ar_k = array_keys($ar['messages'][0]);
@@ -152,13 +162,60 @@ class Test_for_model3 extends CI_Controller {
     foreach($ar['q'] as $r)
             echo '<br>'.$r.'<br>';
 
+    $this->benchmark->mark('stop');
+     echo '<br>';
+	 echo "Elapsed time for render: " . $this->benchmark->elapsed_time('start','stop');
+	  echo '<br>';
 
-//    $this->db->where('lesser_id',$owner)->or_where('greater_id',$owner)->count_all_results('private_messages');
-//    echo $this->db->last_query();
+
+
+    $this->benchmark->mark('start');
+    echo '<br>';
+    echo "Всего сообщений: " . $this->PMmodel->count_all_messages($owner,$second);
+    echo '<br>'. $this->db->last_query();
+    $this->benchmark->mark('stop');
+    echo '<br>';
+	echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+    echo '<br>';
 
 
 
-	//var_dump($ar);
+    $this->benchmark->mark('start');
+    echo '<br>';
+    $minutes = 30;
+    echo "Всего сообщений " . $this->PMmodel->count_ammount_of_sended_in_x_minutes(11,10) . " за период в {$minutes} мин. ";
+    echo '<br>'. $this->db->last_query();
+    $this->benchmark->mark('stop');
+    echo '<br>';
+	echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+    echo '<br>';
+
+
+
+    $this->benchmark->mark('start');
+    echo '<br>';
+    $minutes = 30;
+    $ret = $this->PMmodel->count_all_new_messages_from_board(12);
+    if (is_array($ret))
+    {
+        // ['unread']['messages']['all_messages']['threads']['unread_threads']
+         echo '<br>';
+         echo '<br>'."Всего непрочитанных сообщений: " . $ret['unread'];
+         echo '<br>'."Всего сообщений для пользователя: " . $ret['messages'];
+         echo '<br>'."Всего всего сообщений в общем: " . $ret['all_messages'];
+         echo '<br>'."Всего всего переписок: " . $ret['threads'];
+         echo '<br>'."Всего всего переписок с непрочитанными сообщениями: " . $ret['unread_threads'];
+    }
+    echo '<br>'. $this->db->last_query();
+    $this->benchmark->mark('stop');
+    echo '<br>';
+	echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+    echo '<br>';
+
+
+
+    echo substr('вфвыфвфывфвфывфыв',0,11);
+
 	}
 
 
