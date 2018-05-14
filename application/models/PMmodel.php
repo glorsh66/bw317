@@ -33,21 +33,19 @@ private $users_table = 'site_users';
         'to_id' => $to,
         'lesser_id' => $lesser,
         'greater_id' => $greater,
-        'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,50), //Обре
+        'ip_address' => substr($_SERVER['REMOTE_ADDR'],0,50), //Обрезаем до длины строки
         'pm_text' => $pm);
 
-        //Начинаем транзакцию
-//        $this->db->trans_begin();
+        //Транзакции лучше не делать, а то может получиться деадлок
         $this->db->insert($this->pm_table,$data);
         $insertId = $this->db->insert_id();
 
         //Формируем запрос для вставки боарда
-        $sql_q = 'INSERT INTO '.$this->board_table.' (lesser_id, greater_id, all_count,lesser_count,greater_count,lesser_unread,greater_unread,last_message)
-        VALUES (?, ?, 1,'."$tolesser,$togreater,$tolesser,$togreater,".  $insertId.') ON DUPLICATE KEY UPDATE '.
+        $sql_q = 'INSERT INTO '.$this->board_table.' (lesser_id, greater_id, all_count,lesser_count,greater_count,lesser_unread,greater_unread,last_message,lesser_last_read,greater_last_read)
+        VALUES (?, ?, 1,'."$tolesser,$togreater,$tolesser,$togreater,".  $insertId.',0,0) ON DUPLICATE KEY UPDATE '.
         "all_count=all_count+1,lesser_count=lesser_count+$tolesser,greater_count=greater_count+$togreater,lesser_unread=lesser_unread+$tolesser,".
-        "greater_unread=greater_unread+$togreater,last_message=$insertId;";
-        $query = $this->db->query($sql_q,array($lesser,$greater));
-//       $this->db->trans_complete(); //закрыли транзакцию
+        "greater_unread=greater_unread+$togreater,last_message=$insertId";
+        $this->db->query($sql_q,array($lesser,$greater));
     }
 
 
@@ -120,7 +118,7 @@ return $query->num_rows() > 0? $query->result_array():FALSE;
         {
 $sql = "select * from (select id from {$this->pm_table} where lesser_id={$lesser} and greater_id={$greater} order by id desc
  limit {$limit} offset {$offset}) as t 
-join {$this->pm_table} as pm on pm.id=t.id order by pm.id desc"; //Используем оптимизацию
+join {$this->pm_table} as pm on pm.id=t.id order by t.id desc"; //Используем оптимизацию
 $query = $this->db->query($sql);
 
 //Не эффективный метод При большом оффсете значительно дольше срабатывает.
@@ -142,24 +140,24 @@ $query=$this->db->where('lesser_id',$lesser)->where('greater_id',$greater)
     $number_of_not_readed = $owner_is_lesser?$messages['board']['lesser_unread']:$messages['board']['greater_unread'];
     if (((int)$number_of_not_readed)===0) return $messages; //Если непрочитанных сообщений 0, то просто возвращаем массив
 
-    //Если нет то тогда нужно обнулить значений везде (в борде и в самих сообщениях)
+
+    //Если нет то тогда нужно обнулить значения непрочитанных сообщений
     //Обнуляем непрочитанные в борде
-    if ($owner_is_lesser) $this->db->set('lesser_unread',0);
-    else $this->db->set('greater_unread',0);
-    $this->db->where('lesser_id',$lesser)->where('greater_id',$greater)->limit(1);
+    if ($owner_is_lesser)
+    {
+        $this->db->set('lesser_unread',0);
+        $this->db->set('lesser_last_read','last_message',FALSE);
+    }
+    else
+    {
+        $this->db->set('greater_unread',0);
+        $this->db->set('greater_last_read','last_message',FALSE);
+    }
+
+    $this->db->where('lesser_id',$lesser)->where('greater_id',$greater);
     $this->db->update($this->board_table);
 
-    $messages['q'][]= $this->db->last_query(); //временная для отладки
-
-    //Обнуляем непрочитанные в сообщениях
-    $this->db->where('to_id',$owner_id);
-    $this->db->where('from_id',$second_user_id);
-
-    $this->db->where('has_been_read',0);
-   // $this->db->where('from_id',$lesser)->where('greater_id',$greater)->where('has_been_read',0);
-    $this->db->set('has_been_read',1);
-    $this->db->update($this->pm_table);
-
+    //TODO:Убрать отладочные запросы
     $messages['q'][]= $this->db->last_query(); //временная для отладки
 
     return $messages; //Ворзвращает = $messages['messages'], ['board']
