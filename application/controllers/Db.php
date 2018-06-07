@@ -27,37 +27,37 @@ class Db extends CI_Controller {
 
 
 //////Убираем форен кеи
-//$this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
-//$this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
-//$this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
-//$this->db->query("ALTER TABLE `users_tokens` DROP FOREIGN KEY `FK_login_users_tokens_user_id`;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_greater_id`;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_lesser_id` ;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_to_id`;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_from_id` ;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_advets_user_id` ;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_categoty_id` ;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur1_id` ;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur2_id` ;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur3_id` ;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur4_id`;");
-//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur5_id` ;");
-//$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_id`;");
-//$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_rat_user_id_sender` ;");
-//$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_user_rat_user_id_reciver`;");
-//$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_sender`;");
-//
-//$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_lesser_id`;");
-//$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_greater_id`;");
-//$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_last_message_id`;");
-//
-//$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_owner`;");
-//$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_banned`;");
-//
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_from_id`;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_to_id`;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_lesser_id`;");
-//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater_id`;");
+$this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
+$this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
+$this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
+$this->db->query("ALTER TABLE `users_tokens` DROP FOREIGN KEY `FK_login_users_tokens_user_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_greater_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_lesser_id` ;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_to_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_from_id` ;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_advets_user_id` ;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_categoty_id` ;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur1_id` ;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur2_id` ;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur3_id` ;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur4_id`;");
+$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur5_id` ;");
+$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_id`;");
+$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_rat_user_id_sender` ;");
+$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_user_rat_user_id_reciver`;");
+$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_sender`;");
+
+$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_lesser_id`;");
+$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_greater_id`;");
+$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_last_message_id`;");
+
+$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_owner`;");
+$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_banned`;");
+
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_from_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_to_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_lesser_id`;");
+$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater_id`;");
 
 
 
@@ -232,9 +232,32 @@ class Db extends CI_Controller {
 		    'type' => 'INT',
 		     'constraint' => 9,
 			'unsigned' => TRUE,
-    ),);
+    ),
+
+              'tries_with_wrong_password' => array(
+              'type' => 'TINYINT',
+              'unsigned' => TRUE,
+              'default' => 0,
+
+              ),
+
+              'last_time_wrong_pass_unix_tsmp' => array(
+                  'type' => 'INT',
+                  'unsigned' => TRUE,
+                  'default' => 0,
+              ),
+
+              'blocked_up_to_date' => array(
+                  'type' => 'INT',
+                  'unsigned' => TRUE,
+                  'default' => 0,
+              ),
+
+          );
           $this->dbforge->add_field("`password` CHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL"); //Добавляем поле для пароля
           $this->dbforge->add_field("`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+          $this->dbforge->add_field("`blocked_by_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP");
+
 
           $this->dbforge->add_key('id',TRUE); //Делаем ID основным ключем
          // $this->dbforge->add_key('user_name'); //Создаем индекс для имени

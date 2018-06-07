@@ -1,5 +1,13 @@
 <?php
 
+//['id'] ['password'] ['user_name'] ['user_email'] ['isactivated'] ['ban_reason'] ['ibanned'] ['user_contacts_skype']
+// ['user_adress'] ['user_adress_city'] ['user_adress_region'] ['user_adress_country'] ['user_adress_state']
+// ['user_registration_ip'] ['user_registration_ip_if_proxy'] ['user_carma'] ['user_activation_request'] ['user_change_password_request']
+// ['user_contacts_phone'] ['user_contacts_phone2'] ['user_contacts_phone3'] ['user_contacts_icq'] ['user_contacts_jabber']
+// ['user_contacts_facebook'] ['user_contacts_instagram'] ['user_contacts_twitter'] ['user_contacts_addit_info'] ['user_contacts_www']
+// ['user_bio'] ['user_img'] ['user_ip_creation'] ['user_ip_last_active'] ['user_last_active_date'] ['user_registration_date']
+// ['group_id'] ['modified'] ['user_last_active_date2']
+
 
 /**
  * Class Usermodel
@@ -137,34 +145,78 @@ $this->db->query("DELETE FROM ". SELF::$users_sessions_table_name ." WHERE users
 //Раздел пользователей
 
 //Вставляем данные о последнеё попытке захода
-public function insert_login_attempts($id,$ip)
+public function insert_login_attempts(int $id,bool $increment)
 {
-$data = array(
-'ip_address' => $ip,
-'login_attempts_user_id'=> $id,
-);
-$this->db->insert(SELF::$users_login_attemts, $data);
+    $this->db->where('id', $id);
+    $this->db->set('last_time_wrong_pass_unix_tsmp', time());
+
+    if ($increment === TRUE)
+    {
+    $this->db->set('tries_with_wrong_password', 'tries_with_wrong_password+1', FALSE);
+    }
+    else {$this->db->set('tries_with_wrong_password', 1);}
+
+    $this->db->limit(1);
+    $this->db->update(SELF::$this_table_name);
 }
 
 
-//Считаем колличенство попыток входа и удаляем старые
-//TODO:Убрать удаление в отдельный файл которй будет запускатсья регулярно
-public function count_login_attempts_and_delte_old_entries($userid)
+public function set_zero_login_attempts_with_wrong_password(int $id)
+    {
+        $this->db->where('id', $id);
+        //$this->db->set('last_time_wrong_pass_unix_tsmp', 0);
+        $this->db->set('tries_with_wrong_password', 0);
+        $this->db->limit(1);
+        $this->db->update(SELF::$this_table_name);
+    }
+
+
+
+    /**Обновляет поле blocked_up_to_date в базе, для того, что бы заблокировать пользователя из-за
+	 * большого колличества попыток войти с неправильным паролем
+     * @param int $id (id пользователя)
+     * @param int $minutes (до какого времени заблокировать) Unix time stamp в int
+     */
+public function block_user_on_x_minutes(int $id, int $minutes)
+{
+   // $date = new DateTime();
+  //  $date->modify("+{$minutes} minutes");
+
+    $data = array(
+        'blocked_up_to_date'=> $minutes
+    );
+
+    $this->db->where('id', $id);
+    $this->db->set('tries_with_wrong_password', 0);
+    $this->db->limit(1);
+    $this->db->update(SELF::$this_table_name, $data);
+
+}
+
+
+
+public function count_login_attempts_and_delte_old_entries(int $userid): int
 {
 $deleted_rows=0;
 $tries=0;
 //Удаляем старые записи из таблицы
 //Хотя скорее всего лучше это дело перенести в отдельный скрипт который будет раз
 //в одну минуту запускаться
- $query = $this->db->query('delete FROM '. SELF::$users_login_attemts .
-' WHERE login_attempts_time < NOW() - INTERVAL 1 MINUTE;');
-$deleted_rows =  $this->db->affected_rows();
+//Считаем колличенство попыток входа и удаляем старые
+//TODO:Убрать удаление в отдельный файл которй будет запускатсья регулярно
+// $query = $this->db->query('delete FROM '. SELF::$users_login_attemts .
+//' WHERE login_attempts_time < NOW() - INTERVAL 1 MINUTE;');
+//$deleted_rows =  $this->db->affected_rows();
+//Делаем запрос на колличество попыток входа
 
+$date = new DateTime('-10 minutes');
 
-  //Делаем запрос на колличество попыток входа
-  $this->db->where('login_attempts_user_id',$userid);
-  $tries = $this->db->count_all_results(SELF::$users_login_attemts);
-  return array($deleted_rows,$tries);
+$this->db->where('login_attempts_user_id',$userid);
+$this->db->where('login_attempts_time >=',
+	$this->db->escape($date->format('Y-m-d H:i:s'))
+	,FALSE);
+$tries = $this->db->count_all_results(SELF::$users_login_attemts);
+return $tries;
 }
 
 
@@ -173,7 +225,6 @@ $deleted_rows =  $this->db->affected_rows();
 public function update_user_last_activity($id)
 {
 $date = new DateTime();
-$date->getTimestamp();
 
 $data = array(
 'user_last_active_date'=>date("Y-m-d H:i:s")
@@ -349,30 +400,33 @@ return ($result_int == 0) ? FALSE : TRUE;
 		}
 
 
+    /**
+	 * Ищет пользователя по логину или емайлу. Использует оптимизацию индексов для избегания конструкции OR
+	 *
+	 * Возвращает FALSE если не нашел пользователя.
+	 *
+	 * Если все ОК - Возвращает массив с одной записью из таблицы site_users
+	 *
+     * @param string $user_name_or_email  Логин или Email пользователя
+     * @return bool|array
+     */
+public function find_user_exist_and_return_user_data(string $user_name_or_email)
+	{
+//Ескейпаем строку, для обеспечения безопасности от SQL injection
+$escp_str = $this->db->escape($user_name_or_email);
+//Запрос с оптимизацией, для использования индеса. Должны быть индексы на полях user_name и user_email
+$query = $this->db->query('SELECT * FROM `site_users` WHERE `user_name` ='.$escp_str.'
+UNION
+SELECT * FROM `site_users` WHERE `user_email` = '.$escp_str);
 
-
-
-
-
-    //Функция - находит пользователя
-    //И возвращает только одну строку данных пользователя
-    public function find_user_exist_and_return_user_data($user_name_or_email)
-        {
-            $this->db->where('user_name',$user_name_or_email);
-			$this->db->or_where('user_email',$user_name_or_email);
-			$query = $this->db->get('site_users');
-
-			if ($query->num_rows() > 0)
-			{
-				return  $query->row_array();
-			} else
-			{
-				return FALSE;
-			}
-
-		}
-
-
+if ($query->num_rows() > 0)
+{
+	return  $query->row_array();
+} else
+{
+	return FALSE;
+}
+	}
 
     public function find_user_exist_and_return_user_data_by_id($userid)
         {
@@ -390,44 +444,11 @@ return ($result_int == 0) ? FALSE : TRUE;
 
 		}
 
-
-
-
-
-
-
-
-        public function ret_true()
-        {
-			return TRUE;
-		}
-
-
-        public function get_first_user_as_class()
-        {
-			 $this->db->where('user_name',"glorsh");
-		     $query = $this->db->get('site_users');
-			 $row = $query->row(0, 'Usermodel');
-
-			 return $row;
-
-		}
-
-
-		   public function get_all_user_as_class()
-        {
-			 $query = $this->db->get('site_users', 10);
-             return  $query->custom_result_object(self::$this_table_name);
-
-		}
-
-
         public function get_first_user()
         {
 		 $this->db->where('user_name',"glorsh");
 		 $query = $this->db->get('site_users');
 		 $row = $query->row();
-
 
 			if (isset($row))
 			{
@@ -436,19 +457,7 @@ return ($result_int == 0) ? FALSE : TRUE;
 			$out['user_email']= $row->user_email;
             return $out;
 			}
-
-
 		}
-
-
-
-
-
-
-
-
-
-
 
         public function get_last_ten_entries()
         {

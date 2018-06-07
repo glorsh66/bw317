@@ -8,12 +8,16 @@ class Test_for_model4 extends CI_Controller {
 	{
     $this->benchmark->mark('start');
     $this->load->model("PMmodel");
-    $ar = $this->PMmodel->get_board(5);
+    $this->load->library('simple_auth_lib');
+
+    $this->simple_auth_lib->check_if_user_is_loggined();
+    $ar = $this->simple_auth_lib->user_data;
+
     var_dump($ar);
     echo '<br>';
 
     //Делаем красивое представление ключей
-    $ar_k = array_keys($ar[0]);
+    $ar_k = array_keys($ar);
     $ar_res = array_map(function ($v){return "['{$v}']";},$ar_k);
     foreach($ar_res as $r)
     echo $r.' ';
