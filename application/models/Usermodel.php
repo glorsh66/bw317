@@ -236,28 +236,27 @@ return date("Y-m-d H:i:s");
 }
 
 
-
-
-
-
-
-	   		//Вставляем пользователя после регистрации
-	   		//В качестве ответа получаем Id вставленной строки
-
-	    public function insert_user_registration($user_name,$user_email,$password)
+    /**
+     * Вставляет пользователя
+     * Возвращает ID вставленное в таблицу
+     * @param string $user_name
+     * @param string $user_email
+     * @param string $password
+     * @param bool $activate_by_mail
+     * @return int
+     */
+    public function insert_user_registration(string $user_name, string $user_email, string $password, bool $activate_by_mail=TRUE):int
         {
-        		//$site_users_obj = new site_users_class;
-        		//$site_users_obj->user_name = $user_name;
-        		//$site_users_obj->user_email = $user_email;
-        		//$site_users_obj->password = $password;
-        	    //$this->db->insert('site_users', $site_users_obj);
          $date = new DateTime();
-			   $date->getTimestamp();
+         $date->getTimestamp();
 
-        	     $data = array(
+         $user_is_active = $activate_by_mail===TRUE?0:1;
+
+         $data = array(
         'user_name' => $user_name,
         'user_email'=> $user_email,
         'password'=> password_hash($password,PASSWORD_DEFAULT),
+        'isactivated'=>$user_is_active,
         'group_id'=> $this->config->item('my_conf_default_user_group'),
         'user_registration_ip'=> getenv('REMOTE_ADDR'),
         'user_registration_ip_if_proxy'=> getenv('HTTP_X_FORWARDED_FOR'),
@@ -266,7 +265,6 @@ return date("Y-m-d H:i:s");
         );
         $this->db->insert(SELF::$this_table_name, $data);
         return $this->db->insert_id();
-
         }
 
 
@@ -427,6 +425,53 @@ if ($query->num_rows() > 0)
 	return FALSE;
 }
 	}
+
+
+public function insert_user_activation_code(int $id, string $code)
+{
+$data = array(
+'user_activation_code' => $code,
+'user_that_will_be_activated_id'=> $id,
+);
+$this->db->insert('users_activation_code', $data);
+}
+
+public function delete_activation_code(int $id)
+{
+$this->db->where('user_that_will_be_activated_id',$id)->limit(1);
+$this->db->delete('users_activation_code');
+}
+
+public function get_activation_code_by_code(string $code)
+{
+$this->db->where('user_activation_code',$code);
+$query = $this->db->get('users_activation_code');
+return $query->num_rows()>0 ? $query->row_array() : FALSE;
+}
+
+public function get_activation_code_by_id(int $id)
+{
+$this->db->where('user_that_will_be_activated_id',$id);
+$query = $this->db->get('users_activation_code');
+return $query->num_rows()>0 ? $query->row_array() : FALSE;
+}
+
+public function update_activation_code(int $id, string $code): int
+{
+    $this->db->where('user_that_will_be_activated_id',$id);
+    $this->db->set('user_activation_code',$code);
+    $this->db->update('users_activation_code');
+    return $this->db->affected_rows();
+}
+
+public function activate_user(int $id)
+{
+    $this->db->where('id',$id)->limit(1);
+    $this->db->set('isactivated',1);
+    $this->db->update('site_users');
+}
+
+
 
     public function find_user_exist_and_return_user_data_by_id($userid)
         {

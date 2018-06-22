@@ -40,26 +40,51 @@ class registration extends CI_Controller {
 
         //Проверка текстовой капчи МАРК-1
         $c1_user_sent=$this->input->post('reg_captcha1');
-        $c2_correct_char  =$this->session->flashdata('reg_captcha1');
+        $c1_correct_char  =$this->session->flashdata('reg_captcha1');
 
+        $c2_user_sent=$this->input->post('reg_captcha2');
+        $c2_correct_answer  =$this->session->flashdata('reg_captcha2');
+
+
+//Валидация для первой формы
         $this->form_validation->set_rules( 'reg_captcha1', 'Капча1',
-            [ 'required',  [ 'capch1_check', function ( $str ) use ($c1_user_sent,$c2_correct_char)
+            [ 'required',  [ 'capch_check', function ( $str ) use ($c1_user_sent,$c1_correct_char)
             {
-                if ($c1_user_sent == TRUE && $c2_correct_char == TRUE)//Если что то есть внутри двух переменных
+                if ($c1_user_sent == TRUE && $c1_correct_char == TRUE)//Если что то есть внутри двух переменных
                 {
                     $c1_user_sent = mb_strtolower($c1_user_sent);
-                    $c2_correct_char =mb_strtolower($c2_correct_char);
+                    $c1_correct_char =mb_strtolower($c1_correct_char);
+                    return $c1_user_sent === $c1_correct_char;
+                } else
+                    return FALSE;
+            } ] ],
+            array('capch_check' => 'Вы неправильно ввели ответ на вопрос. Попробуйте еще раз подобрать букву. Докажите что вы не робот.'));
+
+
+//Валидация для второй формы
+                $this->form_validation->set_rules( 'reg_captcha2', 'Капча2',
+            [ 'required',  [ 'capch_check', function ( $str ) use ($c2_user_sent,$c2_correct_answer)
+            {
+                if ($c2_user_sent == TRUE && $c2_correct_answer == TRUE)//Если что то есть внутри двух переменных
+                {
+                    $c1_user_sent = mb_strtolower($c2_user_sent);
+                    $c2_correct_char =mb_strtolower($c2_correct_answer);
                     return $c1_user_sent === $c2_correct_char;
                 } else
                     return FALSE;
             } ] ],
-            array('capch1_check' => 'Anonymous'));
+            array('capch_check' => 'Вы неправильно ввели ответ на вопрос. Попробуйте еще раз подумать и ответить на вопрос. Докажите что вы не робот.'));
+
+
+
+
+
 
 
 
         //Заносим проверку скрытых полей
         $hidden_fields_check = TRUE;
-        $hidden_fields_check1 = strcmp('yes',$this->input->post('reg_chbx_yes'));
+        $hidden_fields_check1 = 'yes'===$this->input->post('reg_chbx_yes');
         $hidden_fields_check2 =  '' === $this->input->post('reg_name');
         $hidden_fields_check3 =  !isset($_POST['reg_chbx_no']);
         if ($hidden_fields_check1===FALSE || $hidden_fields_check2===FALSE || $hidden_fields_check3===FALSE)
@@ -93,9 +118,14 @@ class registration extends CI_Controller {
         else //Сюда заходим только если форма не отправлена, либо не прошла валидацию.
         {
             //Тут мы должны формировать капчу.
-            $captcha1 = $this->textcaptcha();
+            $captcha1 = $this->textcaptcha_mark_one();
+            $captcha2 = $this->textcaptcha_mark_two();
+
             $this->session->set_flashdata('reg_captcha1',$captcha1['correct_char']);
+            $this->session->set_flashdata('reg_captcha2',$captcha2[1]);
+
             $data['captcha1'] = $captcha1;
+            $data['captcha2'] = $captcha2[0];
 
             $this->load->view('User_registration_view',$data);
         }
@@ -154,6 +184,21 @@ private function textcaptcha_mark_one()
     $ret['correct_char'] = $char;
     return $ret;
 }
+
+private function textcaptcha_mark_two()
+{
+$ar[] = ['Первая планета от солнца', 'меркурий'];
+$ar[] = ['Вторая планета от солнца', 'венера'];
+$ar[] = ['Первая планета от солнца', 'земля'];
+$ar[] = ['Четвертая планета от солнца', 'марс'];
+$ar[] = ['Пятая планета от солнца', 'юпитер'];
+
+$arr_len = count($ar);
+$rand_element_of_array = rand(0, $arr_len - 1);
+
+return $ar[$rand_element_of_array];
+}
+
 
 
 }

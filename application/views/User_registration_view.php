@@ -53,6 +53,16 @@
                         <span><?php echo form_error('reg_captcha1'); ?></span>
                     </div>
                 </div>
+                   <div>
+                    <label for="reg_captcha2">
+                        <?php
+                       echo 'Ответь правильно на вопрос: '. $captcha2;
+                        ?>
+                    </label>
+                    <input name="reg_captcha2" type="text" placeholder="Ответ на вопрос" value="" />
+                        <span><?php echo form_error('reg_captcha2'); ?></span>
+                    </div>
+                </div>
 
 
 

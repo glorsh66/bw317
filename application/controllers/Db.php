@@ -30,6 +30,7 @@ class Db extends CI_Controller {
 $this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
 $this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
 $this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
+$this->db->query("ALTER TABLE `users_activation_code` DROP FOREIGN KEY `FK_users_activation_code`;");
 $this->db->query("ALTER TABLE `users_tokens` DROP FOREIGN KEY `FK_login_users_tokens_user_id`;");
 $this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_greater_id`;");
 $this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_lesser_id` ;");
@@ -299,7 +300,9 @@ $this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater
           $this->dbforge->create_table('user_groups');
 
  //** ------------------------------------------------------------------------------------------------------------------------------------------------------------
-   //** ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//** ------------------------------------------------------------------------------------------------------------------------------------------------------------
           //Создаем  таблицу Login_attempts
 
 
@@ -322,15 +325,39 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 
         //  $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
           $this->dbforge->create_table('login_attempts');
+//** ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 
 //** ------------------------------------------------------------------------------------------------------------------------------------------------------------
+//Создаем  таблицу users_activation_codes
+          $this->dbforge->drop_table('users_activation_code',true); //Удаляем есои есть
+           $fields = array(
+       	    		    'user_that_will_be_activated_id' => array(
+					    'type' => 'INT',
+					     'constraint' => 9,
+						'unsigned' => TRUE,
+			    		),
+                       'user_activation_code' => array(
+                      'type' => 'VARCHAR',
+                      'constraint' => '100',
+                      'COLLATE' => 'utf8_bin',
+                          ),
+               );
+$this->dbforge->add_field('`user_activation_code_change_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP');
+$this->dbforge->add_field($fields);
+$this->dbforge->add_key('user_activation_code',TRUE);
+$this->dbforge->add_key('user_that_will_be_activated_id');
+$this->dbforge->create_table('users_activation_code');
+//** ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 //** ------------------------------------------------------------------------------------------------------------------------------------------------------------
-          //Создаем  таблицу Login_attempts
-
+          //Создаем  таблицу users_sessions
 
           $this->dbforge->drop_table('users_sessions',true); //Удаляем есои есть
            $fields = array(
@@ -350,7 +377,6 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 	   				 ),
 
            );
-         // $this->dbforge->add_field('id');
           $this->dbforge->add_field($fields);
           $this->dbforge->add_field("`users_sessions_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
           $this->dbforge->add_key('users_sessions_selector',TRUE);//Делаем ID основным ключем
@@ -1064,6 +1090,7 @@ $this->dbforge->add_field('`login_attempts_time` timestamp NOT NULL DEFAULT CURR
 $this->db->query("ALTER TABLE `site_users` ADD CONSTRAINT `FK_site_users_user_groups` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`);");
 $this->db->query("ALTER TABLE `login_attempts` ADD CONSTRAINT `FK_login_attempts_users` FOREIGN KEY (`login_attempts_user_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `users_sessions` ADD CONSTRAINT `FK_users_sessions_users` FOREIGN KEY (`users_sessions_user_id`) REFERENCES `site_users` (`id`);");
+$this->db->query("ALTER TABLE `users_activation_code` ADD CONSTRAINT `FK_users_activation_code` FOREIGN KEY (`user_that_will_be_activated_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `users_tokens` ADD CONSTRAINT `FK_login_users_tokens_user_id` FOREIGN KEY (`login_users_tokens_user_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");

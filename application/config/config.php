@@ -525,5 +525,5 @@ $config['proxy_ips'] = '';
 
 //Моя часть конфига
 $config['my_conf_default_user_group'] = 4; //Определяет какой group_id - будет вставляться по дефолту при создании нового юзера
-$config['my_user_registration_is_user_active_by_default'] = TRUE; //Определяет нужно ли писать письмо с кодом подтверждения для пользователя.
+$config['my_activate_user_by_mail'] = TRUE; //Определяет нужно ли писать письмо с кодом подтверждения для пользователя.
 //use like this - $this->config->item('foo');

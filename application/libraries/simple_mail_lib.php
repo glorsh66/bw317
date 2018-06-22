@@ -22,8 +22,9 @@ public $time_elapsed =0;
         }
 
 //Функция_отправить_письмо_через_базу
-public function send_mail($from,$to,$subject,$text) : bool
+public function send_mail($to,$subject,$text) : bool
 {
+$from= $this->global_from;
 //Проверям пустые ли строки
 if (empty($from)){$this->error_send = "Sender adress is empty"; return FALSE;}
 if (empty($to)){$this->error_send = "Reciver adress is empty"; return FALSE;}

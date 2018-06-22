@@ -2,7 +2,6 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class simple_auth_lib {
-  public $user_loggined = false;
   public $user_cause_of_error = "";
   public $error = "";
 
@@ -22,7 +21,6 @@ class simple_auth_lib {
 
 
   //Переменные для теста
-  public $already_logged = FALSE;
   public $logged_otkuda = "";
 
   //Переменные для класса
@@ -231,9 +229,8 @@ else{//Если уже 10 минут прошли с последних попы
 public function check_if_user_is_loggined(): bool
 {
 //Если пользовтель уже залогинен
-if ((!is_null($this->user_data) && ($this->user_loggined==TRUE)))
+if ((!is_null($this->user_data) && ($this->is_user_loggined===TRUE)))
 {
-$this->already_logged = TRUE;
 return TRUE;
 }
   //Проверям существует ли сессия
@@ -277,6 +274,7 @@ return TRUE;
   $this->CI->session->set_userdata('user_logged_name', $this->user_data["user_name"]);
   $this->CI->session->set_userdata('user_logged_email', $this->user_data["user_email"]);
   $this->CI->session->set_userdata('user_logged_group_id', $this->user_data["group_id"]);
+  $this->is_user_loggined=TRUE; //Прописываем
   return TRUE;
 } else { //Если не вернул данных для польхователей из базы
   return FALSE;}
@@ -307,27 +305,34 @@ if (strlen($password)>255){$this->error = "Password is more than 255 characters"
 if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sender adress is invalid email adress"; return FALSE;}
 
 
-$this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password);
 
 
-//После проверки правильности если все прошло можно уже загрузить и либу для почты
 $this->CI->load->library('simple_mail_lib');
-//Определяем параметры для отправки письма
-$from = $this->CI->simple_mail_lib->global_from;
-$to = $user_email;
+//Определяем если нужно активировать пользователя по почте
+if ($this->CI->config->item('my_activate_user_by_mail')===TRUE)//активировать пользовалетя по почте
+{
+$ret_usr_id = $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password,TRUE);
 
+$random_validator = bin2hex(random_bytes(100));
+$sha256_validator = hash('sha256', $random_validator);
+$sha256_validator = $sha256_validator. ((string)$ret_usr_id);
 
+$this->CI->Usermodel->insert_user_activation_code($ret_usr_id,$sha256_validator);
 
-$subject = "Welcome to our site! It's a quite nice place to be";
-$text = "Hello our new dear friend " . $user_name . " take a look and be like home!";
+$mail_subject = "Добро пожаловать на наш сайт! Пожалуйста потвердите Вашу регистрацию";
+$mail_text = "Добро пожаловать на наш сайт! Остался всего один шаг, и вы сможете абсолютно бесплатно пользоваться нашим сайтом
+Пожалуйста пройдите введите следующий код потверждения Вашей регистрации: " .  $sha256_validator;
+$this->CI->simple_mail_lib->send_mail($user_email,$mail_subject,$mail_text);
+}
 
-//Если вдруг не получилось отправить письмо.
-//Как обрабатывать ошибку
-$bool_send_try = $this->CI->simple_mail_lib->send_mail($from,$to,$subject,$text);
+else //Если не нужно никакой почты и пользователь сразу активирован, как только зарегился
+{
+    $ret_usr_id = $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password,FALSE);
+    $mail_subject = "Добро пожаловать на наш сайт!";
+    $mail_text = "Добро пожаловать на наш сайт! Вы можете начинать пользоваться сайтом без каких либо дальнейших действий." ;
+}
 
 return true;
-
-
 }
 
 
@@ -383,6 +388,9 @@ public function get_errors():string
     $this->CI->session->unset_userdata('user_logged_group_id');
     $this->CI->session->sess_destroy();
 }
+
+
+
 
 
 

@@ -4,7 +4,142 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class User extends CI_Controller {
 
 
-public function index()
+public function activate($code =null)
+{
+    $ret = $this->check_activation($code);
+    if (!$ret['error']===FALSE)//Ошибка
+    {
+    //TODO: Переделать так, что бы использовать view а не echo (когда уже будет весь интерфейс построен).
+    Echo '<b>Ошибка активации учетной записи пользователя</b><br>'.
+        $ret['error_message'];
+    }
+    else //Успех
+    {
+    //TODO: Переделать так, что бы использовать view а не echo (когда уже будет весь интерфейс построен).
+        Echo 'Ваша учетная запись была успешно активирована, вы теперь можете полностью свободно пользоваться возможностями сайта';
+    }
+
+}
+
+public function another_code()
+{
+
+$this->benchmark->mark('start');
+    if ($this->simple_auth_lib->check_if_user_is_loggined() === TRUE) //Пользователь залогинен
+    {
+        if ( ((int)$this->simple_auth_lib->user_data['isactivated'])===0 ) // Если пользователь уже не активирован
+        {
+        $id = (int)$this->simple_auth_lib->user_data['id'];
+        $row = $this->Usermodel->get_activation_code_by_id($id); //Берем строку
+
+            if (!empty($row) && is_array($row)) // Если есть такая строка в таблице активации.
+            {
+                //Сверяем даты:
+        $datetime = DateTime::createFromFormat ( "Y-m-d H:i:s", $row["user_activation_code_change_time"] );
+        $datetime_before = new DateTime();
+        $datetime_before->modify('-30 minutes');
+
+                if ($datetime_before>$datetime)//Можно отсылать код.
+                {
+                    $this->generate_new_code($id);
+                    $this->benchmark->mark('stop');
+                    //TODO: Переделать так, что бы использовать view а не echo (когда уже будет весь интерфейс построен).
+                    echo 'Новый код отправлен на почту'.'<br>';
+                    echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+                }
+                else
+                {
+                    //TODO: Переделать так, что бы использовать view а не echo (когда уже будет весь интерфейс построен).
+                    $this->benchmark->mark('stop');
+                    echo 'Нельзя отправлять код повторно чаще чем каждые 30 минут'.'<br>';
+                    echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
+                }
+            }
+        }
+    }
+}
+
+
+
+
+private function check_activation($code)
+{
+    $ret['error'] = FALSE;
+    $ret['error_message'] = "";
+
+
+    if (empty($code)) // Если пустая строка
+    {
+    $ret['error'] = TRUE;
+    $ret['error_message'] = "Ошибка активации - Пустая строка активации. Проверьте что вы прошли по ссылки которая Вам пришла 
+    на почту, или правильно в ручную ввели строку";
+    return $ret;
+    }
+
+    $row = $this->Usermodel->get_activation_code_by_code($code); //Берем строку
+    if (empty($row) || !is_array($row))
+    {
+    $ret['error'] = TRUE;
+    $ret['error_message'] = "Ошибка активации - Выввели неправильную строку активации 
+    Проверьте что вы прошли по ссылки которая Вам пришла 
+    на почту, или правильно в ручную ввели строку";
+    return $ret;
+    }
+
+    $id = (int)$row['user_that_will_be_activated_id']; //Айдишник пользователя
+
+    //Проверяем дату получения кода активации (если уже прошло два дня)
+    $datetime = DateTime::createFromFormat ( "Y-m-d H:i:s", $row["user_activation_code_change_time"] );
+    $datetime_two_days_before = new DateTime();
+    $datetime_two_days_before->modify('-2 day');
+
+    if ($datetime_two_days_before>$datetime)
+    {
+    $ret['error'] = TRUE;
+    $ret['error_message'] = "Ошибка активации - Ваш код активации устарел. На Вашу почту отправлен новый код активации";
+    $this->generate_new_code($id);
+    return  $ret; //Возвращаем в итоге ошибку
+    }
+
+    //Успешно активируем пользователя Если небыло никаких ошибок;
+    $this->Usermodel->delete_activation_code($id);
+    $this->Usermodel->activate_user($id);
+    return $ret; // По умолчанию там FALSE в ERROR по этому если небыло ошибок то все норма будет
+}
+
+private function generate_new_code(int $id)
+{
+    $random_validator = bin2hex(random_bytes(100));
+    $sha256_validator = hash('sha256', $random_validator);
+    $sha256_validator = $sha256_validator. ((string)$id);
+    $this->Usermodel->update_activation_code($id,$sha256_validator);
+
+    $usr = $this->Usermodel->find_user_exist_and_return_user_data_by_id($id); //Берем данные пользователя, что бы получить почту
+
+    $this->load->library('simple_mail_lib');
+    $mail_subject = "Повторная отправка кода регистрации";
+    $mail_text = "Повторно отправляем код активации учетной записи пользователя на сайте: " .  $sha256_validator;
+    $this->simple_mail_lib->send_mail($usr['user_email'],$mail_subject,$mail_text);
+}
+
+
+
+
+
+
+public function __construct()
+{
+        parent::__construct();
+        $this->load->model("PMmodel");
+        $this->load->model('Usermodel');
+        $this->load->library('simple_auth_lib');
+        $this->load->helper('url');
+        $this->config->set_item('language', 'russian');
+
+}
+
+
+    public function index()
 {
     $this->auth();
 }
@@ -15,15 +150,7 @@ public function index()
 //Функция для захода юзера
 		public function auth()
 	{
-	    $this->load->helper('url');
-		$this->load->library('session');
-		$this->load->helper('form');	
-		$this->load->helper('captcha');	
-		$this->load->library('form_validation');	
-		$this->load->helper('security');	
-		$this->load->database();
-		$this->load->model('Usermodel');
-		
+
 		
 		$show_captcha = FALSE;
 		$data['show_captcha'] = FALSE;

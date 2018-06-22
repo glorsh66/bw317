@@ -37,7 +37,7 @@ class login extends CI_Controller {
 //            $data['show_captcha'] = FALSE;
 //            $data['wrong_name_or_email'] = False;
 //            $data['wrong_password'] = False;
-            $this->form_validation->set_rules('auth_username_or_email', 'username or @e-mail', 'trim|required|min_length[4]|max_length[255]');
+            $this->form_validation->set_rules('auth_username_or_email', 'username or @e-mail', 'trim|required|min_length[3]|max_length[255]');
             $this->form_validation->set_rules('auth_password', 'Password', 'required|min_length[4]');
 
 
