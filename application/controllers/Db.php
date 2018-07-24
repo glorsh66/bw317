@@ -61,6 +61,9 @@ $this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_lesser_
 $this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater_id`;");
 
 
+$this->db->query("ALTER TABLE `person` DROP FOREIGN KEY `FK_person_user_id`;");
+
+
 
           $this->dbforge->drop_table('site_users',true); //Удаляем есои есть
           $fields = array(
@@ -272,6 +275,99 @@ $this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater
             $this->db->query("ALTER TABLE `site_users` CHANGE COLUMN password password CHAR(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL AFTER id;");
             $this->db->query("ALTER TABLE `site_users` CHANGE COLUMN `modified` `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER group_id;");
 
+
+
+
+
+
+//** ------------------------------------------------------------------------------------------------------------------------------------------------------------
+                //Создаем  таблицу person
+                $this->dbforge->drop_table('person',true); //Удаляем если есть такая таблица
+                $fields = array(
+                    'id' => array( //К сожалению можно только ID называть, хотя это не удобгно для дальнейшего Join, но codeigniter, к сожалению просто без id не
+                        // не работает втроеные ORM он требует обязательно наличия поля id
+                        'type' => 'INT',
+                        'constraint' => 9,
+                        'unsigned' => TRUE,
+                        'auto_increment' => FALSE // Так, как это будет ID пользователя и таблица будет жестко привязанна
+                    ),
+                    'height' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'Height of a person'
+                    ),
+                    'weight' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'weight of a person'
+                    ),
+                    'children' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'amount of children the person currently have'
+                    ),
+                    'sex' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sex of a person'
+                    ),
+                    'sexual_orientation' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+                    'relationship' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'the relationship a person currently have'
+                    ),
+                    'education' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'education level of a person'
+                    ),
+                    'employment' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'employment status of a person'
+                    ),
+                    'smoke' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+                    'alcohol' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+                    'sport' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+                    'health' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+                    'virus_hiv' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+                    'virus_hepatitis_c' => array(
+                        'type' => 'TINYINT',
+                        'unsigned' => TRUE,
+                        'comment' => 'sexual orientation of a person'
+                    ),
+ );
+
+                $this->dbforge->add_field($fields);
+                $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
+                $this->dbforge->create_table('person');
+
+//** ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -1121,6 +1217,7 @@ $this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_to_id` FO
 $this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
 $this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
 
+$this->db->query("ALTER TABLE `person` ADD CONSTRAINT `FK_person_user_id` FOREIGN KEY (`id`) REFERENCES `site_users` (`id`);");
 
 
 //---------------------------------Foregin keys section end-----------------------------------------------------------------------------------------

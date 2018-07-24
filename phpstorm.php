@@ -72,6 +72,7 @@ die('This file is used for development purposes only.');
  * @property PMmodel             $PMmodel                             PMmodel
  * @property Login_attempts_model $Login_attempts_model               Login_attempts_model
  * @property SPM_lib             $SPM_lib                             SPM_lib
+ * @property Personmodel             $Personmodel                     Person Model
  */
 class CI_Controller {
 
@@ -132,6 +133,7 @@ class CI_Controller {
  * @property PMmodel             $PMmodel                             PMmodel
  * @property Login_attempts_model $Login_attempts_model               Login_attempts_model
  * @property SPM_lib             $SPM_lib                             SPM_lib
+ * @property Personmodel             $Personmodel                     Person Model
  */
 class CI_Model {
 
@@ -192,7 +194,7 @@ class CI_Model {
  * @property PMmodel             $PMmodel                             PMmodel
  * @property Login_attempts_model $Login_attempts_model               Login_attempts_model
  * @property SPM_lib             $SPM_lib                             SPM_lib
-
+ * @property Personmodel             $Personmodel                     Person Model
  */
 class MX_Controller {
 
