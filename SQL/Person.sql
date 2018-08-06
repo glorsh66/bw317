@@ -17,7 +17,7 @@ and virus_hepatitis_c = 1;
 
 /*Более улучшенный селект*/
 select * from
-(SELECT person.id, site_users.user_last_active_date, site_users.user_registration_date
+(SELECT person.id
 FROM person
 left join site_users on person.id=site_users.id
 WHERE (height BETWEEN 110 and 180)
@@ -34,4 +34,5 @@ and health = 1
 and virus_hiv =1
 and virus_hepatitis_c = 1
 order by site_users.user_registration_date) as t
-join person on  t.id=person.id;
+join person on  t.id=person.id
+join site_users on t.id = site_users.id;

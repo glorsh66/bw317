@@ -33,14 +33,14 @@ $sexual_orientation= rand(1,5);
 $relationship=  rand(1,5);
 $education=  rand(1,5);
 $employment=  rand(1,5);
-$smoke= rand(1,5);пше
+$smoke= rand(1,5);
 $alcohol=  rand(1,5);
 $sport= rand(1,6);
 $health=  rand(1,5);
 $virus_hiv= rand(1,2);
 $virus_hepatitis_c= rand(1,2);
 $this->Personmodel->insert_person($id,$height,$weight,$children,$sex,$sexual_orientation,$relationship,$education,$employment,$smoke,
-    $alcohol,$sport,$health,$virus_hiv,$virus_hepatitis_c);
+$alcohol,$sport,$health,$virus_hiv,$virus_hepatitis_c);
 
 }
 
