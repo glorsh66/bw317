@@ -11,7 +11,20 @@ class peson_test extends CI_Controller {
         $this->load->library('simple_auth_lib');
     }
 
+
+
+
 public function index()
+{
+
+}
+
+
+
+
+
+
+public function q()
 {
 
 for ($i = 21; $i <=300000 ; $i++)
