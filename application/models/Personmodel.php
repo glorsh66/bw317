@@ -625,8 +625,9 @@ $this->db->insert($this->t, $data);
 }
 
 
-class form_filed
+abstract class form_filed
 {
+
     /* @var string имя поля */
     public $name;
     /* @var string|bool имя поля в базе данных, если отличается от имени поля */
@@ -635,31 +636,79 @@ class form_filed
     public $mysql_field_name = FALSE;
     /* @var array набор опций в списке*/
     public $options;
-    /* @var array набор опций в списке*/
+    /* @var form_params набор опций в списке*/
     public $param;
-    /* @var string префикс имени для сокрытия реального названия в базе*/
-    public $prefix;
-
-
     //Интерфейсы
     /* @var forrm_create_behavior реализация интерфейса по созданию формы*/
     public $form_create_obj;
-
-    /* @var forrm_validation_rules_behavior реализация интерфейса по созданию формы*/
+    /* @var form_validation_rules_behavior реализация интерфейса по созданию формы*/
     public $form_vall_obj;
 
-    function __construct($options, $default)
+
+
+    function __construct($name,$options,$param,$label,$mysql_field_name=FALSE)
     {
-        $this->options=$options;
-        $this->default=$default;
+        $this->name = $name;
+        $this->options = $options;
+        $this->param = $param;
+        $this->label =$label;
+
+        if ($mysql_field_name === FALSE)
+        {
+            $this->mysql_field_name = $name;
+        }
+
+   }
+
+    //Обертки
+    public function get_form():string
+    {
+    return $this->form_create_obj->create_html($this);
     }
+
+    public function get_val_rules()
+    {
+        $this->form_vall_obj->create_validation_rules($this);
+    }
+
+
 
     function get_name(): string
     {
-        return $this->prefix.$this->name;
+        return $this->param->prefix . $this->name;
     }
 
+
 }
+
+class form_field_new_person extends form_filed
+{
+    function __construct($name,$options,$param,$label,$mysql_field_name=FALSE)
+    {
+        parent::__construct($name,$options,$param,$label,$mysql_field_name);
+
+        switch ($param->type) {
+            case form_params::select:
+                $this->form_create_obj = new new_person_create_select_from();
+                $this->form_vall_obj = new new_person_validate_rules_select_from();
+                break;
+            case 2:
+                //    echo "i равно 1";
+                break;
+            case 3:
+                //       echo "i равно 2";
+                break;
+        }
+    }
+}
+
+
+
+
+
+
+
+
 
 
 class form_params
@@ -678,7 +727,47 @@ class form_params
     public $validation_error_message;
     /* @var string класс который будет присвоен полю*/
     public $form_class;
+    /* @var string префикс имени для сокрытия реального названия в базе*/
+    public $prefix;
+    /* @var bool использовать ли анонимную функцию в для FORM validation (для того что бы введеное пользователем значние было из списка и никак иначе*/
+    public $use_anon_funct;
+
+
+    /**
+     * form_params constructor.
+     * @param int $type набор опций в  - const form_params::select form_params::radio и т.д.
+     * @param string $default_option - дефолтное значение поля - типа как "не выбранно"
+     * @param array $validation_rules -  массив правил для from validation, последние это анонимная функция
+     * @param string $validation_error_message - строка которая будет выводиться для анонимной функции в form validation
+     * @param string $form_class - класс который будет присвоен полю
+     * @param string $prefix - префикс имени для сокрытия реального названия в базе
+     * @param bool $use_anon_funct использовать ли анонимную функцию в для FORM validation (для того что бы введеное пользователем значние было из списка и никак иначе
+     **/
+    public function __construct(int $type, string $default_option, array $validation_rules,  string $form_class, string $prefix, bool $use_anon_funct= TRUE, string $validation_error_message="")
+    {
+        $this->type = $type;
+        $this->default_option = $default_option;
+        $this->validation_rules = $validation_rules;
+        $this->validation_error_message = $validation_error_message;
+        $this->form_class = $form_class;
+        $this->prefix = $prefix;
+        $this->use_anon_funct=$use_anon_funct;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Интерфейсы
@@ -687,9 +776,9 @@ interface forrm_create_behavior
     public function create_html(form_filed $ff): string;
 }
 
-interface forrm_validation_rules_behavior
+interface form_validation_rules_behavior
 {
-    public function create_validation_rules(form_filed $ff): string;
+    public function create_validation_rules(form_filed $ff);
 }
 
 interface forrm_edit_behavior
@@ -702,28 +791,115 @@ interface forrm_editor_validation_rules_behavior
     public function create_validation_rules(form_filed $ff, array $qr): string;
 }
 
+//абстрактные классы
+abstract class form_create_abstract
+{
+
+    protected function repopulate(form_filed $ff)
+    {
+        if (!empty(set_value($ff->get_name())))
+        {
+            if (array_key_exists(set_value($ff->get_name()),$ff->options))
+            {
+              return (int)(set_value($ff->get_name()));
+            } else  return FALSE;
+        }
+        else return FALSE;
+    }
+
+    protected function check_error(form_filed $ff)
+    {
+        if (!empty(form_error($ff->get_name())))  return form_error($ff->get_name());
+        else return FALSE;
+    }
+
+
+}
+
+
 //Реализация интерфейсов
-class form_create_select implements forrm_create_behavior
+class new_person_create_select_from extends form_create_abstract implements forrm_create_behavior
 {
     public function create_html(form_filed $ff): string
     {
-        $str='<select name="'.$ff->get_name(). '" id="'.$ff->get_name().'">';
+        $repopulate = $this->repopulate($ff);
+        $error_str  = $this->check_error($ff);
+        //Начинаем формировать строку
+        $required = in_array('required',$ff->param->validation_rules);
 
-        //делаем репопуляцию поля, или проверяем наличие ошибки
-        if (!empty(set_value($ff->get_name())))
+        $str='<label for="'.$ff->get_name().'">'.$ff->label.'</label>';
+        $str.='<select name="'.$ff->get_name(). '" id="'.$ff->get_name().'">';
+
+        //TODO:Убрать это для полей которые required и в которых пользователь, что то наковырял
+        if ($repopulate===FALSE && !$required) $str.='<option value="0" selected>'.$ff->param->default_option.'</option>';
+
+
+        foreach($ff->options as $key => $value)
         {
-
+            //Если это ранее выбранная строка пользователем
+            if (((int)$key)===$repopulate)
+            {
+                $str.= '<option value="'.$key.'"  selected >'.$value.'</option>';
+            }else
+            {
+                 $str.= '<option value="'.$key.'">'.$value.'</option>';
+            }
         }
 
-
-        foreach($ff as $key => $value)
+        $str.='</select>';
+        if ($error_str)
         {
-
+            $str.=  '<span>'.$error_str.'</span>';
         }
+        return $str;
 
     }
 
 }
+
+
+
+class new_person_validate_rules_select_from implements form_validation_rules_behavior
+{
+    public function create_validation_rules(form_filed $ff)
+    {
+         $CI =& get_instance();
+         $required = in_array('required',$ff->param->validation_rules);
+
+        //Если нам нуже каллбак
+        if ($ff->param->use_anon_funct)
+        {
+            $arr = $ff->param->validation_rules; //Просто текстовые правила
+            $funct_name = 'anon_funct'; //Имя каллбака
+
+            $funct = function ($str) use ($ff,$required) //Сам калбак
+            {
+                if (!is_numeric($str)) return FALSE; //Выходим если это не номер
+                $user_int = (int)$str;
+                if ((array_key_exists($user_int,$ff->options))|| (($user_int===0) && $required===FALSE)) return TRUE;
+                else return FALSE;
+            };
+
+            //Описание которое будет выводиться в случае ошибки
+            if (!$required)
+            $description = [$funct_name=>'Вы как-то выбрали пункт которого нет в списке.']; //Сообщение если каллбак возвращает FALSE
+            else
+            $description = [$funct_name=>'Это поле необходимо заполнить']; //Сообщение если каллбак возвращает FALSE
+
+            //Добавляем каллбак к обычному массиву
+            $arr[] =[$funct_name,$funct];
+
+            //Собираем полное правило
+            $CI->form_validation->set_rules($ff->get_name(),$ff->label,$arr,$description);
+        }
+        else //Если нам не нужен каллбак
+        {
+           $CI->form_validation->set_rules($ff->get_name(),$ff->label,$ff->param->validation_rules);
+        }
+    }
+
+}
+
 
 
 ?>
