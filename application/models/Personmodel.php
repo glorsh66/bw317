@@ -692,8 +692,9 @@ class form_field_new_person extends form_filed
                 $this->form_create_obj = new new_person_create_select_from();
                 $this->form_vall_obj = new new_person_validate_rules_select_from();
                 break;
-            case 2:
-                //    echo "i равно 1";
+            case form_params::radio:
+                $this->form_create_obj = new new_person_create_radio_button_from();
+                $this->form_vall_obj = new new_person_validate_rules_select_from();
                 break;
             case 3:
                 //       echo "i равно 2";
@@ -856,6 +857,42 @@ class new_person_create_select_from extends form_create_abstract implements forr
     }
 
 }
+
+
+class new_person_create_radio_button_from extends form_create_abstract implements forrm_create_behavior
+{
+        public function create_html(form_filed $ff): string
+    {
+        $repopulate = $this->repopulate($ff);
+        $error_str  = $this->check_error($ff);
+        //Начинаем формировать строку
+        $required = in_array('required',$ff->param->validation_rules);
+
+        $str='<label for="'.$ff->get_name().'">'.$ff->label.'</label>';
+
+        //TODO:Убрать это для полей которые required и в которых пользователь, что то наковырял
+        foreach($ff->options as $key => $value)
+        {
+            //Если это ранее выбранная строка пользователем
+            if (((int)$key)===$repopulate)
+            {
+               $str.= '<input type="radio" name="'.$ff->get_name().'" value='.$key.' checked>'.$value.'<br>';
+
+            }else
+            {
+                 $str.= '<input type="radio" name="'.$ff->get_name().'" value='.$key.'>'.$value.'<br>';
+            }
+        }
+        if ($error_str)
+        {
+            $str.=  '<span>'.$error_str.'</span>';
+        }
+        return $str;
+
+    }
+}
+
+
 
 
 

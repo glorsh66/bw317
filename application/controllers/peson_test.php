@@ -28,17 +28,23 @@ public function index()
 
     $fp = new form_params(form_params::select,'Ничего не выбрано',array('required'),'Ошибочка','pref_',TRUE,"Ошибочка вышла, не тот класс ты выбрал");
     $fp2 = new form_params(form_params::select,'Ничего не выбрано',[],'Ошибочка','pref_',TRUE,"Ошибочка вышла, не тот класс ты выбрал");
+    $fp3 = new form_params(form_params::radio,'Ничего не выбрано',['required'],'Ошибочка','pref_',TRUE,"Ошибочка вышла, не тот класс ты выбрал");
     $f1 = new form_field_new_person('sex',[1=>'мужчина',2=>'женщина'],$fp,'Ваш пол:');
     $f2 = new form_field_new_person('age',[1=>'18-25',2=>'26-35',3=>'36-42'],$fp,'Ваш возраст:');
-    $f3 = new form_field_new_person('req',[1=>'yes',2=>'no',3=>'I don\' know'],$fp2,'Необходимо заполнить');
+    $f3 = new form_field_new_person('req1',[1=>'yes',2=>'no',3=>'I don\' know'],$fp2,'Необходимо заполнить');
+    $f4 = new form_field_new_person('req2',[1=>'yes',2=>'no',3=>'I don\' know'],$fp3,'Необходимо заполнить');
 
     $f1->get_val_rules();
     $f2->get_val_rules();
+    $f3->get_val_rules();
+    $f4->get_val_rules();
+
 
 
     $data['f1']=$f1;
     $data['f2']=$f2;
     $data['f3']=$f3;
+    $data['f4']=$f4;
 
     if ($this->form_validation->run() == FALSE)
     {
@@ -47,6 +53,7 @@ public function index()
        echo 'Форма1: '. $this->input->post($f1->get_name());
        echo 'Форма2: '. $this->input->post($f2->get_name());
        echo 'Форма3: '. $this->input->post($f3->get_name());
+       echo 'Форма3: '. $this->input->post($f4->get_name());
        $this->benchmark->mark('stop');
        echo "Elapsed time: " . $this->benchmark->elapsed_time('start','stop');
     }
@@ -55,6 +62,7 @@ public function index()
        echo 'Форма1: '. $this->input->post($f1->get_name());
        echo 'Форма2: '. $this->input->post($f2->get_name());
        echo 'Форма3: '. $this->input->post($f3->get_name());
+       echo 'Форма3: '. $this->input->post($f4->get_name());
     }
 
 
