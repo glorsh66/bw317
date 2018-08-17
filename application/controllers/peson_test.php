@@ -46,6 +46,8 @@ public function index()
     $data['f3']=$f3;
     $data['f4']=$f4;
 
+
+
     if ($this->form_validation->run() == FALSE)
     {
 
@@ -59,10 +61,14 @@ public function index()
     }
     else
     {
-       echo 'Форма1: '. $this->input->post($f1->get_name());
-       echo 'Форма2: '. $this->input->post($f2->get_name());
-       echo 'Форма3: '. $this->input->post($f3->get_name());
-       echo 'Форма3: '. $this->input->post($f4->get_name());
+        foreach ($data as $d)
+        {
+            echo $d->name . ':  '  .$d->post_value();;
+            echo '<br>';
+        }
+
+
+
     }
 
 

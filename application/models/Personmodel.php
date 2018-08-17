@@ -678,6 +678,13 @@ abstract class form_filed
         return $this->param->prefix . $this->name;
     }
 
+    function post_value()
+    {
+        $CI =& get_instance();
+        $res = $CI->input->post($this->get_name());
+        return is_null($res)?0:$res;
+    }
+
 
 }
 
