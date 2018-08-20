@@ -629,6 +629,7 @@ abstract class form_filed
 
 
 
+
     function __construct($name,$options,$param,$label,$mysql_field_name=FALSE)
     {
         $this->name = $name;
@@ -644,7 +645,7 @@ abstract class form_filed
    }
 
     //Обертки
-    public function get_form():string
+    public function get_form_html():string
     {
     return $this->form_create_obj->create_html($this);
     }
@@ -654,6 +655,13 @@ abstract class form_filed
         $this->form_vall_obj->create_validation_rules($this);
     }
 
+
+    public function get_text_representation(int $i):string
+    {
+         if (array_key_exists($i,$this->options)) return $this->options[$i];
+         elseif ($i===0) return $this->param->default_option;
+         else return $this->param->default_option;
+    }
 
 
     function get_name(): string
@@ -818,11 +826,12 @@ class new_person_create_select_from extends form_create_abstract implements forr
         //Начинаем формировать строку
         $required = in_array('required',$ff->param->validation_rules);
 
-        $str='<label for="'.$ff->get_name().'">'.$ff->label.'</label>';
-        $str.='<select name="'.$ff->get_name(). '" id="'.$ff->get_name().'">';
+        $str='<label for="'.$ff->get_name().'">'.$ff->label.'</label>'."\r\n";
+        $str.='<select name="'.$ff->get_name(). '" id="'.$ff->get_name().'">'."\r\n";
 
         //TODO:Убрать это для полей которые required и в которых пользователь, что то наковырял
-        if ($repopulate===FALSE && !$required) $str.='<option value="0" selected>'.$ff->param->default_option.'</option>';
+        if ($repopulate===FALSE && !$required) $str.='<option value="0" selected>'.$ff->param->default_option.'</option>'."\r\n";
+        elseif ($repopulate==TRUE && !$required) $str.='<option value="0">'.$ff->param->default_option.'</option>'."\r\n";
 
 
         foreach($ff->options as $key => $value)
@@ -830,17 +839,17 @@ class new_person_create_select_from extends form_create_abstract implements forr
             //Если это ранее выбранная строка пользователем
             if (((int)$key)===$repopulate)
             {
-                $str.= '<option value="'.$key.'"  selected >'.$value.'</option>';
+                $str.= '<option value="'.$key.'"  selected >'.$value.'</option>'."\r\n";
             }else
             {
-                 $str.= '<option value="'.$key.'">'.$value.'</option>';
+                 $str.= '<option value="'.$key.'">'.$value.'</option>'."\r\n";
             }
         }
 
-        $str.='</select>';
+        $str.='</select>'."\r\n";
         if ($error_str)
         {
-            $str.=  '<span>'.$error_str.'</span>';
+            $str.=  '<span>'.$error_str.'</span>'."\r\n";
         }
         return $str;
 
@@ -858,7 +867,7 @@ class new_person_create_radio_button_from extends form_create_abstract implement
         //Начинаем формировать строку
         $required = in_array('required',$ff->param->validation_rules);
 
-        $str='<label for="'.$ff->get_name().'">'.$ff->label.'</label>';
+        $str='<label for="'.$ff->get_name().'">'.$ff->label.'</label>'."\r\n";
 
         //TODO:Убрать это для полей которые required и в которых пользователь, что то наковырял
         foreach($ff->options as $key => $value)
@@ -866,16 +875,16 @@ class new_person_create_radio_button_from extends form_create_abstract implement
             //Если это ранее выбранная строка пользователем
             if (((int)$key)===$repopulate)
             {
-               $str.= '<input type="radio" name="'.$ff->get_name().'" value='.$key.' checked>'.$value.'<br>';
+               $str.= '<input type="radio" name="'.$ff->get_name().'" value='.$key.' checked>'.$value.'<br>'."\r\n";
 
             }else
             {
-                 $str.= '<input type="radio" name="'.$ff->get_name().'" value='.$key.'>'.$value.'<br>';
+                 $str.= '<input type="radio" name="'.$ff->get_name().'" value='.$key.'>'.$value.'<br>'."\r\n";
             }
         }
         if ($error_str)
         {
-            $str.=  '<span>'.$error_str.'</span>';
+            $str.=  '<span>'.$error_str.'</span>'."\r\n";
         }
         return $str;
 
@@ -897,24 +906,27 @@ class new_person_validate_rules_select_from implements form_validation_rules_beh
         if ($ff->param->use_anon_funct)
         {
             $arr = $ff->param->validation_rules; //Просто текстовые правила
-            $funct_name = 'anon_funct'; //Имя каллбака
+            $funct_name = 'callback_inlist'; //Имя каллбака
 
             $funct = function ($str) use ($ff,$required) //Сам калбак
             {
                 if (!is_numeric($str)) return FALSE; //Выходим если это не номер
                 $user_int = (int)$str;
-                if ((array_key_exists($user_int,$ff->options))|| (($user_int===0) && $required===FALSE)) return TRUE;
+                if ((array_key_exists($user_int,$ff->options)) || (($user_int===0) && $required===FALSE)) return TRUE;
                 else return FALSE;
             };
 
             //Описание которое будет выводиться в случае ошибки
             if (!$required)
-            $description = [$funct_name=>'Вы как-то выбрали пункт которого нет в списке.']; //Сообщение если каллбак возвращает FALSE
+          //  $description = [$funct_name=>'Вы как-то выбрали пункт которого нет в списке.']; //Сообщение если каллбак возвращает FALSE
+            $description = [$funct_name=>$ff->param->validation_error_message]; //Сообщение если каллбак возвращает FALSE
             else
-            $description = [$funct_name=>'Это поле необходимо заполнить']; //Сообщение если каллбак возвращает FALSE
+         //   $description = [$funct_name=>'Это поле необходимо заполнить']; //Сообщение если каллбак возвращает FALSE
+            $description = [$funct_name=>$ff->param->validation_error_message]; //Сообщение если каллбак возвращает FALSE
 
             //Добавляем каллбак к обычному массиву
-            $arr[] =[$funct_name,$funct];
+            if (empty($arr))  $arr=[[$funct_name,$funct]];
+            else $arr[] = [$funct_name,$funct];
 
             //Собираем полное правило
             $CI->form_validation->set_rules($ff->get_name(),$ff->label,$arr,$description);

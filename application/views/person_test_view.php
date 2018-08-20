@@ -1,11 +1,9 @@
-<?php  echo form_open('peson_test'); ?>
-<?php echo $f1->get_form();?>
-<br>
-<?php echo $f2->get_form();?>
-<br>
-<?php echo $f3->get_form();?>
-<br>
-<?php echo $f4->get_form();?>
+<?php  echo form_open('peson_test');
+foreach ($person_forms as $k =>$pf)
+{
+    echo '<div>№: '.$k.' '.$pf->get_form_html().'</div>';
+}
+?>
    <div>
        <button name="submit" type="submit" class="btn btn-default">Зарегестрироваться</button>
    </div>
