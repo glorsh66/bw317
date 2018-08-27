@@ -66,12 +66,29 @@ private $users_table = 'site_users';
 {
 //Запрос для получения:
 //Борды со всеми сообщениями
-$sql='select pb.*, pm.from_id,pm.to_id,pm.PM_timestamp,pm.has_been_read,pm.pm_text,
-su.user_name,su.user_last_active_date,su.isactivated
-from '.$this->board_table.' as pb
-left join '.$this->pm_table.' as pm on pb.last_message = pm.id
-left join '.$this->users_table.' as su on pm.from_id=su.id
-where pb.lesser_id ='.$me_id.' or pb.greater_id='.$me_id.' order by pb.last_message DESC ';
+
+//Используем оптимизацию для UNION
+$sql = "select pb.*,
+pm.pm_text,
+lu.user_name as lesser_user_name,
+gu.user_name as greater_user_name
+from (SELECT * FROM `PM_board` WHERE `lesser_id`={$me_id}
+UNION
+SELECT * FROM `PM_board` WHERE `greater_id` ={$me_id}) as pb
+left join private_messages as pm  on pb.last_message=pm.id
+left join site_users as lu on lu.id=pb.lesser_id
+left join site_users as gu on gu.id=pb.greater_id
+";
+
+
+//Старый запрос
+//$sql='select pb.*, pm.from_id,pm.to_id,pm.PM_timestamp,pm.pm_text,
+//su.user_name,su.user_last_active_date,su.isactivated
+//from '.$this->board_table.' as pb
+//left join '.$this->pm_table.' as pm on pb.last_message = pm.id
+//left join '.$this->users_table.' as su on pm.from_id=su.id
+//where pb.lesser_id ='.$me_id.' or pb.greater_id='.$me_id.' order by pb.last_message DESC ';
+
 if ($limit  >0) $sql .="limit $limit offset $offset";
  //Выполняем запрос
 $query =  $this->db->query($sql);
