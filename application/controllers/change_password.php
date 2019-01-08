@@ -1,49 +1,39 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class registration extends CI_Controller {
+class change_password extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
-        $this->load->model("PMmodel");
         $this->load->model('Usermodel');
         $this->load->library('simple_auth_lib');
         $this->load->helper('url');
         $this->config->set_item('language', 'russian');
+        $this->load->library('form_validation');
+        $this->load->helper('form');
+
     }
 
     public function index()
     {
-        //Если пользователь залогинен, то ему регистрироваться не нужно, и редиректим на страницу с логином.
-        if ($this->simple_auth_lib->check_if_user_is_loggined() === TRUE) {
+        //Если пользователь залогинен, то ему нужно залогиниться.
+        if ($this->simple_auth_lib->check_if_user_is_loggined() !== TRUE) {
             redirect('/login/', 'refresh');
         }
 
-        $this->load->library('form_validation');
-        $this->load->helper('form');
 
         //Устанавливаем правила проверки форм
-        $this->form_validation->set_rules('reg_username', 'Username', 'required|min_length[3]|max_length[50]|is_unique[site_users.user_name]|regex_match[/^[a-zA-Z0-9а-яА-Я_.,!][a-zA-Z0-9а-яА-Я_.,! ]*[a-zA-Z0-9а-яА-Я_.,!]$/]');
 
-        $this->form_validation->set_message('regex_match', 'В имени пользователя не допускаются а');
-
-        //$this->form_validation->set_rules('reg_username', 'Username', 'trim|required|min_length[3]|max_length[50]|is_unique[site_users.user_name]|regex_match[^[^-\s][a-zA-Z0-9а-яА-Я_.,! ]*[^-\s]$]|callback__check_anonymous');
-
-        //Поле проверяется, что бы не было заняты имена такие как anonymous1 - anonymous10
-        $this->form_validation->set_rules('reg_email', 'Email', 'trim|required|valid_email|is_unique[site_users.user_email]');
         $this->form_validation->set_rules('reg_password', 'Password', 'required|min_length[4]');
         $this->form_validation->set_rules('reg_cpassword', 'Password Confirmation', 'required|matches[reg_password]');
 
-
-
-
         //Проверка текстовой капчи МАРК-1
-        $c1_user_sent=$this->input->post('reg_captcha1');
-        $c1_correct_char  =$this->session->flashdata('reg_captcha1');
+        $c1_user_sent= $this->input->post('reg_captcha1');
+        $c1_correct_char= $this->session->flashdata('reg_captcha1');
 
-        $c2_user_sent=$this->input->post('reg_captcha2');
-        $c2_correct_answer  =$this->session->flashdata('reg_captcha2');
+        $c2_user_sent= $this->input->post('reg_captcha2');
+        $c2_correct_answer = $this->session->flashdata('reg_captcha2');
 
 
 //Валидация для первой формы
@@ -76,12 +66,6 @@ class registration extends CI_Controller {
             array('capch_check' => 'Вы неправильно ввели ответ на вопрос. Попробуйте еще раз подумать и ответить на вопрос. Докажите что вы не робот.'));
 
 
-
-
-
-
-
-
         //Заносим проверку скрытых полей
         $hidden_fields_check = TRUE;
         $hidden_fields_check1 = 'yes'===$this->input->post('reg_chbx_yes');
@@ -96,15 +80,24 @@ class registration extends CI_Controller {
         if ($this->form_validation->run() && $hidden_fields_check)
         { //Если проверка на  шаблоны прошла успешно то
             //Берем данные из формы и вставляем в переменные
-            $user_name = $this->input->post('reg_username'); //
-            $user_email = $this->input->post('reg_email');
             $password = $this->input->post('reg_password');
 
-            //Вызываем модель Usermodel, которая вставляем данные для регистрации пользователя
-            $ret =  $this->simple_auth_lib->register($user_name, $user_email, $password);
+            //Меняем пароль
+            $id=(int)$this->simple_auth_lib->user_data['id'];
+            $this->Usermodel->changePassword($id,$password);
+
+            //TODO: Тут еще можно реализовать удаление все остальных сессий. Выход из текущекого пользователя.
+            $this->Usermodel->deleteAllSessionsForUser($id);
+            $this->simple_auth_lib->log_out();
+
+            $name = $this->simple_auth_lib->user_data['user_name'];
+            $this->simple_auth_lib->user_login_from_form($name,$password,true);
 
             //Если вставка регистрационных данныъ прошла успешно
-            $this->load->view('registration success_without_validation');
+            $data['success_message'] = 'Сменили свой старый пароль на новый';
+            $this->load->view('success_view',$data);
+
+
 
         }
         else //Сюда заходим только если форма не отправлена, либо не прошла валидацию.
@@ -119,7 +112,7 @@ class registration extends CI_Controller {
             $data['captcha1'] = $captcha1;
             $data['captcha2'] = $captcha2[0];
 
-            $this->load->view('User_registration_view',$data);
+            $this->load->view('change_password_view',$data);
         }
         //Проводим проверку полей
 

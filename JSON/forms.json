@@ -1,0 +1,31 @@
+{
+"sexual_orientation":
+    {
+        "name" : "sexual_orientation",
+        "label": "Сексуальная ореентация",
+        "options": ["гетеро", "лесби", "бисексуал","пансексуал"],
+        "required": true,
+        "type": "select",
+        "Residence": "Birmingham"
+    },
+"sexual_orientation2":
+    {
+        "name" : "sexual_orientation2",
+        "label": "Сексуальная ореентация",
+        "options": ["гетеро2", "лесби2", "бисексуал2","пансексуал2"],
+        "required": true,
+        "type": "select",
+        "Residence": "Birmingham"
+    },
+
+  "sexual_orientation3":
+    {
+        "name" : "sexual_orientation3",
+        "label": "Сексуальная ореентация",
+        "options": ["гетеро2", "лесби2", "бисексуал2","пансексуал2"],
+        "required": true,
+        "type": "radio",
+        "Residence": "Birmingham"
+    }
+
+}

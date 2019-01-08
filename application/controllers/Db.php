@@ -27,41 +27,41 @@ class Db extends CI_Controller {
 
 
 //////Убираем форен кеи
-$this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
-$this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
-$this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
-$this->db->query("ALTER TABLE `users_activation_code` DROP FOREIGN KEY `FK_users_activation_code`;");
-$this->db->query("ALTER TABLE `users_tokens` DROP FOREIGN KEY `FK_login_users_tokens_user_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_greater_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_lesser_id` ;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_to_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_from_id` ;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_advets_user_id` ;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_categoty_id` ;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur1_id` ;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur2_id` ;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur3_id` ;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur4_id`;");
-$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur5_id` ;");
-$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_id`;");
-$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_rat_user_id_sender` ;");
-$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_user_rat_user_id_reciver`;");
-$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_sender`;");
-
-$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_lesser_id`;");
-$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_greater_id`;");
-$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_last_message_id`;");
-
-$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_owner`;");
-$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_banned`;");
-
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_from_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_to_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_lesser_id`;");
-$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater_id`;");
-
-
-$this->db->query("ALTER TABLE `person` DROP FOREIGN KEY `FK_person_user_id`;");
+//$this->db->query("ALTER TABLE `site_users` DROP FOREIGN KEY `FK_site_users_user_groups`;");
+//$this->db->query("ALTER TABLE `login_attempts` DROP FOREIGN KEY `FK_login_attempts_users`;");
+//$this->db->query("ALTER TABLE `users_sessions` DROP FOREIGN KEY `FK_users_sessions_users`;");
+//$this->db->query("ALTER TABLE `users_activation_code` DROP FOREIGN KEY `FK_users_activation_code`;");
+//$this->db->query("ALTER TABLE `users_tokens` DROP FOREIGN KEY `FK_login_users_tokens_user_id`;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_greater_id`;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_lesser_id` ;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_to_id`;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_private_messages_user_from_id` ;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_advets_user_id` ;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_categoty_id` ;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur1_id` ;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur2_id` ;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur3_id` ;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur4_id`;");
+//$this->db->query("ALTER TABLE `advets` DROP FOREIGN KEY `FK_ad_cur5_id` ;");
+//$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_id`;");
+//$this->db->query("ALTER TABLE `ad_rat` DROP FOREIGN KEY `FK_ad_rat_user_id_sender` ;");
+//$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_user_rat_user_id_reciver`;");
+//$this->db->query("ALTER TABLE `user_rat` DROP FOREIGN KEY `FK_puser_rat_user_id_sender`;");
+//
+//$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_lesser_id`;");
+//$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_greater_id`;");
+//$this->db->query("ALTER TABLE `PM_board` DROP FOREIGN KEY `FK_PM_board_last_message_id`;");
+//
+//$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_owner`;");
+//$this->db->query("ALTER TABLE `PM_blacklist` DROP FOREIGN KEY `FK_PM_blacklist_banned`;");
+//
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_from_id`;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_to_id`;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_lesser_id`;");
+//$this->db->query("ALTER TABLE `private_messages` DROP FOREIGN KEY `FK_pm_greater_id`;");
+//
+//
+//$this->db->query("ALTER TABLE `person` DROP FOREIGN KEY `FK_person_user_id`;");
 
 
 
@@ -290,80 +290,15 @@ $this->db->query("ALTER TABLE `person` DROP FOREIGN KEY `FK_person_user_id`;");
                         'constraint' => 9,
                         'unsigned' => TRUE,
                         'auto_increment' => FALSE // Так, как это будет ID пользователя и таблица будет жестко привязанна
-                    ),
-                    'height' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'Height of a person'
-                    ),
-                    'weight' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'weight of a person'
-                    ),
-                    'children' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'amount of children the person currently have'
-                    ),
-                    'sex' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sex of a person'
-                    ),
-                    'sexual_orientation' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
-                    'relationship' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'the relationship a person currently have'
-                    ),
-                    'education' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'education level of a person'
-                    ),
-                    'employment' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'employment status of a person'
-                    ),
-                    'smoke' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
-                    'alcohol' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
-                    'sport' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
-                    'health' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
-                    'virus_hiv' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
-                    'virus_hepatitis_c' => array(
-                        'type' => 'TINYINT',
-                        'unsigned' => TRUE,
-                        'comment' => 'sexual orientation of a person'
-                    ),
- );
+                    ), );
 
                 $this->dbforge->add_field($fields);
+
+
+                //Создаем все поля из PERSONMODEL
+                $this->load->model('Personmodel');
+                $this->Personmodel->makeAllMysqlFields(); //Создаем поля из PERSONMODEL
+
                 $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
                 $this->dbforge->create_table('person');
 
@@ -389,7 +324,11 @@ $this->db->query("ALTER TABLE `person` DROP FOREIGN KEY `FK_person_user_id`;");
                   'groups_description' => array(
                           'type' =>'VARCHAR',
                           'constraint' => '255',
-                  ), );
+                  ));
+
+
+
+
          // $this->dbforge->add_field('id');
           $this->dbforge->add_field($fields);
           $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
@@ -1183,41 +1122,41 @@ $this->dbforge->create_table('users_activation_code');
 //---------------------------------Foregin keys section-----------------------------------------------------------------------------------------
           //Добавляем Foreging keys т.к.
           //Делаем это после создания всех таблиц, т.к. для этого нужные уже созданные таблицы
-$this->db->query("ALTER TABLE `site_users` ADD CONSTRAINT `FK_site_users_user_groups` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`);");
-$this->db->query("ALTER TABLE `login_attempts` ADD CONSTRAINT `FK_login_attempts_users` FOREIGN KEY (`login_attempts_user_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `users_sessions` ADD CONSTRAINT `FK_users_sessions_users` FOREIGN KEY (`users_sessions_user_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `users_activation_code` ADD CONSTRAINT `FK_users_activation_code` FOREIGN KEY (`user_that_will_be_activated_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `users_tokens` ADD CONSTRAINT `FK_login_users_tokens_user_id` FOREIGN KEY (`login_users_tokens_user_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_to_id` FOREIGN KEY (`to_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_from_id` FOREIGN KEY (`from_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_advets_user_id` FOREIGN KEY (`advets_user_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_categoty_id` FOREIGN KEY (`ad_categoty_id`) REFERENCES `ad_categories` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur1_id` FOREIGN KEY (`ad_cur1_id`) REFERENCES `crypto_currencies` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur2_id` FOREIGN KEY (`ad_cur2_id`) REFERENCES `crypto_currencies` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur3_id` FOREIGN KEY (`ad_cur3_id`) REFERENCES `crypto_currencies` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur4_id` FOREIGN KEY (`ad_cur4_id`) REFERENCES `crypto_currencies` (`id`);");
-$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur5_id` FOREIGN KEY (`ad_cur5_id`) REFERENCES `crypto_currencies` (`id`);");
-$this->db->query("ALTER TABLE `ad_rat` ADD CONSTRAINT `FK_ad_id` FOREIGN KEY (`ad_rat_ad_id`) REFERENCES `advets` (`id`);");
-$this->db->query("ALTER TABLE `ad_rat` ADD CONSTRAINT `FK_ad_rat_user_id_sender` FOREIGN KEY (`ad_rat_sender_user_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `user_rat` ADD CONSTRAINT `FK_user_rat_user_id_reciver` FOREIGN KEY (`us_rat_reciver_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `user_rat` ADD CONSTRAINT `FK_puser_rat_user_id_sender` FOREIGN KEY (`us_rat_sender_id`) REFERENCES `site_users` (`id`);");
-
-$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_last_message_id` FOREIGN KEY (`last_message`) REFERENCES `private_messages` (`id`);");
-
-
-$this->db->query("ALTER TABLE `PM_blacklist` ADD CONSTRAINT `FK_PM_blacklist_owner` FOREIGN KEY (`owner`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `PM_blacklist` ADD CONSTRAINT `FK_PM_blacklist_banned` FOREIGN KEY (`banned`) REFERENCES `site_users` (`id`);");
-
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_from_id` FOREIGN KEY (`from_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_to_id` FOREIGN KEY (`to_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
-$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
-
-$this->db->query("ALTER TABLE `person` ADD CONSTRAINT `FK_person_user_id` FOREIGN KEY (`id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `site_users` ADD CONSTRAINT `FK_site_users_user_groups` FOREIGN KEY (`group_id`) REFERENCES `user_groups` (`id`);");
+//$this->db->query("ALTER TABLE `login_attempts` ADD CONSTRAINT `FK_login_attempts_users` FOREIGN KEY (`login_attempts_user_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `users_sessions` ADD CONSTRAINT `FK_users_sessions_users` FOREIGN KEY (`users_sessions_user_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `users_activation_code` ADD CONSTRAINT `FK_users_activation_code` FOREIGN KEY (`user_that_will_be_activated_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `users_tokens` ADD CONSTRAINT `FK_login_users_tokens_user_id` FOREIGN KEY (`login_users_tokens_user_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_to_id` FOREIGN KEY (`to_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_private_messages_user_from_id` FOREIGN KEY (`from_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_advets_user_id` FOREIGN KEY (`advets_user_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_categoty_id` FOREIGN KEY (`ad_categoty_id`) REFERENCES `ad_categories` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur1_id` FOREIGN KEY (`ad_cur1_id`) REFERENCES `crypto_currencies` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur2_id` FOREIGN KEY (`ad_cur2_id`) REFERENCES `crypto_currencies` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur3_id` FOREIGN KEY (`ad_cur3_id`) REFERENCES `crypto_currencies` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur4_id` FOREIGN KEY (`ad_cur4_id`) REFERENCES `crypto_currencies` (`id`);");
+//$this->db->query("ALTER TABLE `advets` ADD CONSTRAINT `FK_ad_cur5_id` FOREIGN KEY (`ad_cur5_id`) REFERENCES `crypto_currencies` (`id`);");
+//$this->db->query("ALTER TABLE `ad_rat` ADD CONSTRAINT `FK_ad_id` FOREIGN KEY (`ad_rat_ad_id`) REFERENCES `advets` (`id`);");
+//$this->db->query("ALTER TABLE `ad_rat` ADD CONSTRAINT `FK_ad_rat_user_id_sender` FOREIGN KEY (`ad_rat_sender_user_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `user_rat` ADD CONSTRAINT `FK_user_rat_user_id_reciver` FOREIGN KEY (`us_rat_reciver_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `user_rat` ADD CONSTRAINT `FK_puser_rat_user_id_sender` FOREIGN KEY (`us_rat_sender_id`) REFERENCES `site_users` (`id`);");
+//
+//$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `PM_board` ADD CONSTRAINT `FK_PM_board_last_message_id` FOREIGN KEY (`last_message`) REFERENCES `private_messages` (`id`);");
+//
+//
+//$this->db->query("ALTER TABLE `PM_blacklist` ADD CONSTRAINT `FK_PM_blacklist_owner` FOREIGN KEY (`owner`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `PM_blacklist` ADD CONSTRAINT `FK_PM_blacklist_banned` FOREIGN KEY (`banned`) REFERENCES `site_users` (`id`);");
+//
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_from_id` FOREIGN KEY (`from_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_to_id` FOREIGN KEY (`to_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_lesser_id` FOREIGN KEY (`lesser_id`) REFERENCES `site_users` (`id`);");
+//$this->db->query("ALTER TABLE `private_messages` ADD CONSTRAINT `FK_pm_greater_id` FOREIGN KEY (`greater_id`) REFERENCES `site_users` (`id`);");
+//
+//$this->db->query("ALTER TABLE `person` ADD CONSTRAINT `FK_person_user_id` FOREIGN KEY (`id`) REFERENCES `site_users` (`id`);");
 
 
 //---------------------------------Foregin keys section end-----------------------------------------------------------------------------------------

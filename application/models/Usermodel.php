@@ -47,6 +47,9 @@ class Usermodel extends CI_Model {
 
 
 
+
+
+
 //раздел группы пользователей
 
 //Вставляет новую группу пользователей
@@ -82,6 +85,13 @@ public function delete_one_user_session($selector)
 {
   $this->db->where('users_sessions_selector',$selector);
   $this->db->limit(1);
+  $this->db->delete(SELF::$users_sessions_table_name);
+}
+
+
+public function deleteAllSessionsForUser(int $id)
+{
+  $this->db->where('users_sessions_user_id',$id);
   $this->db->delete(SELF::$users_sessions_table_name);
 }
 
@@ -193,6 +203,13 @@ public function block_user_on_x_minutes(int $id, int $minutes)
 
 }
 
+public function changePassword(int $id, string $new_password)
+{
+    $this->db->where('id', $id);
+    $this->db->set('password', password_hash($new_password,PASSWORD_DEFAULT));
+    $this->db->limit(1);
+    $this->db->update(SELF::$this_table_name);
+}
 
 
 public function count_login_attempts_and_delte_old_entries(int $userid): int

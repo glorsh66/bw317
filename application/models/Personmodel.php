@@ -1,690 +1,351 @@
 <?php
-class Personmodel extends CI_Model {
+class Personmodel extends CI_Model
+{
 
     /**
-     * название текущей таблицы. По дефолту должно быть, person.
-     * @var string
+     * @var string название текущей таблицы. По дефолту должно быть, person.     *
      */
-private $t = 'person'; //название текущей таблицы, что бы менять в одном месте
+    private $t = 'person'; //название текущей таблицы, что бы менять в одном месте
+    
+    // Публичные переменные
+    /**
+     * @var array массив объектов form_filed
+     */
+    public $ar;
+    /**
+     * @var array масив вернувшихся значений из базы данных
+     */
+    public $person_data_table=FALSE;
 
+    //Поля (устанавливаются в завимисомти от того в каком режиме работает наш PersonModel).
+    //Может быть: New Person, Editable, Search
+    /**
+     * @var form_params объект форм params - для radio button. Он по умолчанию Required;
+     */
+    private $fp_radio_req;
+    /**
+     * @var form_params объект форм params - для select. Который Required;
+     */
+    private $fp_sel_req;
+    /**
+     * @var form_params объект форм params - для обычного select. Который не Required;
+     */
+    private $fp_sel_not_req;
+    /**
+     * @var form_params объект форм params - для multi-select. На текущий момент не используется.;
+     */
+    private $fp_sel_multi;
 
+    //Переменные типов работы Person Model. На основании этого будет решено, что будет использовано.
+    public const new=1;
+    public const edit=2;
+    public const search=3;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    //Поля (доступные формы)
     function __construct()
+    {
+        parent::__construct();
+//Грузим нужные либы
+$this->load->library('form_validation');
+$this->load->helper('form');
+    }
+
+
+
+function initialize(int $type)
 {
-    parent::__construct();
+    if ($type=Personmodel::new) { //Формы для создания нового пользователя
+        //Определяем наборы параметров для форм (типа RADIO BUTTON, SELECT BOX и т.д.)
+        $this->fp_radio_req = new form_params(form_params::radio, 'Не указано', array('required', 'numeric'), 'radio_required', 'error_line', 'p_', TRUE, "Это поле обязательно нужно выбрать.", ['numeric' => 'Значение должно быть числом.', 'required' => 'Это поле обязательно нужно выбрать.']);
+        $this->fp_sel_req = new form_params(form_params::select, 'Не указано', array('required', 'numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_sel_not_req = new form_params(form_params::select, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_sel_multi = new form_params(form_params::select_multiple, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+    }
+    elseif ($type=Personmodel::edit) //Формы для редактирования
+    {
+        //Определяем наборы параметров для форм (типа RADIO BUTTON, SELECT BOX и т.д.)
+        $this->fp_radio_req = new form_params(form_params::radio, 'Не указано', array('required', 'numeric'), 'radio_required', 'error_line', 'p_', TRUE, "Это поле обязательно нужно выбрать.", ['numeric' => 'Значение должно быть числом.', 'required' => 'Это поле обязательно нужно выбрать.']);
+        $this->fp_sel_req = new form_params(form_params::select, 'Не указано', array('required', 'numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_sel_not_req = new form_params(form_params::select, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_sel_multi = new form_params(form_params::select_multiple, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+    }
+    elseif ($type=Personmodel::search) //Для поиска
+    {
+        //Определяем наборы параметров для форм (типа RADIO BUTTON, SELECT BOX и т.д.)
+        $this->fp_radio_req = new form_params(form_params::radio, 'Не указано', array('required', 'numeric'), 'radio_required', 'error_line', 'p_', TRUE, "Это поле обязательно нужно выбрать.", ['numeric' => 'Значение должно быть числом.', 'required' => 'Это поле обязательно нужно выбрать.']);
+        $this->fp_sel_req = new form_params(form_params::select, 'Не указано', array('required', 'numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_sel_not_req = new form_params(form_params::select, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_sel_multi = new form_params(form_params::select_multiple, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
+    }
+    else die('Выбран неправильный тип инициплизации класса PersonModel'); // В случае если не выбран никакой типа поля.
+
+    //Создаем формы (в зависимости от разного типа переменных используются разные объекты - form_params)
+    $this->ar=$this->makeFormsFromJSON(); //Делаем формочки при помощи файла JSON
 }
 
 
-public function insert_person(int $id, int $height, int $weight, int $children, int $sex, int $sexual_orientation,
-int $relationship, int $education, int $employment, int $smoke, int $alcohol, int $sport, int $health, int $virus_hiv,
-int $virus_hepatitis_c)
-{
-//Массив который будет вставлен в таблицу
-$data = array(
-'id' => $id,
-'height'=> $height,
-'weight'=> $weight,
-'children'=> $children,
-'sex'=> $sex,
-'sexual_orientation'=> $sexual_orientation,
-'relationship'=> $relationship,
-'education'=> $education,
-'employment'=> $employment,
-'smoke'=> $smoke,
-'alcohol'=> $alcohol,
-'sport'=> $sport,
-'health'=> $health,
-'virus_hiv'=> $virus_hiv,
-'virus_hepatitis_c'=> $virus_hepatitis_c,
-);
 
-$this->db->insert($this->t, $data);
-}
+
+    public function getDataPerson(int $id)
+    {
+            $this->db->where('id',$id);
+			$query = $this->db->get($this->t);
+			if ($query->num_rows() > 0)
+			{
+			    $this->person_data_table = $query->row(); //Сохраняем в Personmodel строки для текущего пользователя
+				return $this->person_data_table;
+			} else
+            {
+					return FALSE;
+            }
+    }
+
+
+/**
+ * @deprecated deprecated потому что проще это делать через JSON. Это нагляднее.
+ */
+    private function makeFormsHardCodedWay()
+    {
+    //Определяем наборы параметров для форм (типа RADIO BUTTON, SELECT BOX и т.д.)
+    $fp_radio_req = new form_params(form_params::radio,'Не указано',array('required','numeric'),'radio_required','error_line','p_',TRUE,"Это поле обязательно нужно выбрать.",['numeric'=>'Значение должно быть числом.','required'=>'Это поле обязательно нужно выбрать.']);
+    $fp_sel_req = new form_params(form_params::select,'Не указано',array('numeric'),'select_not_required','error_line' ,'p_',TRUE,"Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric'=>'Значение должно быть числом.']);
+    $fp_sel_not_req = new form_params(form_params::select,'Не указано',array('numeric'),'select_not_required','error_line' ,'p_',TRUE,"Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric'=>'Значение должно быть числом.']);
+    $fp_sel_multi = new form_params(form_params::select_multiple,'Не указано',array('numeric'),'select_not_required','error_line' ,'p_',TRUE,"Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric'=>'Значение должно быть числом.']);
+
+
+
+    $ar[0] = new form_filed('sex',[1=>'мужчина',2=>'женщина'],$fp_radio_req,'Ваш пол',FALSE,'Пусто','УПС Ошибочка');
+    $ar[1] = new form_filed('sexual_orientation', array(1 => 'гетеро', 2 => 'лесби', 3=> 'бисексуал', 4=>'пансексуал'),
+    $fp_radio_req,'Сексуальная ориентация');
+
+    $ar[2] = new form_filed('relationship',array(1 => 'свободен', 2 => 'в отношениях', 3=> 'в гражданском браке', 4=>'в браке', 5=>'разведен')
+    ,$fp_sel_req,'Текущие отношения');
+
+    $ar[3] = new form_filed('education',array(1 => 'среднее',2=>'срднее-специальное', 3 => 'высшее', 4=> 'нескольких высших',
+    5=>'ученая степень', 6=>'иностранное образование'),$fp_sel_req,'Ваш пол');
+
+    $ar[4] = new form_filed('income',array(1 => 'нет дохода',2=>'небольшой доход', 3 => 'средний доход', 4=> 'высокий доход',
+    5=>'непостоянные заработки'),$fp_sel_not_req,'Доход');
+
+    $ar[5] = new form_filed('employment',[1 => 'безработный',2=>'непостоянные заработки', 3 => 'фрилансер', 4=> 'предприниматель',
+    6=>'живу на доход от чего то', 7=>'непостоянные заработки', 8=>'стабильная работа', 9=>'руководитель'],$fp_sel_req,'Ваша деятельность');
+
+    $ar[6] = new form_filed('smoke',[1 => 'заядлый курильщик', 2 => 'курю иногда', 3 => 'курю когда выпью',
+    4 => 'изредка балуюсь', 5 => 'не курю', 6 => 'Никогда не пробовал курить'],$fp_sel_req,'Ваш пол:');
+
+    $ar[7] = new form_filed('alcohol',[1 => 'пью регулярно', 2 => 'пью за компанию (социально)',3 => 'пью изредко',
+    4 => 'почти не пью',5 => 'противник алкоголя',5 => 'никогда не пробовал алкоголь', 6 =>'не пью'],$fp_sel_req,'Ваш пол:');
+
+    $ar[8] = new form_filed('sport',[1 => 'Профессиональный спортсмен',  2 => 'Мастер спорта', 3 =>'Занимаю регулярно',
+    4 => 'Иногда знимаюсь', 5 => 'Изредка занимаюсь', 6 => 'Не занимаюсь'],$fp_sel_req,'Ваш пол:');
+
+    $ar[9] = new form_filed('health',[1 => 'есть проблемы со здоровьем', 2 => 'небольшие проблемы со здоровьем', 3 => 'в целом все нормально',
+    4 => 'здоров', 5 => 'отличное здоровье'],$fp_sel_req,'Ваш пол:');
+
+    $ar[10] = new form_filed('virus_hiv',[1 => 'Носитель', 2 => 'Нет'],$fp_sel_req,'Ваш пол:');
+
+    $ar[11] = new form_filed('virus_hepatitis_c',[1 => 'Носитель', 2 => 'Нет'],$fp_sel_not_req,'Ваш пол:');
+
+    $ar[12] = new form_filed('multi_vibor[]',[1 => 'Пункт 1', 2 => 'Пункт 2',3 => 'Пункт 3', 4 => 'Пункт 4',5 => 'Пункт 5', 6 => 'Пункт 6'],$fp_sel_multi,'Много пунктов:');
+
+
+    return $ar;
+    }
+
+
+
+    public function makeFormsFromJSON()
+    {
+
+    //Определяем наборы параметров для форм (типа RADIO BUTTON, SELECT BOX и т.д.)
+    $fp_radio_req = $this->fp_radio_req;
+    $fp_sel_req =  $this->fp_sel_req;
+    $fp_sel_not_req = $this->fp_sel_not_req;
+    $fp_sel_multi =  $this->fp_sel_multi;
+
+    //Грузим JSON
+    $json_file = file_get_contents('JSON/forms.json');
+    // convert the string to a json object
+    $json = json_decode($json_file);
+    // read the title value
+    $possilbe_types = array("select", "select_multiple", "radio");
+
+    $ar=[]; //Создаем пустой массив который мы будем возвращать (это набор готовых объектов).
+
+    foreach ($json as $el) {
+    //Внутренние переменные (нужны для того, что бы проверить правильность значений в JSON массиве).
+    $name = FALSE; //Имя поля
+    $label = FALSE; //название поля на руском языке
+    $options = FALSE; // Массив доступных опций
+    $type = FALSE; //Тип поля - Может быть: select, select_multiple, radio
+    $dbName = FALSE; //Имя для базы данных
+    $defaultOption = FALSE; //Опции по умолчанию
+    $css_class = FALSE; //CSS класс для поля
+    $errol_class = FALSE; //CSS класс для поля с ошибками
+    $validation_message = FALSE; //Сообщение для ошибок
+    $validation_messages_array = FALSE; // Массив ошибок для
+    $required = FALSE; //Обязательно ли это поле.
+    $editable = FALSE; //Можно ли это редактировать
+    $searchable = FALSE; //Можно ли искать по этому полю
+    $group = 0; // Группа для разбивания массива на несколько частей
+    $order = 0; // Порядок сортировки
+
+
+    //Присваиваем переменные из JSON
+    if (!isset($el->name)) die("Нет поля именя в файле JSON/forms.json");
+    if (!isset($el->label)) die("Нет поля label в файле JSON/forms.json ля поля с именем: " . $el->name);
+    if (!isset($el->options)) die("Нет массива options в файле JSON/forms.json ля поля с именем: " . $el->name);
+
+    $name = $el->name;
+    $label= $el->label;
+    $options = $el->options;
+
+    //Переводим Массив из Zero Based в ONE BASED
+    $ar_length = count($options);
+    for ($i=0; $i<$ar_length; $i++)
+    {
+       $temp_arr[$i+1]=$options[$i];
+    }
+    $options=$temp_arr;
+
+
+    //Проверка остальных полей
+    $defaultOption = isset($el->defaultOption) ? $el->$defaultOption : FALSE;
+    $css_class = isset($el->css_class) ? $el->css_class : FALSE;
+    $errol_class = isset($el->errol_class) ? $el->errol_class : FALSE;
+    $validation_message = isset($el->validation_message) ? $el->validation_message : FALSE;
+    $dbName = isset($el->$defaultOption) ? $el->$defaultOption : FALSE;
+    $validation_messages_array = isset($el->validation_messages_array) ? $el->validation_messages_array : FALSE;
+    $required = isset($el->required) ? $el->required : FALSE;
+    $editable = isset($el->editable) ? $el->editable : FALSE;
+    $searchable = isset($el->searchable) ? $el->searchable : FALSE;
+    $group = isset($el->group) ? (int)$el->group : 0;
+    $order= isset($el->order) ? (int)$el->order : 0;
+
+
+    //Определяем тип
+    if (!in_array($el->type, $possilbe_types)) die("Неправильно назван тип поля в файле  JSON/forms.json для поля с именем: " . $name ); // Проверка на ошибки
+
+    if ($el->type==='select' && $required) $type = $fp_sel_req;
+    elseif ($el->type==='select') $type = $fp_sel_not_req;
+    elseif ($el->type==='select_multiple') $type = $fp_sel_multi;
+    elseif ($el->type==='radio') $type = $fp_radio_req;
+    else $type = $fp_sel_not_req;
+
+    //Создаем объект
+    $obj = new form_filed($name,$options,$type,$label,$dbName,$defaultOption,$validation_message,$validation_messages_array,$css_class,$errol_class);
+    //пушим его в массив
+    array_push($ar,$obj);
+    }
+
+    //Возвращаем готовый массивчик с объектами
+    return $ar;
+
+    }
+
+
+
+
+    public function insertNewPerson($id)
+    {
+    //Готовим данные для вставки в таблицу персона
+    $data['id']=$id; //Айдишник который получили от вставленного юзера
+
+    //Обходим все динамические поля. Они уже проверены валидацией формы. По этому просто вставляем значения
+    foreach ($this->ar as $el)
+    {
+        if (!empty($this->input->post($el->get_name())))
+        {
+          $data[$el->getMysqlName()] = (int)$this->input->post($el->get_name()); // Добавляем в массив данных те значения которые есть в POST
+        }
+    }
+    $this->db->insert($this->t, $data);
+    }
+
+
+    public function makeValidationRules()
+    {
+        foreach ($this->ar as $el)
+        {
+            $el->get_val_rules();
+        }
+    }
+
+        public function makeAllMysqlFields()
+    {
+        foreach ($this->ar as $el)
+        {
+            $el->createDBField();
+        }
+    }
+
+
 
     public function get_int()
     {
-             return $this->glob_var;
+        return $this->glob_var;
     }
 
     public function get_int_with_increment()
     {
-      SELF::$test_int++;
-      return ++$this->glob_var;
+        SELF::$test_int++;
+        return ++$this->glob_var;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-////Вставляет новую группу пользователей
-/// 
-/// 
-/// 
-/// 
-///// //Объявляем массивы с перечислениями
-
-//
-////Как я вижу зачатия и дальнейшие отношения
-////TODO: Сделать таблички для этого
-//    public $e_sposob_inception = array(1 => 'По договоренности', 2 => 'Натурально', 3 => 'ИИ в доманшних условиях',
-//        4 => 'ИИ в клинике', 5 => 'ЭКО или ИКСИ');
-//    public $e_dalneshee_ibshenie = array(1 => 'Не имеет значения', 2 => 'Общение по желанию', 3 => 'Удаленное общение (переписка)',
-//        4 => 'Общение по выходным (папа выходного дня)', 5 => 'Постоянное общение', 6 => 'Совместное проживание',
-//        7 => 'Создание полноценной семьи', 8 => 'Общение по желанию матери', 9 => 'Общение по желанию ребенка');
-//
-//    public $e_oplata_partneru = array(1 => 'Без оплаты', 2 => 'Оплата затрат (анализы и т.д.)' , 3 => 'Оплата проезда' ,
-//        4 => 'По договоренности' , 5 => 'Оплату помощь донора считаю желательной');
-//
-//
-////TODO: добавить нужные строки в базу данных потом.
-//public function insert_user_group($group_name,$group_description)
-//{
-//$data = array(
-//'groups_name' => $group_name,
-//'groups_description'=> $group_description,
-//);
-//$this->db->insert(SELF::$this_user_groups, $data);
-//return $this->db->insert_id();
-//}
-//
-//
-////Раздел сессий
-//
-////Функция которая вставляет новую сессиию
-////Когда пользователь входит с опцией "Remember Me"
-//public function insert_user_session($random_selector,$sha256_validator,$user_id)
-//{
-//$data = array(
-//'users_sessions_selector' => $random_selector,
-//'users_sessions_validator' => $sha256_validator,
-//'users_sessions_user_id' => $user_id,
-//);
-//$this->db->insert(SELF::$users_sessions_table_name, $data);
-//}
-//
-//
-////Удаляет конкретную запись из сессии
-////с конкретной кукой
-//public function delete_one_user_session($selector)
-//{
-//  $this->db->where('users_sessions_selector',$selector);
-//  $this->db->limit(1);
-//  $this->db->delete(SELF::$users_sessions_table_name);
-//}
-//
-//
-////Функция для того что бы исключь коллизию с одинаковым селектором
-////Не нашли - возвращаем FALSE
-////Нашли - возвращаем TRUE
-//public function find_collision_selecto_session($selector)
-//{
-//$this->db->where('users_sessions_selector',$selector);
-//$result_int = $this->db->count_all_results(SELF::$users_sessions_table_name);
-//return ($result_int <= 0) ? FALSE : TRUE;
-//}
-//
-////Проверка правильности куки
-////находим куку по $user_selector
-////Проводим проверку хэша sha256  $user_validator (в базе хранится только хэщ для защиты от возможных утечек)
-////Если вдруг такое случится что валидатор не походит (что скорее всего попытка взлома)
-////запись из базы (а куку убираем в котроллере, ибо так более MVC)
-//public function check_cookie_and_return_id($user_selector,$user_validator)
-//{
-//$this->db->where('users_sessions_selector',$user_selector);
-//$this->db->limit(1);
-//$query = $this->db->get(SELF::$users_sessions_table_name);
-////Проверяем нашли ли мы строку вообще
-//if ($query->num_rows() > 0)
-//{
-//$ses = $query->row_array();
-//
-//  if(hash_equals(hash('sha256', $user_validator),$ses['users_sessions_validator']))
-//  {
-//    return $ses['users_sessions_user_id'];
-//  }
-//  //Если вдруг по какой то причине (что скорее всего попытка взлома) валадиатор не подошел удаляем запись с текущим селектором и возвращаем false
-//  else {
-//     $this->delete_one_user_session($user_selector);
-//     return false;
-//    }
-//}
-//else
-//{return false; // Не нашли строку (нет такого селектора)
-//}
-//}//Конец функции
-//
-//
-//
-////Удаляет все записи которые старше двух месяцев
-//function delete_old_sessions()
-//{
-//$this->db->query("DELETE FROM ". SELF::$users_sessions_table_name ." WHERE users_sessions_timestamp < NOW() - INTERVAL 2 MONTH ");
-//}
-//
-//function delete_old_sessions_test()
-//{
-//$this->db->query("DELETE FROM ". SELF::$users_sessions_table_name ." WHERE users_sessions_timestamp < NOW() - INTERVAL 2 SECOND; ");
-//}
-//
-//
-//
-//
-////Раздел пользователей
-//
-////Вставляем данные о последнеё попытке захода
-//public function insert_login_attempts(int $id,bool $increment)
-//{
-//    $this->db->where('id', $id);
-//    $this->db->set('last_time_wrong_pass_unix_tsmp', time());
-//
-//    if ($increment === TRUE)
-//    {
-//    $this->db->set('tries_with_wrong_password', 'tries_with_wrong_password+1', FALSE);
-//    }
-//    else {$this->db->set('tries_with_wrong_password', 1);}
-//
-//    $this->db->limit(1);
-//    $this->db->update(SELF::$this_table_name);
-//}
-//
-//
-//public function set_zero_login_attempts_with_wrong_password(int $id)
-//    {
-//        $this->db->where('id', $id);
-//        //$this->db->set('last_time_wrong_pass_unix_tsmp', 0);
-//        $this->db->set('tries_with_wrong_password', 0);
-//        $this->db->limit(1);
-//        $this->db->update(SELF::$this_table_name);
-//    }
-//
-//
-//
-//    /**Обновляет поле blocked_up_to_date в базе, для того, что бы заблокировать пользователя из-за
-//	 * большого колличества попыток войти с неправильным паролем
-//     * @param int $id (id пользователя)
-//     * @param int $minutes (до какого времени заблокировать) Unix time stamp в int
-//     */
-//public function block_user_on_x_minutes(int $id, int $minutes)
-//{
-//   // $date = new DateTime();
-//  //  $date->modify("+{$minutes} minutes");
-//
-//    $data = array(
-//        'blocked_up_to_date'=> $minutes
-//    );
-//
-//    $this->db->where('id', $id);
-//    $this->db->set('tries_with_wrong_password', 0);
-//    $this->db->limit(1);
-//    $this->db->update(SELF::$this_table_name, $data);
-//
-//}
-//
-//
-//
-//public function count_login_attempts_and_delte_old_entries(int $userid): int
-//{
-//$deleted_rows=0;
-//$tries=0;
-////Удаляем старые записи из таблицы
-////Хотя скорее всего лучше это дело перенести в отдельный скрипт который будет раз
-////в одну минуту запускаться
-////Считаем колличенство попыток входа и удаляем старые
-////TODO:Убрать удаление в отдельный файл которй будет запускатсья регулярно
-//// $query = $this->db->query('delete FROM '. SELF::$users_login_attemts .
-////' WHERE login_attempts_time < NOW() - INTERVAL 1 MINUTE;');
-////$deleted_rows =  $this->db->affected_rows();
-////Делаем запрос на колличество попыток входа
-//
-//$date = new DateTime('-10 minutes');
-//
-//$this->db->where('login_attempts_user_id',$userid);
-//$this->db->where('login_attempts_time >=',
-//	$this->db->escape($date->format('Y-m-d H:i:s'))
-//	,FALSE);
-//$tries = $this->db->count_all_results(SELF::$users_login_attemts);
-//return $tries;
-//}
-//
-//
-//
-////Функция обновляет последнюю активность пользователя на сайте
-//public function update_user_last_activity($id)
-//{
-//$date = new DateTime();
-//
-//$data = array(
-//'user_last_active_date'=>date("Y-m-d H:i:s")
-//);
-//$this->db->where('id', $id);
-//$this->db->limit(1);
-//$this->db->update(SELF::$this_table_name, $data);
-//return date("Y-m-d H:i:s");
-//}
-//
-//
-//    /**
-//     * Вставляет пользователя
-//     * Возвращает ID вставленное в таблицу
-//     * @param string $user_name
-//     * @param string $user_email
-//     * @param string $password
-//     * @param bool $activate_by_mail
-//     * @return int
-//     */
-//    public function insert_user_registration(string $user_name, string $user_email, string $password, bool $activate_by_mail=TRUE):int
-//        {
-//         $date = new DateTime();
-//         $date->getTimestamp();
-//
-//         $user_is_active = $activate_by_mail===TRUE?0:1;
-//
-//         $data = array(
-//        'user_name' => $user_name,
-//        'user_email'=> $user_email,
-//        'password'=> password_hash($password,PASSWORD_DEFAULT),
-//        'isactivated'=>$user_is_active,
-//        'group_id'=> $this->config->item('my_conf_default_user_group'),
-//        'user_registration_ip'=> getenv('REMOTE_ADDR'),
-//        'user_registration_ip_if_proxy'=> getenv('HTTP_X_FORWARDED_FOR'),
-//        'user_last_active_date'=>   date("Y-m-d H:i:s"),
-//        'user_registration_date'=>   date_format($date,"Y-m-d H:i:s"),
-//        );
-//        $this->db->insert(SELF::$this_table_name, $data);
-//        return $this->db->insert_id();
-//        }
-//
-//
-//
-//         public function insert_user_registration_with_any_user_group($user_name,$user_email,$password,$user_group_id)
-//        {
-//        		//$site_users_obj = new site_users_class;
-//        		//$site_users_obj->user_name = $user_name;
-//        		//$site_users_obj->user_email = $user_email;
-//        		//$site_users_obj->password = $password;
-//        	    //$this->db->insert('site_users', $site_users_obj);
-//        	   $date = new DateTime();
-//			   $date->getTimestamp();
-//
-//        	     $data = array(
-//        'user_name' => $user_name,
-//        'user_email'=> $user_email,
-//        'password'=> password_hash($password,PASSWORD_DEFAULT),
-//        'group_id'=> $user_group_id,
-//        'user_registration_ip'=> getenv('REMOTE_ADDR'),
-//        'user_registration_ip_if_proxy'=> getenv('HTTP_X_FORWARDED_FOR'),
-//        'user_last_active_date'=>   date("Y-m-d H:i:s"),
-//        'user_registration_date'=>   date_format($date,"Y-m-d H:i:s"),
-//
-//        );
-//        $this->db->insert(SELF::$this_table_name, $data);
-//        return $this->db->insert_id();
-//
-//        }
-//
-//        public function find_user_whith_pass_exist_and_return_all_data($user_name_or_password,$password)
-//        {
-//
-//			$this->db->where('user_name',$user_name_or_password);
-//			$this->db->or_where('user_email',$user_name_or_password);
-//			$query = $this->db->get('site_users');
-//
-//
-//			if ($query->num_rows() > 0)
-//			{
-//				$pass = $query->row()->password;
-//				if(password_verify($password,$pass))
-//				{
-//				return $query->row();
-//				} else
-//				{
-//					return FALSE;
-//				}
-//
-//			} else
-//			{
-//				return FALSE;
-//			}
-//
-//		}
-//
-//
-//
-////Функция найти пользователя по имени (для опредлеения дупликатов)
-//public function if_user_exist_by_name(string $name):bool
-//{
-//$this->db->where('user_name',$name);
-//$result_int = $this->db->count_all_results(SELF::$this_table_name);
-//return ($result_int == 0) ? FALSE : TRUE;
-//}
-//
-////Функция найти пользователя email (для опредлеения дупликатов)
-//public function if_user_exist_by_email(string $email):bool
-//{
-//$this->db->where('user_email',$email);
-//$result_int = $this->db->count_all_results(SELF::$this_table_name);
-//return ($result_int == 0) ? FALSE : TRUE;
-//}
-//
-//
-//
-//        public function find_user_whith_pass_exist_true_or_false($user_name_or_password,$password)
-//        {
-//
-//			$this->db->where('user_name',$user_name_or_password);
-//			$this->db->or_where('user_email',$user_name_or_password);
-//			$query = $this->db->get('site_users');
-//
-//
-//			if ($query->num_rows() > 0)
-//			{
-//				$pass = $query->row()->password;
-//				if(password_verify($password,$pass))
-//				{
-//				return TRUE;
-//				} else
-//				{
-//					return FALSE;
-//				}
-//
-//			} else
-//			{
-//				return FALSE;
-//			}
-//
-//		}
-//
-//
-//    /**
-//	 * Function looks for a match by using username or email (both must be unique)
-//	 * Return true or false
-//	 * 	 *
-//     * @param string $user_name_or_email
-//     * @return bool
-//	 *
-//     */
-//    public function find_user_exist(string $user_name_or_email): bool        {
-//        	$this->db->where('user_name',$user_name_or_email);
-//			$this->db->or_where('user_email',$user_name_or_email);
-//			$num_ret = $this->db->count_all_results('site_users');
-//			return $num_ret > 0 ? TRUE : FALSE; //Больше нуля возвращаем TRUE
-//		}
-//
-//
-//    /**
-//	 * Function looks for a match by using ID
-//	 * Return true or false
-//	 *
-//     * @param int $id  UserID - только инты
-//     * @return bool User is found or not
-//     */
-//    public function find_user_exist_by_id(int $id): bool        {
-//        	$this->db->where('id',$id);
-//			$num_ret = $this->db->count_all_results('site_users');
-//			return $num_ret > 0 ? TRUE : FALSE; //Больше нуля возвращаем TRUE
-//		}
-//
-//
-//    /**
-//	 * Ищет пользователя по логину или емайлу. Использует оптимизацию индексов для избегания конструкции OR
-//	 *
-//	 * Возвращает FALSE если не нашел пользователя.
-//	 *
-//	 * Если все ОК - Возвращает массив с одной записью из таблицы site_users
-//	 *
-//     * @param string $user_name_or_email  Логин или Email пользователя
-//     * @return bool|array
-//     */
-//public function find_user_exist_and_return_user_data(string $user_name_or_email)
-//	{
-////Ескейпаем строку, для обеспечения безопасности от SQL injection
-//$escp_str = $this->db->escape($user_name_or_email);
-////Запрос с оптимизацией, для использования индеса. Должны быть индексы на полях user_name и user_email
-//$query = $this->db->query('SELECT * FROM `site_users` WHERE `user_name` ='.$escp_str.'
-//UNION
-//SELECT * FROM `site_users` WHERE `user_email` = '.$escp_str);
-//
-//if ($query->num_rows() > 0)
-//{
-//	return  $query->row_array();
-//} else
-//{
-//	return FALSE;
-//}
-//	}
-//
-//
-//public function insert_user_activation_code(int $id, string $code)
-//{
-//$data = array(
-//'user_activation_code' => $code,
-//'user_that_will_be_activated_id'=> $id,
-//);
-//$this->db->insert('users_activation_code', $data);
-//}
-//
-//public function delete_activation_code(int $id)
-//{
-//$this->db->where('user_that_will_be_activated_id',$id)->limit(1);
-//$this->db->delete('users_activation_code');
-//}
-//
-//public function get_activation_code_by_code(string $code)
-//{
-//$this->db->where('user_activation_code',$code);
-//$query = $this->db->get('users_activation_code');
-//return $query->num_rows()>0 ? $query->row_array() : FALSE;
-//}
-//
-//public function get_activation_code_by_id(int $id)
-//{
-//$this->db->where('user_that_will_be_activated_id',$id);
-//$query = $this->db->get('users_activation_code');
-//return $query->num_rows()>0 ? $query->row_array() : FALSE;
-//}
-//
-//public function update_activation_code(int $id, string $code): int
-//{
-//    $this->db->where('user_that_will_be_activated_id',$id);
-//    $this->db->set('user_activation_code',$code);
-//    $this->db->update('users_activation_code');
-//    return $this->db->affected_rows();
-//}
-//
-//public function activate_user(int $id)
-//{
-//    $this->db->where('id',$id)->limit(1);
-//    $this->db->set('isactivated',1);
-//    $this->db->update('site_users');
-//}
-//
-//
-//
-//    public function find_user_exist_and_return_user_data_by_id($userid)
-//        {
-//      $this->db->where('id',$userid);
-//      $this->db->limit(1);
-//			$query = $this->db->get('site_users');
-//
-//			if ($query->num_rows() > 0)
-//			{
-//				return  $query->row_array();
-//			} else
-//			{
-//				return FALSE;
-//			}
-//
-//		}
-//
-//        public function get_first_user()
-//        {
-//		 $this->db->where('user_name',"glorsh");
-//		 $query = $this->db->get('site_users');
-//		 $row = $query->row();
-//
-//			if (isset($row))
-//			{
-//			$out['user_name']= $row->user_name;
-//			$out['id']= $row->id;
-//			$out['user_email']= $row->user_email;
-//            return $out;
-//			}
-//		}
-//
-//        public function get_last_ten_entries()
-//        {
-//                $query = $this->db->get('entries', 10);
-//                return $query->result();
-//
-//        }
-//
-//        public function insert_entry()
-//        {
-//                $this->title    = $_POST['title']; // please read the below note
-//                $this->content  = $_POST['content'];
-//                $this->date     = time();
-//
-//                $this->db->insert('entries', $this);
-//        }
-//
-//        public function update_entry()
-//        {
-//               $data = array(
-//        'user_name' => 'arrayname',
-//        'user_email'=>''
-//       );
-//                //$site_users_obj = new site_users_class;
-//        		//$site_users_obj->user_name = 'test_name';
-//        		//$site_users_obj->user_email = $user_email;
-//        		//$site_users_obj->password = $password;
-//
-//				$this->db->where('id', 4);
-//				$this->db->update('site_users', $data);
-//
-//
-//        }
-
 }
 
-
-abstract class form_filed
+class form_filed
 {
 
     /* @var string имя поля */
     public $name;
-    /* @var string|bool имя поля в базе данных, если отличается от имени поля */
+    /* @var string|bool Название поля которое выводится пользователю на руском языке */
     public $label = FALSE;
     /* @var string|bool имя поля в базе данных, если отличается от имени поля */
-    public $mysql_field_name = FALSE;
-    /* @var array набор опций в списке*/
+    protected $mysql_field_name = FALSE;
+    /* @var array набор опций в списке (т.е. доступные варианты ответов которые пользователь может выбрать)*/
     public $options;
-    /* @var form_params набор опций в списке*/
+    /* @var form_params тип использованного меню. Для работы используется объект класса - form_params*/
     public $param;
-    //Интерфейсы
+    //Интерфейсы (Паттерн Strategy). Данные интерфейсы реализуеют поведение формы
     /* @var forrm_create_behavior реализация интерфейса по созданию формы*/
     public $form_create_obj;
     /* @var form_validation_rules_behavior реализация интерфейса по созданию формы*/
     public $form_vall_obj;
+    /* @var  стандартная опция. Если будет FALSE то будет использоваться стандартная опция из $param (form_params)*/
+    protected $default_option = FALSE;
+    /* @var  строка ошибки которая выводится. Если будет FALSE то будет использоваться стандартная опция из $param (form_params)*/
+    protected $validation_error_message = FALSE;
+    /* @var  массив ошибок которые выводятся. Если будет FALSE то будет использоваться стандартная опция из $param (form_params)*/
+    protected $validation_errors = FALSE;
+    /* @var  CSS класс для формы. Если будет FALSE то будет использоваться стандартная опция из $param (form_params)*/
+    protected $css_class = FALSE;
+    /* @var  CSS класс для строки с ощибками. Если будет FALSE то будет использоваться стандартная опция из $param (form_params)*/
+    protected $error_css_class = FALSE;
 
 
 
 
-    function __construct($name,$options,$param,$label,$mysql_field_name=FALSE)
+
+    function __construct($name,$options,$param,$label,$mysql_field_name=FALSE,$default_option=FALSE,$validation_error_message=FALSE,
+                         $validation_errors=FALSE,$css_class=FALSE,$error_css_class=FAlSE)
     {
         $this->name = $name;
         $this->options = $options;
         $this->param = $param;
         $this->label =$label;
-
-        if ($mysql_field_name === FALSE)
-        {
-            $this->mysql_field_name = $name;
-        }
-
-   }
-
-    //Обертки
-    public function get_form_html():string
-    {
-    return $this->form_create_obj->create_html($this);
-    }
-
-    public function get_val_rules()
-    {
-        $this->form_vall_obj->create_validation_rules($this);
-    }
+        $this->default_option=$default_option;
+        $this->validation_error_message=$validation_error_message;
+        $this->validation_errors=$validation_errors;
+        $this->css_class=$css_class;
+        $this->error_css_class=$error_css_class;
+        $this->mysql_field_name = $mysql_field_name;
 
 
-    public function get_text_representation(int $i):string
-    {
-         if (array_key_exists($i,$this->options)) return $this->options[$i];
-         elseif ($i===0) return $this->param->default_option;
-         else return $this->param->default_option;
-    }
-
-
-    function get_name(): string
-    {
-        return $this->param->prefix . $this->name;
-    }
-
-    function post_value()
-    {
-        $CI =& get_instance();
-        $res = $CI->input->post($this->get_name());
-        return is_null($res)?0:$res;
-    }
-
-
-}
-
-class form_field_new_person extends form_filed
-{
-    function __construct($name,$options,$param,$label,$mysql_field_name=FALSE)
-    {
-        parent::__construct($name,$options,$param,$label,$mysql_field_name);
-
+        //Фабричный метод для сборки нужного объекта реализующего необходимое поведение
+        //Strategy pattern
         switch ($param->type) {
             case form_params::select:
                 $this->form_create_obj = new new_person_create_select();
@@ -701,15 +362,141 @@ class form_field_new_person extends form_filed
             case 4:
                 break;
         }
+
+   }
+
+
+   public function createDBField()
+   {
+   $CI =& get_instance();
+   $data = [$this->getMysqlName() => array(
+                          'type' => 'tinyint',
+                          'null' => FALSE, // NOT Null
+                          'default' => '0' )];
+   $CI ->dbforge->add_field($data);
+   }
+
+   public function getDefaultValue():string
+    {
+        if ($this->default_option===FALSE)
+            return $this->param->default_option;
+        else
+            (string)$this->default_option;
     }
+
+
+   public function getMysqlName():string
+    {
+        if ($this->mysql_field_name===FALSE)
+            return $this->name;
+        else
+            return $this->mysql_field_name;
+    }
+
+    public function getErrorMessage():string
+    {
+        if ($this->validation_error_message===FALSE)
+            return $this->param->validation_error_message;
+        else
+            return $this->validation_error_message;
+    }
+
+    public function getValidationErrorsArray()
+    {
+        if ($this->validation_errors===FALSE)
+            return $this->param->error_messages_arr;
+        else
+           return $this->validation_errors;
+    }
+
+    public function getCSSClass():string
+    {
+        if ($this->css_class===FALSE)
+            return $this->param->form_class;
+        else
+            return $this->css_class;
+    }
+
+    public function getCSSErrorClass():string
+    {
+        if ($this->error_css_class===FALSE)
+            return $this->param->error_class;
+        else
+           return $this->error_css_class;
+    }
+
+
+
+
+
+
+    /**
+     * Функция которая делает HTML представлание формы
+     * @return string готовая для вставки в пользовательский интерфейс форма
+     */
+    public function get_form_html():string
+    {
+    return $this->form_create_obj->create_html($this);
+    }
+
+    /**
+     * Создает правила для form validation rules
+     */
+    public function get_val_rules()
+    {
+        $this->form_vall_obj->create_validation_rules($this);
+    }
+
+
+    /**
+     * Получить текстовое представлание номера пунта.
+     * Если переданао невалидное значение то возвращает, значение по умолчанию.
+     * @param int Номер в формате INT. Типа ID данного пункта который будет показан пользователю. Нужно для того что бы
+     * хранить данные в базе в INT
+     * @return string возвращает тектовое представлание данного пункта
+     */
+    public function get_text_representation(int $i):string
+    {
+         if (array_key_exists($i,$this->options)) return $this->options[$i];
+         elseif ($i===0) return $this->getDefaultValue();
+         else return  $this->getDefaultValue();
+    }
+
+
+    /**
+     * Возвращает префикс поля
+     * @return string|bool возвращает префикс поля. Если его нет возвращает FALSE
+     */
+    function getPrefix()
+    {
+      return $this->param->prefix===FALSE ? FALSE : $this->param->prefix;
+    }
+
+
+    /**
+     * Возвращает имя текущего поля с префиксом
+     * @return string имя поля (просто добавляет префикс, если он нужен)
+     */
+    function get_name(): string
+    {
+        if ($this->param->prefix!==FALSE) return $this->param->prefix . $this->name;
+        else $this->name;
+    }
+
+    /**
+     * Получаем значение которое передал пользователь через форму методом POST.
+     * @return int|mixed возвращает значение которое передано по методу POST. (не можем кастить в инт, так как может
+     * быть возвращен массив).
+     */
+    function post_value()
+    {
+        $CI =& get_instance();
+        $res = $CI->input->post($this->get_name());
+        return is_null($res)?0:$res;
+    }
+
+
 }
-
-
-
-
-
-
-
 
 
 
@@ -771,18 +558,6 @@ class form_params
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 //Интерфейсы
 interface forrm_create_behavior
 {
@@ -794,12 +569,12 @@ interface form_validation_rules_behavior
     public function create_validation_rules(form_filed $ff);
 }
 
-interface forrm_edit_behavior
+interface form_edit_behavior
 {
     public function edit_form_html(form_filed $ff, array $qr): string;
 }
 
-interface forrm_editor_validation_rules_behavior
+interface form_editor_validation_rules_behavior
 {
     public function create_validation_rules(form_filed $ff, array $qr): string;
 }
@@ -826,9 +601,8 @@ abstract class form_create_abstract
     protected function repopulate_for_multi_choice(form_filed $ff)
     {
         $CI =& get_instance();
-      //  $val = $CI->input->post($ff->get_name());
 
-        $val = set_value($ff->get_name());
+        $val = $CI->input->post($ff->get_name());
         if (empty($val)) return FALSE;
         if (!is_array($val)) return FALSE;
             else
@@ -851,7 +625,7 @@ abstract class form_create_abstract
 
     protected function make_error_line(form_filed $ff,string $s):string
     {
-        return PHP_EOL.'<span class="'.$ff->param->error_class.'">'.$s.'</span>'.PHP_EOL;
+        return PHP_EOL.'<span class="'.$ff->getCSSErrorClass().'">'.$s.'</span>'.PHP_EOL;
     }
 
 
@@ -878,13 +652,9 @@ class new_person_create_select extends form_create_abstract implements forrm_cre
 
         $str.='<select name="'.$ff->get_name(). '" id="'.$ff->get_name().'">'.PHP_EOL;
 
-        //TODO:Убрать это для полей которые required и в которых пользователь, что то наковырял
-//        if ($repopulate===FALSE && !$required) $str.='<option value="0" selected>'.$ff->param->default_option.'</option>'.PHP_EOL;
-//        elseif ($repopulate==TRUE && !$required) $str.='<option value="0">'.$ff->param->default_option.'</option>'.PHP_EOL;
-
         //Значение по умолчанию - что то вроде типа - не выбрано
-        if ($repopulate===FALSE) $str.='<option value="0" selected>'.$ff->param->default_option.'</option>'.PHP_EOL;
-        elseif ($repopulate==TRUE ) $str.='<option value="0">'.$ff->param->default_option.'</option>'.PHP_EOL;
+        if ($repopulate===FALSE) $str.='<option value="0" selected>'.$ff->getDefaultValue().'</option>'.PHP_EOL;
+        elseif ($repopulate==TRUE ) $str.='<option value="0">'.$ff->getDefaultValue().'</option>'.PHP_EOL;
 
         foreach($ff->options as $key => $value)
         {
@@ -1004,6 +774,66 @@ class new_person_create_radio_button extends form_create_abstract implements for
 
 
 
+class edit_person_create_select extends form_create_abstract implements forrm_create_behavior
+{
+    public function create_html(form_filed $ff): string
+    {
+
+        $CI = &get_instance();
+        //Работает только с залогиненым юзером
+        $repopulate = $this->repopulate($ff);
+        $error_str  = $this->check_error($ff);
+
+        //PD - Person Data - строка для конкретного пользователя. Берется так как пользователь уже залогинен.
+        $pd = $CI->Personmodel->person_data_table;
+
+        //Hook для Repopulate. Если repopulate пустая значит пользователь еще ничего не отправлял
+        //Значит мы заменяем repopulate на значение из базы. Если Repopulate не пустое, значит юзер уже отправил данные.
+        $repopulate = (int)$pd[$ff->getMysqlName()];
+
+        //Начинаем формировать строку
+        $required = in_array('required',$ff->param->validation_rules);
+        $str='';//Делаем пустую строку
+
+
+
+        if ($required)
+            $str.=PHP_EOL.'<label for="'.$ff->get_name().'">'.$ff->label.' * </label>'.PHP_EOL;
+        else $str.=PHP_EOL.'<label for="'.$ff->get_name().'">'.$ff->label.'</label>'.PHP_EOL;
+
+
+
+        $str.='<select name="'.$ff->get_name(). '" id="'.$ff->get_name().'">'.PHP_EOL;
+
+        //Значение по умолчанию - что то вроде типа - не выбрано
+        if ($repopulate===FALSE) $str.='<option value="0" selected>'.$ff->getDefaultValue().'</option>'.PHP_EOL;
+        elseif ($repopulate==TRUE ) $str.='<option value="0">'.$ff->getDefaultValue().'</option>'.PHP_EOL;
+
+        foreach($ff->options as $key => $value)
+        {
+            //Если это ранее выбранная строка пользователем
+            if (((int)$key)===$repopulate)
+            {
+                $str.= '<option value="'.$key.'"  selected >'.$value.'</option>'.PHP_EOL;
+            }else
+            {
+                 $str.= '<option value="'.$key.'">'.$value.'</option>'.PHP_EOL;
+            }
+        }
+
+
+        $str.='</select>'.PHP_EOL;
+        if ($error_str)
+        {
+            $str.=  $this->make_error_line($ff,$error_str);
+        }
+        return $str;
+
+    }
+
+}
+
+
 
 
 class new_person_validate_rules_one_possible_answer implements form_validation_rules_behavior
@@ -1023,9 +853,9 @@ class new_person_validate_rules_one_possible_answer implements form_validation_r
 
         $err_description=[];//Создаем пустой массив ошибок.
          //Заполняем $err_description (если переданы они в качестве параметра)
-        if (!empty($ff->param->error_messages_arr))
+         if (!empty($ff->getValidationErrorsArray()))
         {
-            $err_description = $ff->param->error_messages_arr;
+            $err_description = $ff->getValidationErrorsArray();
         }
 
             //Если нам нужен каллбак
@@ -1041,7 +871,7 @@ class new_person_validate_rules_one_possible_answer implements form_validation_r
                 if ((array_key_exists($user_int,$ff->options)) || (($user_int===0) && $required===FALSE)) return TRUE;
                 else return FALSE;
             };
-                $err_description[$funct_name]= $ff->param->validation_error_message; //Заполняем
+                $err_description[$funct_name]= $ff->getErrorMessage(); //Заполняем
                 $rules[] = [$funct_name,$funct];
             //Собираем полное правило
             $CI->form_validation->set_rules($ff->get_name(),$ff->label,$rules,$err_description);
@@ -1073,9 +903,9 @@ class new_person_validate_rules_seveveral_possible_answers  implements form_vali
 
         $err_description=[];//Создаем пустой массив ошибок.
         //Заполняем $err_description (если переданы они в качестве параметра)
-        if (!empty($ff->param->error_messages_arr))
+        if (!empty($ff->getValidationErrorsArray()))
         {
-            $err_description = $ff->param->error_messages_arr;
+            $err_description = $ff->getValidationErrorsArray();
         }
 
         //Если нам нужен каллбак
@@ -1091,7 +921,7 @@ class new_person_validate_rules_seveveral_possible_answers  implements form_vali
                 if ((array_key_exists($user_int,$ff->options)) || (($user_int===0) && $required===FALSE)) return TRUE;
                 else return FALSE;
             };
-            $err_description[$funct_name]= $ff->param->validation_error_message; //Заполняем
+            $err_description[$funct_name]= $ff->getErrorMessage(); //Заполняем
             $rules[] = [$funct_name,$funct];
             //Собираем полное правило
             $CI->form_validation->set_rules($ff->get_name(),$ff->label,$rules,$err_description);

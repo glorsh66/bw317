@@ -269,7 +269,7 @@ return TRUE;
   //Если существует то мы обновим сессию на всякий случай
   if ($this->user_data)
   {
-      //TODO: Нужно ли тут обновлять сессиию?
+  //TODO: Нужно ли тут обновлять сессиию? Вот в чем попрос.
   $this->CI->session->set_userdata('user_logged_id', $this->user_data["id"]);
   $this->CI->session->set_userdata('user_logged_name', $this->user_data["user_name"]);
   $this->CI->session->set_userdata('user_logged_email', $this->user_data["user_email"]);
@@ -288,19 +288,16 @@ public function register($user_name,$user_email,$password)
 {
 //Грубая проверка данных что бы не допустить значений которые база не может принять
 //Проверям пустые ли строки
-if (empty($user_name)){$this->error = "User_name is empty"; return FALSE;}
-if (empty($user_email)){$this->error = "Email is empty"; return FALSE;}
-if (empty($password)){$this->error = "Password is empty"; return FALSE;}
+if (empty($user_name)){$this->error = "User_name is empty"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
+if (empty($user_email)){$this->error = "Email is empty"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
+if (empty($password)){$this->error = "Password is empty"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
 
 //Проверяем длинну строк
-if (strlen($user_name)>255){$this->error = "User_name is more than 255 characters"; return FALSE;}
-if (strlen($user_email)>255){$this->error = "Email is more than 255 characters"; return FALSE;}
-if (strlen($password)>255){$this->error = "Password is more than 255 characters"; return FALSE;}
-
+if (strlen($user_name)>255){$this->error = "User_name is more than 255 characters"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
+if (strlen($user_email)>255){$this->error = "Email is more than 255 characters"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
+if (strlen($password)>255){$this->error = "Password is more than 255 characters"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
 //Проверям правильность email
-if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sender adress is invalid email adress"; return FALSE;}
-
-
+if (filter_var($user_email, FILTER_VALIDATE_EMAIL)=== false){$this->error = "Sender adress is invalid email adress"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
 
 
 $this->CI->load->library('simple_mail_lib');
