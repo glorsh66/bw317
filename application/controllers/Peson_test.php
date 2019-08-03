@@ -24,15 +24,20 @@ public function index()
 
 $this->benchmark->mark('start');
 $this->load->model('Personmodel');
+$this->Personmodel->initialize(Personmodel::new);
+
 $this->benchmark->mark('stop');
 
 
     //Устанавливаем правила FORM VALIDATION
-$this->Personmodel->makeValidationRules();
+
 
     //Массив данных для передачи в VIEW
-    $data['person_forms'] = $this->Personmodel->ar;
-    $ar = $this->Personmodel->ar;
+    $data['person_forms'] = $this->Personmodel->allFields;
+    $ar = $this->Personmodel->allFields;
+
+
+
 
 
 

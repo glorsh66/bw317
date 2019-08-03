@@ -1,20 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class registration_with_person extends CI_Controller {
+class registration extends CI_Controller {
 
     public function __construct()
     {
         parent::__construct();
         $this->load->model("PMmodel");
         $this->load->model('Usermodel');
-        $this->load->model('Personmodel'); //Грузим для того что бы можно было еще данные из person загрузить.
         $this->load->library('simple_auth_lib');
         $this->load->helper('url');
         $this->config->set_item('language', 'russian');
-        $this->load->library('form_validation');
-        $this->load->helper('form');
-
     }
 
     public function index()
@@ -24,29 +20,30 @@ class registration_with_person extends CI_Controller {
             redirect('/login/', 'refresh');
         }
 
+        $this->load->library('form_validation');
+        $this->load->helper('form');
+
         //Устанавливаем правила проверки форм
         $this->form_validation->set_rules('reg_username', 'Username', 'required|min_length[3]|max_length[50]|is_unique[site_users.user_name]|regex_match[/^[a-zA-Z0-9а-яА-Я_.,!][a-zA-Z0-9а-яА-Я_.,! ]*[a-zA-Z0-9а-яА-Я_.,!]$/]');
+
         $this->form_validation->set_message('regex_match', 'В имени пользователя не допускаются а');
+
+        //$this->form_validation->set_rules('reg_username', 'Username', 'trim|required|min_length[3]|max_length[50]|is_unique[site_users.user_name]|regex_match[^[^-\s][a-zA-Z0-9а-яА-Я_.,! ]*[^-\s]$]|callback__check_anonymous');
 
         //Поле проверяется, что бы не было заняты имена такие как anonymous1 - anonymous10
         $this->form_validation->set_rules('reg_email', 'Email', 'trim|required|valid_email|is_unique[site_users.user_email]');
         $this->form_validation->set_rules('reg_password', 'Password', 'required|min_length[4]');
         $this->form_validation->set_rules('reg_cpassword', 'Password Confirmation', 'required|matches[reg_password]');
 
+
+
+
         //Проверка текстовой капчи МАРК-1
-        $c1_user_sent= $this->input->post('reg_captcha1');
-        $c1_correct_char= $this->session->flashdata('reg_captcha1');
+        $c1_user_sent=$this->input->post('reg_captcha1');
+        $c1_correct_char  =$this->session->flashdata('reg_captcha1');
 
-        $c2_user_sent= $this->input->post('reg_captcha2');
-        $c2_correct_answer = $this->session->flashdata('reg_captcha2');
-
-        //Устанавливаем правила Form Validation для персоны.
-        $this->Personmodel->makeValidationRules();
-
-        //Массив данных для передачи в VIEW (HTML код для форм Persona)
-        $data['person_forms'] = $this->Personmodel->ar;
-        $ar = $this->Personmodel->ar;
-
+        $c2_user_sent=$this->input->post('reg_captcha2');
+        $c2_correct_answer  =$this->session->flashdata('reg_captcha2');
 
 
 //Валидация для первой формы
@@ -79,6 +76,12 @@ class registration_with_person extends CI_Controller {
             array('capch_check' => 'Вы неправильно ввели ответ на вопрос. Попробуйте еще раз подумать и ответить на вопрос. Докажите что вы не робот.'));
 
 
+
+
+
+
+
+
         //Заносим проверку скрытых полей
         $hidden_fields_check = TRUE;
         $hidden_fields_check1 = 'yes'===$this->input->post('reg_chbx_yes');
@@ -86,7 +89,6 @@ class registration_with_person extends CI_Controller {
         $hidden_fields_check3 =  !isset($_POST['reg_chbx_no']);
         if ($hidden_fields_check1===FALSE || $hidden_fields_check2===FALSE || $hidden_fields_check3===FALSE)
             $hidden_fields_check=FALSE;
-
 
 
 
@@ -100,13 +102,8 @@ class registration_with_person extends CI_Controller {
             //Вызываем модель Usermodel, которая вставляем данные для регистрации пользователя
             $ret =  $this->simple_auth_lib->register($user_name, $user_email, $password);
 
-            //Вставляем Person с полученными данными
-            $this->Personmodel->insertNewPerson($ret);
-
             //Если вставка регистрационных данныъ прошла успешно
             $this->load->view('registration success_without_validation');
-
-
         }
         else //Сюда заходим только если форма не отправлена, либо не прошла валидацию.
         {
@@ -120,7 +117,7 @@ class registration_with_person extends CI_Controller {
             $data['captcha1'] = $captcha1;
             $data['captcha2'] = $captcha2[0];
 
-            $this->load->view('User_registration_view_with_person',$data);
+            $this->load->view('User_registration_view',$data);
         }
         //Проводим проверку полей
 
