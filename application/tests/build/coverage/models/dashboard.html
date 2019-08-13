@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/html/bw317/application/models</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../.css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../.css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../.css/style.css" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="../.js/html5shiv.min.js"></script>
+  <script src="../.js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="../index.html">/var/www/html/bw317/application</a></li>
+        <li><a href="index.html">models</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Capchamodelfirst.php.html#2">CapchamodelFirst</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#769">new_person_create_select</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Testmod.php.html#2">Testmod</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1071">new_person_validate_rules_seveveral_possible_answers</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1024">new_person_validate_rules_for_text_field</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#975">new_person_validate_rules_one_possible_answer</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#908">edit_person_create_select</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#868">new_person_create_radio_button</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#819">new_person_create_select_multiple</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#718">person_edit_text_field</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Inventory_model.php.html#2">Inventory_model</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#674">new_person_create_text_field</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#620">form_create_abstract</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#2">PMmodel</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#2">Mailmodel</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Login_attempts_model.php.html#2">Login_attempts_model</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#15">Usermodel</a></td><td class="text-right">3%</td></tr>
+       <tr><td><a href="Personmodel.php.html#305">form_filed</a></td><td class="text-right">45%</td></tr>
+       <tr><td><a href="Personmodel.php.html#2">Personmodel</a></td><td class="text-right">65%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Usermodel.php.html#15">Usermodel</a></td><td class="text-right">3003</td></tr>
+       <tr><td><a href="PMmodel.php.html#2">PMmodel</a></td><td class="text-right">600</td></tr>
+       <tr><td><a href="Personmodel.php.html#305">form_filed</a></td><td class="text-right">209</td></tr>
+       <tr><td><a href="Personmodel.php.html#2">Personmodel</a></td><td class="text-right">176</td></tr>
+       <tr><td><a href="Personmodel.php.html#975">new_person_validate_rules_one_possible_answer</a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Personmodel.php.html#1071">new_person_validate_rules_seveveral_possible_answers</a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Personmodel.php.html#620">form_create_abstract</a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Personmodel.php.html#908">edit_person_create_select</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Capchamodelfirst.php.html#2">CapchamodelFirst</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Personmodel.php.html#769">new_person_create_select</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Personmodel.php.html#718">person_edit_text_field</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Personmodel.php.html#819">new_person_create_select_multiple</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Personmodel.php.html#674">new_person_create_text_field</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#868">new_person_create_radio_button</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Personmodel.php.html#1024">new_person_validate_rules_for_text_field</a></td><td class="text-right">20</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Capchamodelfirst.php.html#5"><abbr title="CapchamodelFirst::validateCaptcha">validateCaptcha</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Testmod.php.html#23"><abbr title="Testmod::update_entry">update_entry</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#158"><abbr title="Usermodel::set_zero_login_attempts_with_wrong_password">set_zero_login_attempts_with_wrong_password</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#142"><abbr title="Usermodel::insert_login_attempts">insert_login_attempts</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#131"><abbr title="Usermodel::delete_old_sessions_test">delete_old_sessions_test</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#126"><abbr title="Usermodel::delete_old_sessions">delete_old_sessions</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#98"><abbr title="Usermodel::check_cookie_and_return_id">check_cookie_and_return_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#86"><abbr title="Usermodel::find_collision_selecto_session">find_collision_selecto_session</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#76"><abbr title="Usermodel::deleteAllSessionsForUser">deleteAllSessionsForUser</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#68"><abbr title="Usermodel::delete_one_user_session">delete_one_user_session</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#55"><abbr title="Usermodel::insert_user_session">insert_user_session</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Testmod.php.html#14"><abbr title="Testmod::insert_entry">insert_entry</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#190"><abbr title="Usermodel::changePassword">changePassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Testmod.php.html#8"><abbr title="Testmod::get_last_ten_entries">get_last_ten_entries</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1099"><abbr title="new_person_validate_rules_seveveral_possible_answers::anonymousFunction:1099#6925">anonymousFunction:1099#6925</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1078"><abbr title="new_person_validate_rules_seveveral_possible_answers::create_validation_rules">create_validation_rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1051"><abbr title="new_person_validate_rules_for_text_field::anonymousFunction:1051#6672">anonymousFunction:1051#6672</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1031"><abbr title="new_person_validate_rules_for_text_field::create_validation_rules">create_validation_rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#1003"><abbr title="new_person_validate_rules_one_possible_answer::anonymousFunction:1003#6358">anonymousFunction:1003#6358</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#982"><abbr title="new_person_validate_rules_one_possible_answer::create_validation_rules">create_validation_rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#910"><abbr title="edit_person_create_select::create_html">create_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#870"><abbr title="new_person_create_radio_button::create_html">create_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#174"><abbr title="Usermodel::block_user_on_x_minutes">block_user_on_x_minutes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#199"><abbr title="Usermodel::count_login_attempts_and_delte_old_entries">count_login_attempts_and_delte_old_entries</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#771"><abbr title="new_person_create_select::create_html">create_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#446"><abbr title="Usermodel::delete_activation_code">delete_activation_code</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#540"><abbr title="Usermodel::insert_entry">insert_entry</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#533"><abbr title="Usermodel::get_last_ten_entries">get_last_ten_entries</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#518"><abbr title="Usermodel::get_first_user">get_first_user</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#500"><abbr title="Usermodel::find_user_exist_and_return_user_data_by_alias_id">find_user_exist_and_return_user_data_by_alias_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#483"><abbr title="Usermodel::find_user_exist_and_return_user_data_by_id">find_user_exist_and_return_user_data_by_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#474"><abbr title="Usermodel::activate_user">activate_user</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#466"><abbr title="Usermodel::update_activation_code">update_activation_code</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#459"><abbr title="Usermodel::get_activation_code_by_id">get_activation_code_by_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#452"><abbr title="Usermodel::get_activation_code_by_code">get_activation_code_by_code</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#437"><abbr title="Usermodel::insert_user_activation_code">insert_user_activation_code</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#226"><abbr title="Usermodel::update_user_last_activity">update_user_last_activity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#418"><abbr title="Usermodel::find_user_exist_and_return_user_data">find_user_exist_and_return_user_data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#401"><abbr title="Usermodel::find_user_exist_by_alias_id">find_user_exist_by_alias_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#394"><abbr title="Usermodel::find_user_exist_by_id">find_user_exist_by_id</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#379"><abbr title="Usermodel::find_user_exist">find_user_exist</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#344"><abbr title="Usermodel::find_user_whith_pass_exist_true_or_false">find_user_whith_pass_exist_true_or_false</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#335"><abbr title="Usermodel::if_user_exist_by_email">if_user_exist_by_email</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#327"><abbr title="Usermodel::if_user_exist_by_name">if_user_exist_by_name</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#298"><abbr title="Usermodel::find_user_whith_pass_exist_and_return_all_data">find_user_whith_pass_exist_and_return_all_data</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#256"><abbr title="Usermodel::insert_user_registration">insert_user_registration</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#821"><abbr title="new_person_create_select_multiple::create_html">create_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#720"><abbr title="person_edit_text_field::create_html">create_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Capchamodelfirst.php.html#14"><abbr title="CapchamodelFirst::anonymousFunction:14#73">anonymousFunction:14#73</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#32"><abbr title="Mailmodel::get_last_ten_entries">get_last_ten_entries</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#211"><abbr title="PMmodel::count_ammount_of_sended_in_x_minutes">count_ammount_of_sended_in_x_minutes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#204"><abbr title="PMmodel::count_all_messages">count_all_messages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#193"><abbr title="PMmodel::count_board">count_board</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#110"><abbr title="PMmodel::get_message_thread">get_message_thread</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#65"><abbr title="PMmodel::get_board">get_board</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#18"><abbr title="PMmodel::insert_message">insert_message</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#59"><abbr title="Mailmodel::delete_old_mails">delete_old_mails</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#50"><abbr title="Mailmodel::delete_one_mail">delete_one_mail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#41"><abbr title="Mailmodel::update_has_been_sent">update_has_been_sent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#21"><abbr title="Mailmodel::get_mails">get_mails</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#676"><abbr title="new_person_create_text_field::create_html">create_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Mailmodel.php.html#6"><abbr title="Mailmodel::insert_mail">insert_mail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Login_attempts_model.php.html#26"><abbr title="Login_attempts_model::del_old_entries">del_old_entries</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Login_attempts_model.php.html#20"><abbr title="Login_attempts_model::count_results">count_results</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Login_attempts_model.php.html#8"><abbr title="Login_attempts_model::insert_new_entry">insert_new_entry</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Inventory_model.php.html#23"><abbr title="Inventory_model::get_category_name2">get_category_name2</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Inventory_model.php.html#17"><abbr title="Inventory_model::get_category_name">get_category_name</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Inventory_model.php.html#8"><abbr title="Inventory_model::get_category_list">get_category_list</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Capchamodelfirst.php.html#35"><abbr title="CapchamodelFirst::textcaptcha_mark_one">textcaptcha_mark_one</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Capchamodelfirst.php.html#29"><abbr title="CapchamodelFirst::generateCaptcha">generateCaptcha</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PMmodel.php.html#230"><abbr title="PMmodel::count_all_new_messages_from_board">count_all_new_messages_from_board</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#113"><abbr title="Personmodel::getDataPerson">getDataPerson</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#235"><abbr title="Personmodel::updatePersonData">updatePersonData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#476"><abbr title="form_filed::get_form_html">get_form_html</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#663"><abbr title="form_create_abstract::make_error_line">make_error_line</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#657"><abbr title="form_create_abstract::check_error">check_error</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#638"><abbr title="form_create_abstract::repopulate_for_multi_choice">repopulate_for_multi_choice</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#623"><abbr title="form_create_abstract::repopulate">repopulate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#530"><abbr title="form_filed::post_value">post_value</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#519"><abbr title="form_filed::get_name">get_name</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#509"><abbr title="form_filed::getPrefix">getPrefix</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#497"><abbr title="form_filed::get_text_representation">get_text_representation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#484"><abbr title="form_filed::get_val_rules">get_val_rules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#462"><abbr title="form_filed::getCSSErrorClass">getCSSErrorClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#454"><abbr title="form_filed::getCSSClass">getCSSClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#446"><abbr title="form_filed::getValidationErrorsArray">getValidationErrorsArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#438"><abbr title="form_filed::getErrorMessage">getErrorMessage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#421"><abbr title="form_filed::getDefaultValue">getDefaultValue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#296"><abbr title="Personmodel::get_int_with_increment">get_int_with_increment</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#291"><abbr title="Personmodel::get_int">get_int</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#263"><abbr title="Personmodel::makeValidationRules">makeValidationRules</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#242"><abbr title="Personmodel::insertNewPerson">insertNewPerson</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Usermodel.php.html#549"><abbr title="Usermodel::update_entry">update_entry</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Personmodel.php.html#76"><abbr title="Personmodel::initialize">initialize</abbr></a></td><td class="text-right">47%</td></tr>
+       <tr><td><a href="Personmodel.php.html#430"><abbr title="form_filed::getMysqlName">getMysqlName</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Personmodel.php.html#345"><abbr title="form_filed::__construct">__construct</abbr></a></td><td class="text-right">67%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Personmodel.php.html#910"><abbr title="edit_person_create_select::create_html">create_html</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="PMmodel.php.html#110"><abbr title="PMmodel::get_message_thread">get_message_thread</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="PMmodel.php.html#230"><abbr title="PMmodel::count_all_new_messages_from_board">count_all_new_messages_from_board</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Personmodel.php.html#771"><abbr title="new_person_create_select::create_html">create_html</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Personmodel.php.html#1078"><abbr title="new_person_validate_rules_seveveral_possible_answers::create_validation_rules">create_validation_rules</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Personmodel.php.html#982"><abbr title="new_person_validate_rules_one_possible_answer::create_validation_rules">create_validation_rules</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Personmodel.php.html#720"><abbr title="person_edit_text_field::create_html">create_html</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Personmodel.php.html#821"><abbr title="new_person_create_select_multiple::create_html">create_html</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Personmodel.php.html#1003"><abbr title="new_person_validate_rules_one_possible_answer::anonymousFunction:1003#6358">anonymousFunction:1003#6358</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#1099"><abbr title="new_person_validate_rules_seveveral_possible_answers::anonymousFunction:1099#6925">anonymousFunction:1099#6925</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#638"><abbr title="form_create_abstract::repopulate_for_multi_choice">repopulate_for_multi_choice</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#263"><abbr title="Personmodel::makeValidationRules">makeValidationRules</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#242"><abbr title="Personmodel::insertNewPerson">insertNewPerson</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#676"><abbr title="new_person_create_text_field::create_html">create_html</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Personmodel.php.html#870"><abbr title="new_person_create_radio_button::create_html">create_html</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Personmodel.php.html#1031"><abbr title="new_person_validate_rules_for_text_field::create_validation_rules">create_validation_rules</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Usermodel.php.html#98"><abbr title="Usermodel::check_cookie_and_return_id">check_cookie_and_return_id</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Usermodel.php.html#256"><abbr title="Usermodel::insert_user_registration">insert_user_registration</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Usermodel.php.html#298"><abbr title="Usermodel::find_user_whith_pass_exist_and_return_all_data">find_user_whith_pass_exist_and_return_all_data</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Capchamodelfirst.php.html#14"><abbr title="CapchamodelFirst::anonymousFunction:14#73">anonymousFunction:14#73</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Usermodel.php.html#344"><abbr title="Usermodel::find_user_whith_pass_exist_true_or_false">find_user_whith_pass_exist_true_or_false</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Capchamodelfirst.php.html#5"><abbr title="CapchamodelFirst::validateCaptcha">validateCaptcha</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Personmodel.php.html#623"><abbr title="form_create_abstract::repopulate">repopulate</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Personmodel.php.html#497"><abbr title="form_filed::get_text_representation">get_text_representation</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="PMmodel.php.html#65"><abbr title="PMmodel::get_board">get_board</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Personmodel.php.html#345"><abbr title="form_filed::__construct">__construct</abbr></a></td><td class="text-right">8</td></tr>
+       <tr><td><a href="Personmodel.php.html#76"><abbr title="Personmodel::initialize">initialize</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#500"><abbr title="Usermodel::find_user_exist_and_return_user_data_by_alias_id">find_user_exist_and_return_user_data_by_alias_id</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#483"><abbr title="Usermodel::find_user_exist_and_return_user_data_by_id">find_user_exist_and_return_user_data_by_id</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#459"><abbr title="Usermodel::get_activation_code_by_id">get_activation_code_by_id</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#452"><abbr title="Usermodel::get_activation_code_by_code">get_activation_code_by_code</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#418"><abbr title="Usermodel::find_user_exist_and_return_user_data">find_user_exist_and_return_user_data</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#401"><abbr title="Usermodel::find_user_exist_by_alias_id">find_user_exist_by_alias_id</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#394"><abbr title="Usermodel::find_user_exist_by_id">find_user_exist_by_id</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#379"><abbr title="Usermodel::find_user_exist">find_user_exist</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="PMmodel.php.html#18"><abbr title="PMmodel::insert_message">insert_message</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#335"><abbr title="Usermodel::if_user_exist_by_email">if_user_exist_by_email</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#327"><abbr title="Usermodel::if_user_exist_by_name">if_user_exist_by_name</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#142"><abbr title="Usermodel::insert_login_attempts">insert_login_attempts</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#657"><abbr title="form_create_abstract::check_error">check_error</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#113"><abbr title="Personmodel::getDataPerson">getDataPerson</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#86"><abbr title="Usermodel::find_collision_selecto_session">find_collision_selecto_session</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#421"><abbr title="form_filed::getDefaultValue">getDefaultValue</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#438"><abbr title="form_filed::getErrorMessage">getErrorMessage</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#446"><abbr title="form_filed::getValidationErrorsArray">getValidationErrorsArray</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#454"><abbr title="form_filed::getCSSClass">getCSSClass</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#462"><abbr title="form_filed::getCSSErrorClass">getCSSErrorClass</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#509"><abbr title="form_filed::getPrefix">getPrefix</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#519"><abbr title="form_filed::get_name">get_name</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#530"><abbr title="form_filed::post_value">post_value</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Usermodel.php.html#518"><abbr title="Usermodel::get_first_user">get_first_user</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Personmodel.php.html#430"><abbr title="form_filed::getMysqlName">getMysqlName</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 5.3.0</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.19-0ubuntu0.18.04.1</a> with <a href="https://xdebug.org/">Xdebug 2.6.0</a> and <a href="https://phpunit.de/">PHPUnit 6.5.5</a> at Sun Jul 14 11:45:58 UTC 2019.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../.js/jquery.min.js" type="text/javascript"></script>
+  <script src="../.js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="../.js/holder.min.js" type="text/javascript"></script>
+  <script src="../.js/d3.min.js" type="text/javascript"></script>
+  <script src="../.js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([16,1,0,0,0,1,0,1,0,0,0,1], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([93,0,0,0,0,1,0,2,0,0,1,8], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,8,"<a href=\"Capchamodelfirst.php.html#2\">CapchamodelFirst<\/a>"],[0,3,"<a href=\"Inventory_model.php.html#2\">Inventory_model<\/a>"],[0,3,"<a href=\"Login_attempts_model.php.html#2\">Login_attempts_model<\/a>"],[0,6,"<a href=\"Mailmodel.php.html#2\">Mailmodel<\/a>"],[0,24,"<a href=\"PMmodel.php.html#2\">PMmodel<\/a>"],[65.2542372881356,54,"<a href=\"Personmodel.php.html#2\">Personmodel<\/a>"],[45.45454545454545,33,"<a href=\"Personmodel.php.html#305\">form_filed<\/a>"],[100,1,"<a href=\"Personmodel.php.html#539\">form_params<\/a>"],[0,11,"<a href=\"Personmodel.php.html#620\">form_create_abstract<\/a>"],[0,5,"<a href=\"Personmodel.php.html#674\">new_person_create_text_field<\/a>"],[0,6,"<a href=\"Personmodel.php.html#718\">person_edit_text_field<\/a>"],[0,7,"<a href=\"Personmodel.php.html#769\">new_person_create_select<\/a>"],[0,6,"<a href=\"Personmodel.php.html#819\">new_person_create_select_multiple<\/a>"],[0,4,"<a href=\"Personmodel.php.html#868\">new_person_create_radio_button<\/a>"],[0,9,"<a href=\"Personmodel.php.html#908\">edit_person_create_select<\/a>"],[0,12,"<a href=\"Personmodel.php.html#975\">new_person_validate_rules_one_possible_answer<\/a>"],[0,4,"<a href=\"Personmodel.php.html#1024\">new_person_validate_rules_for_text_field<\/a>"],[0,12,"<a href=\"Personmodel.php.html#1071\">new_person_validate_rules_seveveral_possible_answers<\/a>"],[0,3,"<a href=\"Testmod.php.html#2\">Testmod<\/a>"],[3.2085561497326207,57,"<a href=\"Usermodel.php.html#15\">Usermodel<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,3,"<a href=\"Capchamodelfirst.php.html#5\">CapchamodelFirst::validateCaptcha<\/a>"],[0,3,"<a href=\"Capchamodelfirst.php.html#14\">CapchamodelFirst::anonymousFunction:14#73<\/a>"],[0,1,"<a href=\"Capchamodelfirst.php.html#29\">CapchamodelFirst::generateCaptcha<\/a>"],[0,1,"<a href=\"Capchamodelfirst.php.html#35\">CapchamodelFirst::textcaptcha_mark_one<\/a>"],[0,1,"<a href=\"Inventory_model.php.html#8\">Inventory_model::get_category_list<\/a>"],[0,1,"<a href=\"Inventory_model.php.html#17\">Inventory_model::get_category_name<\/a>"],[0,1,"<a href=\"Inventory_model.php.html#23\">Inventory_model::get_category_name2<\/a>"],[0,1,"<a href=\"Login_attempts_model.php.html#8\">Login_attempts_model::insert_new_entry<\/a>"],[0,1,"<a href=\"Login_attempts_model.php.html#20\">Login_attempts_model::count_results<\/a>"],[0,1,"<a href=\"Login_attempts_model.php.html#26\">Login_attempts_model::del_old_entries<\/a>"],[0,1,"<a href=\"Mailmodel.php.html#6\">Mailmodel::insert_mail<\/a>"],[0,1,"<a href=\"Mailmodel.php.html#21\">Mailmodel::get_mails<\/a>"],[0,1,"<a href=\"Mailmodel.php.html#32\">Mailmodel::get_last_ten_entries<\/a>"],[0,1,"<a href=\"Mailmodel.php.html#41\">Mailmodel::update_has_been_sent<\/a>"],[0,1,"<a href=\"Mailmodel.php.html#50\">Mailmodel::delete_one_mail<\/a>"],[0,1,"<a href=\"Mailmodel.php.html#59\">Mailmodel::delete_old_mails<\/a>"],[0,2,"<a href=\"PMmodel.php.html#18\">PMmodel::insert_message<\/a>"],[0,3,"<a href=\"PMmodel.php.html#65\">PMmodel::get_board<\/a>"],[0,8,"<a href=\"PMmodel.php.html#110\">PMmodel::get_message_thread<\/a>"],[0,1,"<a href=\"PMmodel.php.html#193\">PMmodel::count_board<\/a>"],[0,1,"<a href=\"PMmodel.php.html#204\">PMmodel::count_all_messages<\/a>"],[0,1,"<a href=\"PMmodel.php.html#211\">PMmodel::count_ammount_of_sended_in_x_minutes<\/a>"],[0,8,"<a href=\"PMmodel.php.html#230\">PMmodel::count_all_new_messages_from_board<\/a>"],[100,1,"<a href=\"Personmodel.php.html#66\">Personmodel::__construct<\/a>"],[47.61904761904761,4,"<a href=\"Personmodel.php.html#76\">Personmodel::initialize<\/a>"],[0,2,"<a href=\"Personmodel.php.html#113\">Personmodel::getDataPerson<\/a>"],[98.33333333333333,28,"<a href=\"Personmodel.php.html#128\">Personmodel::makeFormsFromJSON<\/a>"],[100,2,"<a href=\"Personmodel.php.html#227\">Personmodel::anonymousFunction:227#2022<\/a>"],[100,2,"<a href=\"Personmodel.php.html#228\">Personmodel::anonymousFunction:228#2061<\/a>"],[0,1,"<a href=\"Personmodel.php.html#235\">Personmodel::updatePersonData<\/a>"],[0,5,"<a href=\"Personmodel.php.html#242\">Personmodel::insertNewPerson<\/a>"],[0,5,"<a href=\"Personmodel.php.html#263\">Personmodel::makeValidationRules<\/a>"],[100,2,"<a href=\"Personmodel.php.html#281\">Personmodel::makeAllMysqlFields<\/a>"],[0,1,"<a href=\"Personmodel.php.html#291\">Personmodel::get_int<\/a>"],[0,1,"<a href=\"Personmodel.php.html#296\">Personmodel::get_int_with_increment<\/a>"],[67.5,7,"<a href=\"Personmodel.php.html#345\">form_filed::__construct<\/a>"],[100,3,"<a href=\"Personmodel.php.html#401\">form_filed::createDBField<\/a>"],[0,2,"<a href=\"Personmodel.php.html#421\">form_filed::getDefaultValue<\/a>"],[66.66666666666666,2,"<a href=\"Personmodel.php.html#430\">form_filed::getMysqlName<\/a>"],[0,2,"<a href=\"Personmodel.php.html#438\">form_filed::getErrorMessage<\/a>"],[0,2,"<a href=\"Personmodel.php.html#446\">form_filed::getValidationErrorsArray<\/a>"],[0,2,"<a href=\"Personmodel.php.html#454\">form_filed::getCSSClass<\/a>"],[0,2,"<a href=\"Personmodel.php.html#462\">form_filed::getCSSErrorClass<\/a>"],[0,1,"<a href=\"Personmodel.php.html#476\">form_filed::get_form_html<\/a>"],[0,1,"<a href=\"Personmodel.php.html#484\">form_filed::get_val_rules<\/a>"],[0,3,"<a href=\"Personmodel.php.html#497\">form_filed::get_text_representation<\/a>"],[0,2,"<a href=\"Personmodel.php.html#509\">form_filed::getPrefix<\/a>"],[0,2,"<a href=\"Personmodel.php.html#519\">form_filed::get_name<\/a>"],[0,2,"<a href=\"Personmodel.php.html#530\">form_filed::post_value<\/a>"],[100,1,"<a href=\"Personmodel.php.html#584\">form_params::__construct<\/a>"],[0,3,"<a href=\"Personmodel.php.html#623\">form_create_abstract::repopulate<\/a>"],[0,5,"<a href=\"Personmodel.php.html#638\">form_create_abstract::repopulate_for_multi_choice<\/a>"],[0,2,"<a href=\"Personmodel.php.html#657\">form_create_abstract::check_error<\/a>"],[0,1,"<a href=\"Personmodel.php.html#663\">form_create_abstract::make_error_line<\/a>"],[0,5,"<a href=\"Personmodel.php.html#676\">new_person_create_text_field::create_html<\/a>"],[0,6,"<a href=\"Personmodel.php.html#720\">person_edit_text_field::create_html<\/a>"],[0,7,"<a href=\"Personmodel.php.html#771\">new_person_create_select::create_html<\/a>"],[0,6,"<a href=\"Personmodel.php.html#821\">new_person_create_select_multiple::create_html<\/a>"],[0,4,"<a href=\"Personmodel.php.html#870\">new_person_create_radio_button::create_html<\/a>"],[0,9,"<a href=\"Personmodel.php.html#910\">edit_person_create_select::create_html<\/a>"],[0,7,"<a href=\"Personmodel.php.html#982\">new_person_validate_rules_one_possible_answer::create_validation_rules<\/a>"],[0,5,"<a href=\"Personmodel.php.html#1003\">new_person_validate_rules_one_possible_answer::anonymousFunction:1003#6358<\/a>"],[0,3,"<a href=\"Personmodel.php.html#1031\">new_person_validate_rules_for_text_field::create_validation_rules<\/a>"],[0,1,"<a href=\"Personmodel.php.html#1051\">new_person_validate_rules_for_text_field::anonymousFunction:1051#6672<\/a>"],[0,7,"<a href=\"Personmodel.php.html#1078\">new_person_validate_rules_seveveral_possible_answers::create_validation_rules<\/a>"],[0,5,"<a href=\"Personmodel.php.html#1099\">new_person_validate_rules_seveveral_possible_answers::anonymousFunction:1099#6925<\/a>"],[0,1,"<a href=\"Testmod.php.html#8\">Testmod::get_last_ten_entries<\/a>"],[0,1,"<a href=\"Testmod.php.html#14\">Testmod::insert_entry<\/a>"],[0,1,"<a href=\"Testmod.php.html#23\">Testmod::update_entry<\/a>"],[100,1,"<a href=\"Usermodel.php.html#24\">Usermodel::__construct<\/a>"],[100,1,"<a href=\"Usermodel.php.html#40\">Usermodel::insert_user_group<\/a>"],[0,1,"<a href=\"Usermodel.php.html#55\">Usermodel::insert_user_session<\/a>"],[0,1,"<a href=\"Usermodel.php.html#68\">Usermodel::delete_one_user_session<\/a>"],[0,1,"<a href=\"Usermodel.php.html#76\">Usermodel::deleteAllSessionsForUser<\/a>"],[0,2,"<a href=\"Usermodel.php.html#86\">Usermodel::find_collision_selecto_session<\/a>"],[0,3,"<a href=\"Usermodel.php.html#98\">Usermodel::check_cookie_and_return_id<\/a>"],[0,1,"<a href=\"Usermodel.php.html#126\">Usermodel::delete_old_sessions<\/a>"],[0,1,"<a href=\"Usermodel.php.html#131\">Usermodel::delete_old_sessions_test<\/a>"],[0,2,"<a href=\"Usermodel.php.html#142\">Usermodel::insert_login_attempts<\/a>"],[0,1,"<a href=\"Usermodel.php.html#158\">Usermodel::set_zero_login_attempts_with_wrong_password<\/a>"],[0,1,"<a href=\"Usermodel.php.html#174\">Usermodel::block_user_on_x_minutes<\/a>"],[0,1,"<a href=\"Usermodel.php.html#190\">Usermodel::changePassword<\/a>"],[0,1,"<a href=\"Usermodel.php.html#199\">Usermodel::count_login_attempts_and_delte_old_entries<\/a>"],[0,1,"<a href=\"Usermodel.php.html#226\">Usermodel::update_user_last_activity<\/a>"],[0,3,"<a href=\"Usermodel.php.html#256\">Usermodel::insert_user_registration<\/a>"],[0,3,"<a href=\"Usermodel.php.html#298\">Usermodel::find_user_whith_pass_exist_and_return_all_data<\/a>"],[0,2,"<a href=\"Usermodel.php.html#327\">Usermodel::if_user_exist_by_name<\/a>"],[0,2,"<a href=\"Usermodel.php.html#335\">Usermodel::if_user_exist_by_email<\/a>"],[0,3,"<a href=\"Usermodel.php.html#344\">Usermodel::find_user_whith_pass_exist_true_or_false<\/a>"],[0,2,"<a href=\"Usermodel.php.html#379\">Usermodel::find_user_exist<\/a>"],[0,2,"<a href=\"Usermodel.php.html#394\">Usermodel::find_user_exist_by_id<\/a>"],[0,2,"<a href=\"Usermodel.php.html#401\">Usermodel::find_user_exist_by_alias_id<\/a>"],[0,2,"<a href=\"Usermodel.php.html#418\">Usermodel::find_user_exist_and_return_user_data<\/a>"],[0,1,"<a href=\"Usermodel.php.html#437\">Usermodel::insert_user_activation_code<\/a>"],[0,1,"<a href=\"Usermodel.php.html#446\">Usermodel::delete_activation_code<\/a>"],[0,2,"<a href=\"Usermodel.php.html#452\">Usermodel::get_activation_code_by_code<\/a>"],[0,2,"<a href=\"Usermodel.php.html#459\">Usermodel::get_activation_code_by_id<\/a>"],[0,1,"<a href=\"Usermodel.php.html#466\">Usermodel::update_activation_code<\/a>"],[0,1,"<a href=\"Usermodel.php.html#474\">Usermodel::activate_user<\/a>"],[0,2,"<a href=\"Usermodel.php.html#483\">Usermodel::find_user_exist_and_return_user_data_by_id<\/a>"],[0,2,"<a href=\"Usermodel.php.html#500\">Usermodel::find_user_exist_and_return_user_data_by_alias_id<\/a>"],[0,2,"<a href=\"Usermodel.php.html#518\">Usermodel::get_first_user<\/a>"],[0,1,"<a href=\"Usermodel.php.html#533\">Usermodel::get_last_ten_entries<\/a>"],[0,1,"<a href=\"Usermodel.php.html#540\">Usermodel::insert_entry<\/a>"],[0,1,"<a href=\"Usermodel.php.html#549\">Usermodel::update_entry<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

@@ -19,10 +19,8 @@ class Db extends CI_Controller {
           $this->load->helper('url');
 
         	//Создаем таблицу пользователей
-
           $this->load->dbforge();
 
-          //$this->db->query('CREATE DATABASE `test_ci` CHARACTER SET utf8 COLLATE utf8_general_ci;');
 
 
 
@@ -290,17 +288,31 @@ class Db extends CI_Controller {
                         'constraint' => 9,
                         'unsigned' => TRUE,
                         'auto_increment' => FALSE // Так, как это будет ID пользователя и таблица будет жестко привязанна
-                    ), );
-
+                    ),
+'registration_date' => array('type' => 'timestamp'),
+'last_active_date' => array('type' => 'timestamp'),
+'profile_image' => array('type' => 'VARCHAR', 'constraint' => 255),
+'amount_of_images' => array('type' => 'TINYINT'),
+'short_text' => array('type' => 'VARCHAR', 'constraint' => 255)
+                );
                 $this->dbforge->add_field($fields);
-
+                $this->dbforge->add_field("`modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
 
                 //Создаем все поля из PERSONMODEL
                 $this->load->model('Personmodel');
+
+
+
+                $this->Personmodel->initialize(Personmodel::new);
                 $this->Personmodel->makeAllMysqlFields(); //Создаем поля из PERSONMODEL
 
                 $this->dbforge->add_key('id',TRUE);//Делаем ID основным ключем
                 $this->dbforge->create_table('person');
+                $this->db->query("ALTER TABLE `person` CHANGE COLUMN `registration_date` `registration_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER short_text;");
+                $this->db->query("ALTER TABLE `person` CHANGE COLUMN `last_active_date` `last_active_date` timestamp NOT NULL AFTER short_text;");
+
+
+
 
 //** ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -339,6 +351,7 @@ class Db extends CI_Controller {
 
 //** ------------------------------------------------------------------------------------------------------------------------------------------------------------
           //Создаем  таблицу Login_attempts
+          //Deprecated
 
 
           $this->dbforge->drop_table('login_attempts',true); //Удаляем есои есть

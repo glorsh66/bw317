@@ -17,3 +17,6 @@
 	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
 </body>
 </html>
+
+
+<?php echo "Использовано памяти: " . memory_get_usage()/1024/1024 . " MB"  ?>

@@ -19,29 +19,13 @@ class Usermodel extends CI_Model {
     private static $users_sessions_table_name = 'users_sessions'; //Название таблицы сессий юзеров
     private static $users_login_attemts = 'login_attempts'; //Попытки захода пользователйе
     private static $this_user_groups = 'user_groups';
-    private static $test_int = 1;
-    public $test_globa = 100;
-    public $glob_var=0;
+
 
     function __construct()
     {
         parent::__construct();
-    //    $this->glob_var=0;
-      //  SELF::$test_int++;
-      $this->glob_var++;
     }
 
-    public function get_int()
-    {
-
-      return $this->glob_var;
-    }
-
-    public function get_int_with_increment()
-    {
-      SELF::$test_int++;
-      return ++$this->glob_var;
-    }
 
 
 
@@ -243,74 +227,73 @@ public function update_user_last_activity($id)
 {
 $date = new DateTime();
 
-$data = array(
-'user_last_active_date'=>date("Y-m-d H:i:s")
-);
+$data = array('user_last_active_date'=>date("Y-m-d H:i:s"));
 $this->db->where('id', $id);
 $this->db->limit(1);
 $this->db->update(SELF::$this_table_name, $data);
+
+
+//Обновление таблицы Person
+//Нужно убрать если, будем декоуплить
+$data = array('last_active_date'=>date("Y-m-d H:i:s"));
+$this->db->where('id', $id);
+$this->db->limit(1);
+$this->db->update('person', $data);
+
 return date("Y-m-d H:i:s");
 }
 
 
     /**
-     * Вставляет пользователя
-     * Возвращает ID вставленное в таблицу
+     * Вставляет пользователя. Генерирует случайный алис.
+     * Возвращает Array -  ID и сгенерированный alias вставленное в таблицу
      * @param string $user_name
      * @param string $user_email
      * @param string $password
-     * @param bool $activate_by_mail
+     * @param int $group_id (опционально - по дефолту -1. Если -1 то вставляется группа по умолчанию. Если отличное от этого то любая другая).
      * @return int
      */
-    public function insert_user_registration(string $user_name, string $user_email, string $password, bool $activate_by_mail=TRUE):int
+    public function insert_user_registration(string $user_name, string $user_email, string $password, int $group_id = -1):int
         {
          $date = new DateTime();
          $date->getTimestamp();
 
-         $user_is_active = $activate_by_mail===TRUE?0:1;
+
+
+         //Проверям хотим ли мы вставить пользоателя с определенной группой
+         if ($group_id < 0 )
+             $group_id=  $this->config->item('my_conf_default_user_group');
+
+
+
+
+            do{
+            //Генерируем Alias для пользователя /
+            $alias = str_replace('.','', uniqid(rand(1,999999999) . crc32(time()), true));
+            }while($this->find_user_exist_by_alias_id($alias));
+            //Чекаем если alias еще не занят.
+            // Повторяем до того момента пока нахоядтся коллизии.
+
+
 
          $data = array(
         'user_name' => $user_name,
         'user_email'=> $user_email,
+        'person_alias'=> $alias,
         'password'=> password_hash($password,PASSWORD_DEFAULT),
-        'isactivated'=>$user_is_active,
         'group_id'=> $this->config->item('my_conf_default_user_group'),
         'user_registration_ip'=> getenv('REMOTE_ADDR'),
         'user_registration_ip_if_proxy'=> getenv('HTTP_X_FORWARDED_FOR'),
-        'user_last_active_date'=>   date("Y-m-d H:i:s"),
         'user_registration_date'=>   date_format($date,"Y-m-d H:i:s"),
         );
+
+
         $this->db->insert(SELF::$this_table_name, $data);
         return $this->db->insert_id();
         }
 
 
 
-         public function insert_user_registration_with_any_user_group($user_name,$user_email,$password,$user_group_id)
-        {
-        		//$site_users_obj = new site_users_class;
-        		//$site_users_obj->user_name = $user_name;
-        		//$site_users_obj->user_email = $user_email;
-        		//$site_users_obj->password = $password;
-        	    //$this->db->insert('site_users', $site_users_obj);
-        	   $date = new DateTime();
-			   $date->getTimestamp();
-
-        	     $data = array(
-        'user_name' => $user_name,
-        'user_email'=> $user_email,
-        'password'=> password_hash($password,PASSWORD_DEFAULT),
-        'group_id'=> $user_group_id,
-        'user_registration_ip'=> getenv('REMOTE_ADDR'),
-        'user_registration_ip_if_proxy'=> getenv('HTTP_X_FORWARDED_FOR'),
-        'user_last_active_date'=>   date("Y-m-d H:i:s"),
-        'user_registration_date'=>   date_format($date,"Y-m-d H:i:s"),
-
-        );
-        $this->db->insert(SELF::$this_table_name, $data);
-        return $this->db->insert_id();
-
-        }
 
         public function find_user_whith_pass_exist_and_return_all_data($user_name_or_password,$password)
         {
@@ -415,6 +398,13 @@ return ($result_int == 0) ? FALSE : TRUE;
 		}
 
 
+    public function find_user_exist_by_alias_id(string $alias): bool        {
+        $this->db->where('user_alias',$alias);
+        $num_ret = $this->db->count_all_results('site_users');
+        return $num_ret > 0 ? TRUE : FALSE; //Больше нуля возвращаем TRUE
+    }
+
+
     /**
 	 * Ищет пользователя по логину или емайлу. Использует оптимизацию индексов для избегания конструкции OR
 	 *
@@ -444,6 +434,7 @@ if ($query->num_rows() > 0)
 	}
 
 
+
 public function insert_user_activation_code(int $id, string $code)
 {
 $data = array(
@@ -452,6 +443,7 @@ $data = array(
 );
 $this->db->insert('users_activation_code', $data);
 }
+
 
 public function delete_activation_code(int $id)
 {
@@ -505,6 +497,25 @@ public function activate_user(int $id)
 			}
 
 		}
+
+
+    public function find_user_exist_and_return_user_data_by_alias_id(string $alias)
+    {
+        $this->db->where('user_alias',$alias);
+        $this->db->limit(1);
+        $query = $this->db->get('site_users');
+
+        if ($query->num_rows() > 0)
+        {
+            return  $query->row_array();
+        } else
+        {
+            return FALSE;
+        }
+
+    }
+
+
 
         public function get_first_user()
         {

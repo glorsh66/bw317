@@ -35,7 +35,13 @@ class Welcome extends CI_Controller {
 		$data['title'] = "Ссылки на все контроллеры";
 		$data['heading'] = "Ссылочки на контроллеры";
 
+
 		$this->load->view('service_view', $data);
+
+
+
+
+
 
 
 

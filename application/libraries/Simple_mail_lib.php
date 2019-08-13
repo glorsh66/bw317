@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class simple_mail_lib {
+class Simple_mail_lib {
 public $error_send = "";
 
 //Глобальные переменные

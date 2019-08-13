@@ -1,31 +1,135 @@
 {
-"sexual_orientation":
+"person_option":
     {
-        "name" : "sexual_orientation",
-        "label": "Сексуальная ореентация",
-        "options": ["гетеро", "лесби", "бисексуал","пансексуал"],
-        "required": true,
+        "name" : "person_option",
+        "label": "Опция № 1",
+        "options": ["ответ 1", "ответ 2", "ответ 3","ответ 4"],
         "type": "select",
-        "Residence": "Birmingham"
+        "defaultOption": "Заглушка варианта",
+        "css_class": "css_class_person_option",
+        "validation_message": "Ошибка person_option",
+        "editable": false,
+        "searchable": false,
+        "group": 1,
+        "order": 1
     },
-"sexual_orientation2":
+"person_option2_editable":
     {
-        "name" : "sexual_orientation2",
-        "label": "Сексуальная ореентация",
-        "options": ["гетеро2", "лесби2", "бисексуал2","пансексуал2"],
-        "required": true,
+        "name" : "person_option2_editable",
+        "label": "Опция № 2_editable",
+        "options": ["ответ 1_E", "ответ 2_E", "ответ 3_E","ответ 4_E"],
         "type": "select",
-        "Residence": "Birmingham"
+        "defaultOption": "Заглушка варианта 2",
+        "css_class": "css_class_person_option2",
+        "validation_message": "Ошибка person_option2",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 2
     },
-
-  "sexual_orientation3":
+"person_option2_searchable":
     {
-        "name" : "sexual_orientation3",
-        "label": "Сексуальная ореентация",
-        "options": ["гетеро2", "лесби2", "бисексуал2","пансексуал2"],
-        "required": true,
-        "type": "radio",
-        "Residence": "Birmingham"
+        "name" : "person_option3_editable",
+        "label": "Опция № 3 searchable",
+        "options": ["ответ 1_s", "ответ 2_s", "ответ 3_s","ответ 4_s"],
+        "type": "select",
+        "defaultOption": "Заглушка варианта",
+        "css_class": "css_class_person_option",
+        "validation_message": "Ошибка person_option3_editable",
+        "editable": false,
+        "searchable": true,
+        "group": 3,
+        "order": 5
+    },
+"person_option4_editable":
+    {
+        "name" : "person_option4_editable",
+        "label": "Опция № 4_editable",
+        "options": ["ответ 41_E", "ответ 42_E", "ответ 43_E","ответ 44_E"],
+        "type": "select",
+        "defaultOption": "Заглушка варианта 4",
+        "css_class": "css_class_person_option4",
+        "validation_message": "Ошибка person_option4",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 6,
+        "required": true
+    },
+    "person_text_editable_req":
+    {
+        "name" : "person_text_editable_req",
+        "label": "text1",
+        "options": ["костыль"],
+        "type": "text",
+        "defaultOption": "Заглушка текста 1",
+        "css_class": "css_class_person_option4",
+        "validation_message": "Ошибка текста 1",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 6,
+        "required": false
+    },
+    "person_text_editable_not_req":
+    {
+        "name" : "person_text_editable_not_req",
+        "label": "text2",
+        "options": ["костыль"],
+        "type": "text",
+        "defaultOption": "Заглушка текста 2",
+        "css_class": "css_class_person_option4",
+        "validation_message": "Ошибка текста 2",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 6,
+        "required": true
+    },
+    "person_country":
+    {
+        "name" : "person_country",
+        "label": "Страна",
+        "options": ["ads"],
+        "type": "country",
+        "defaultOption": "Ведите страну",
+        "css_class": "css_class_person_option4",
+        "validation_message": "Ошибка страны",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 6,
+        "required": true
+    },
+    "person_region":
+    {
+        "name" : "person_region",
+        "label": "Регион",
+        "options": ["gfg"],
+        "type": "region",
+        "defaultOption": "Ведите регион",
+        "css_class": "css_class_person_option4",
+        "validation_message": "Ошибка региона",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 6,
+        "required": true
+    },
+    "person_city":
+    {
+        "name" : "person_city",
+        "label": "Город",
+        "options": ["dasda"],
+        "type": "city",
+        "defaultOption": "Ведите город",
+        "css_class": "css_class_person_option4",
+        "validation_message": "Ошибка города",
+        "editable": true,
+        "searchable": false,
+        "group": 2,
+        "order": 6,
+        "required": false
     }
 
 }

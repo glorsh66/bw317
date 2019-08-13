@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class simple_auth_lib {
+class Simple_auth_lib {
   public $user_cause_of_error = "";
   public $error = "";
 

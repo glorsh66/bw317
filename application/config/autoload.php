@@ -103,7 +103,7 @@ $autoload['helper'] = array('my_helper');
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('bw317conf');
 
 /*
 | -------------------------------------------------------------------
