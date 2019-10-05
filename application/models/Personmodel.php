@@ -94,11 +94,11 @@ function initialize(int $type)
         $this->fp_sel_req = new form_params(form_params::select, 'Не указано', array('required', 'numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
         $this->fp_sel_not_req = new form_params(form_params::select, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
         $this->fp_sel_multi = new form_params(form_params::select_multiple, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
-        $this->fp_edit_text_not_req = new form_params(form_params::text, 'Введите сюда текст', array('min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.','min_length' => 'Это поле не может быть меньше 10 символов']);
-        $this->fp_edit_text_req =new form_params(form_params::text, 'Введите сюда текст', array('required','min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.']);
-        $this->fp_sel_country =new form_params(form_params::country, 'Введите сюда текст', array('required','min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.']);
-        $this->fp_sel_region =new form_params(form_params::region, 'Введите сюда текст', array('required','min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.']);
-        $this->fp_sel_city =new form_params(form_params::city, 'Введите сюда текст', array('required','min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_edit_text_not_req = new form_params(form_params::text, 'Введите сюда текст', array('min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.','min_length' => 'Это поле не может быть меньше 10 символов'],False);
+        $this->fp_edit_text_req =new form_params(form_params::text, 'Введите сюда текст', array('required','min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_sel_country =new form_params(form_params::country, 'Введите сюда текст', array('required'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_sel_region =new form_params(form_params::region, 'Введите сюда текст', array('required'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_sel_city =new form_params(form_params::city, 'Введите сюда текст', array('required'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
 
     }
     elseif ($type===Personmodel::edit) //Формы для редактирования
@@ -107,8 +107,14 @@ function initialize(int $type)
         $this->fp_sel_req = new form_params(form_params::edit_select, 'Не указано', array('required', 'numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
         $this->fp_sel_not_req = new form_params(form_params::edit_select, 'Не указано', array('numeric'), 'select_not_required', 'error_line', 'p_', TRUE, "Вы выбрали неправильный ответ. Попробуйте снова.", ['numeric' => 'Значение должно быть числом.']);
         //TODO: Не реализованны еще
-        $this->fp_edit_text_not_req = new form_params(form_params::edit_text, 'Введите сюда текст', array('min_length[10]','max_length[25000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.']);
-        $this->fp_edit_text_req =new form_params(form_params::edit_text, 'Введите сюда текст', array('required','min_length[10]','max_length[25000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.']);
+        $this->fp_edit_text_not_req = new form_params(form_params::edit_text, 'Введите сюда текст', array('min_length[10]','max_length[25000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_edit_text_req =new form_params(form_params::edit_text, 'Введите сюда текст', array('required','min_length[10]','max_length[25000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_edit_text_not_req = new form_params(form_params::text, 'Введите сюда текст', array('min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.','min_length' => 'Это поле не может быть меньше 10 символов'],False);
+        $this->fp_edit_text_req =new form_params(form_params::text, 'Введите сюда текст', array('required','min_length[10]','max_length[21000]'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_sel_country =new form_params(form_params::country, 'Введите сюда текст', array('required'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_sel_region =new form_params(form_params::region, 'Введите сюда текст', array('required'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+        $this->fp_sel_city =new form_params(form_params::city, 'Введите сюда текст', array('required'), 'text_not_required', 'error_line', 'p_', TRUE, "ошибка поля.", ['numeric' => 'Значение должно быть числом.'],False);
+
     }
     elseif ($type===Personmodel::search) //Для поиска
     {
@@ -266,7 +272,7 @@ public function updatePersonData(int $id, array $data):int
     return $this->db->affected_rows();
 }
 
-    public function insertNewPerson($id)
+    public function insertNewPerson($id, $alias)
     {
     //Готовим данные для вставки в таблицу персона
     $data['id']=$id; //Айдишник который получили от вставленного юзера
@@ -278,11 +284,39 @@ public function updatePersonData(int $id, array $data):int
         if (!empty($this->input->post($el->get_name())))
         {
             //Для текста делаем исключение
-            if (($el->param->type!=form_params::text && $el->param->type!=form_params::edit_text))
-                $data[$el->getMysqlName()] = (int)$this->input->post($el->get_name()); // Добавляем в массив данных те значения которые есть в POST
+            if (($el->param->selectable))
+                $data[$el->getMysqlName()] = (int)$this->input->post($el->get_name());
+            elseif ($el->param->type===form_params::country || $el->param->type=== form_params::region || $el->param->type=== form_params::city)
+            {
+                //Блок на случай, если это форма региона
+                $input_id = (int)$this->input->post($el->get_name());
+                $data[$el->getMysqlName()."_id"] = $input_id;
+
+
+                $text_city_or_region_name ="";
+                switch ($el->param->type) {
+                    case form_params::country:
+                        $text_city_or_region_name =  $this->Regionmodel->getCountryById($input_id);
+                        break;
+                    case form_params::region:
+                        $text_city_or_region_name =  $this->Regionmodel->getRegionById($input_id);
+                        break;
+                    case form_params::city:
+                        $text_city_or_region_name =  $this->Regionmodel->getCityById($input_id);
+                        break;
+                }
+                $data[$el->getMysqlName()."_text"] = $text_city_or_region_name;
+
+
+            }
+
             else $data[$el->getMysqlName()] = $this->input->post($el->get_name());
         }
     }
+    //Добавляем Alias
+    $data['person_alias'] = $alias;
+
+
     $this->db->insert($this->t, $data);
     }
 
@@ -642,6 +676,8 @@ class form_params
     /* @var array массив параметров для отображения ошибок кроме каллбака. (для стандартных - типа как required).*/
     public $error_messages_arr;
 
+    public $selectable;
+
 
 
     /**
@@ -657,7 +693,7 @@ class form_params
      * @param bool $error_messages_arr  массив параметров для отображения ошибок кроме каллбака. (для стандартных - типа как required).
      *
      **/
-    public function __construct(int $type, string $default_option, array $validation_rules,  string $form_class, string $error_class, string $prefix, bool $use_anon_funct= TRUE, string $validation_error_message="", array $error_messages_arr=null)
+    public function __construct(int $type, string $default_option, array $validation_rules,  string $form_class, string $error_class, string $prefix, bool $use_anon_funct= TRUE, string $validation_error_message="", array $error_messages_arr=null, $selectable=True)
     {
         $this->type = $type;
         $this->default_option = $default_option;
@@ -668,6 +704,7 @@ class form_params
         $this->use_anon_funct=$use_anon_funct;
         $this->error_messages_arr=$error_messages_arr;
         $this->error_class=$error_class;
+        $this->selectable = $selectable;
     }
 }
 

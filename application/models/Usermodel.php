@@ -244,16 +244,29 @@ return date("Y-m-d H:i:s");
 }
 
 
+
+public function generateUserAlias()
+{
+    do{
+        //Генерируем Alias для пользователя /
+        $alias = str_replace('.','', uniqid(rand(1,999999999) . crc32(time()), true));
+    }while($this->find_user_exist_by_alias_id($alias));
+    return $alias;
+
+}
+
+
     /**
      * Вставляет пользователя. Генерирует случайный алис.
      * Возвращает Array -  ID и сгенерированный alias вставленное в таблицу
      * @param string $user_name
      * @param string $user_email
      * @param string $password
-     * @param int $group_id (опционально - по дефолту -1. Если -1 то вставляется группа по умолчанию. Если отличное от этого то любая другая).
+     * @param string $alias
+     * @param int $group_id (опционально - по дефолту -1. Если -1 то вставляется группа по умолчанию. Если отличное от этого то любая другая).     *
      * @return int
      */
-    public function insert_user_registration(string $user_name, string $user_email, string $password, int $group_id = -1):int
+    public function insert_user_registration(string $user_name, string $user_email, string $password,string $alias, int $group_id = -1):int
         {
          $date = new DateTime();
          $date->getTimestamp();
@@ -265,21 +278,10 @@ return date("Y-m-d H:i:s");
              $group_id=  $this->config->item('my_conf_default_user_group');
 
 
-
-
-            do{
-            //Генерируем Alias для пользователя /
-            $alias = str_replace('.','', uniqid(rand(1,999999999) . crc32(time()), true));
-            }while($this->find_user_exist_by_alias_id($alias));
-            //Чекаем если alias еще не занят.
-            // Повторяем до того момента пока нахоядтся коллизии.
-
-
-
          $data = array(
         'user_name' => $user_name,
         'user_email'=> $user_email,
-        'person_alias'=> $alias,
+        'user_alias'=> $alias,
         'password'=> password_hash($password,PASSWORD_DEFAULT),
         'group_id'=> $this->config->item('my_conf_default_user_group'),
         'user_registration_ip'=> getenv('REMOTE_ADDR'),

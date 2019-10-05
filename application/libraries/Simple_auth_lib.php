@@ -286,6 +286,10 @@ return FALSE; // Если по какой то причине дошли до э
 
 public function register($user_name,$user_email,$password)
 {
+
+//Генерируем алиас
+$generatedUserAlias = $this->CI->Usermodel->generateUserAlias();
+
 //Грубая проверка данных что бы не допустить значений которые база не может принять
 //Проверям пустые ли строки
 if (empty($user_name)){$this->error = "User_name is empty"; die('Критическая ошибка при сохранении пользователя: ' . $this->error);}
@@ -304,7 +308,7 @@ $this->CI->load->library('simple_mail_lib');
 //Определяем если нужно активировать пользователя по почте
 if ($this->CI->config->item('my_activate_user_by_mail')===TRUE)//активировать пользовалетя по почте
 {
-$ret_usr_id = $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password,TRUE);
+$ret_usr_id = $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password,$generatedUserAlias,TRUE);
 
 $random_validator = bin2hex(random_bytes(100));
 $sha256_validator = hash('sha256', $random_validator);
@@ -315,17 +319,23 @@ $this->CI->Usermodel->insert_user_activation_code($ret_usr_id,$sha256_validator)
 $mail_subject = "Добро пожаловать на наш сайт! Пожалуйста потвердите Вашу регистрацию";
 $mail_text = "Добро пожаловать на наш сайт! Остался всего один шаг, и вы сможете абсолютно бесплатно пользоваться нашим сайтом
 Пожалуйста пройдите введите следующий код потверждения Вашей регистрации: " .  $sha256_validator;
+
+
+
 $this->CI->simple_mail_lib->send_mail($user_email,$mail_subject,$mail_text);
 }
 
 else //Если не нужно никакой почты и пользователь сразу активирован, как только зарегился
 {
-    $ret_usr_id = $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password,FALSE);
+    $ret_usr_id = $this->CI->Usermodel->insert_user_registration($user_name,$user_email,$password,$generatedUserAlias,FALSE);
     $mail_subject = "Добро пожаловать на наш сайт!";
     $mail_text = "Добро пожаловать на наш сайт! Вы можете начинать пользоваться сайтом без каких либо дальнейших действий." ;
 }
 
-return $ret_usr_id;
+
+//Вставляем персону
+$this->CI->Personmodel->insertNewPerson($ret_usr_id, $generatedUserAlias);
+
 }
 
 

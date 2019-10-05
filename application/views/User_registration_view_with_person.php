@@ -1,3 +1,6 @@
+
+
+
 <div>
     <div>
         <div>
@@ -95,3 +98,78 @@ foreach ($person_forms as $k =>$pf)
         </div>
     </div>
 </div>
+
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous">
+</script>
+
+
+<script type="text/javascript">
+    var global_regions_array = [];
+    var global_cities_array = [];
+
+
+    function fillSelections(firstform_this, secondform, geturl, global_array){
+        glarray = global_array;
+
+        if (!isNaN(firstform_this)) {
+            var new_value = firstform_this;
+            var region_url = geturl;
+            var new_url = region_url + new_value;
+            var current_idex = parseInt(firstform_this);
+
+            function filltheselect() {
+                var new_options = [];
+                for (var i = 0; i < glarray[current_idex].length; ++i)
+                {
+                    new_options.push(new Option(glarray[current_idex][i][1],glarray[current_idex][i][0]));
+                }
+
+                $(secondform).append(new_options);
+            }
+
+
+
+            if(typeof glarray[current_idex] === 'undefined') {
+                glarray[current_idex] = [];
+
+                $.get(new_url, function (data) {
+                    $(".result").html(data);
+                    var splitted_array = data.split(";");
+                    for (var i = 0; i < splitted_array.length; ++i) {
+                        if (splitted_array[i].length > 0 && splitted_array[i].indexOf(',') > -1) {
+                            var splitted_array_by_coma = splitted_array[i].split(",");
+                            // console.log(splitted_array_by_coma);
+                            glarray[current_idex].push(splitted_array_by_coma);
+
+                        }
+                    }
+                    filltheselect();
+                });
+            }else
+            {
+                filltheselect();
+            }
+
+        }
+    }
+
+    //Для региона
+    $('#p_person_country').on('change', function() {
+        var thisvalue = this.value;
+        $('#p_person_region').children('option:not(:first)').remove();
+        $('#p_person_city').children('option:not(:first)').remove();
+        fillSelections(thisvalue, "#p_person_region", "RegionParametrs/getRegion/", global_regions_array);
+    });
+
+    //Для города
+    $('#p_person_region').on('change', function() {
+        var thisvalue = this.value;
+        $('#p_person_city').children('option:not(:first)').remove();
+        fillSelections(thisvalue, "#p_person_city", "RegionParametrs/getCity/", global_cities_array);
+    });
+
+</script>

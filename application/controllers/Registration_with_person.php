@@ -101,11 +101,13 @@ class Registration_with_person extends CI_Controller {
             $password = $this->input->post('reg_password');
 
             //Вызываем модель Usermodel, которая вставляем данные для регистрации пользователя
+
+
+
+
             $ret =  $this->simple_auth_lib->register($user_name, $user_email, $password);
 
-            //Вставляем Person с полученными данными
 
-            $this->Personmodel->insertNewPerson($ret);
 
             //Если вставка регистрационных данныъ прошла успешно
             $this->load->view('registration success_without_validation');

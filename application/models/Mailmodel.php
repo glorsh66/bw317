@@ -4,7 +4,11 @@ private static $this_table_name = 'mail'; //название текущей та
 
 //Функция для вставки почты в базу
 public function insert_mail($from,$to,$subject,$text)
-{//mail_from
+{
+//TODO:Убрать заглушку
+return;
+
+//mail_from
 //mail_to
 //mail_subject
 //mail_text

@@ -16,10 +16,16 @@
 /** @var form_filed $el  */
 foreach ( $all_forms as $k =>$el)
 {
-    if ($el->param->type!=form_params::text && $el->param->type!=form_params::edit_text)
-        echo $el->get_name() . " " . "Значение из базы цифрой: " . $person_data_db[$el->getMysqlName()] . " Название значения: " .
-            $el->get_text_representation($person_data_db[$el->getMysqlName()])."<br>";
-    else echo $el->get_name() . " " . "Значение из базы цифрой: " . $person_data_db[$el->getMysqlName()] . " Название значения: " ."<br>";
+
+
+
+    echo $el->get_name(). " " .  $el->param->selectable . " ". "Данные: " . $person_data_db[$el->getMysqlName()] . "<br>";
+
+//
+//    if ($el->param->selectable)
+//        echo $el->get_name() . " " . "Значение из базы цифрой: " . $person_data_db[$el->getMysqlName()] . " Название значения: ".
+//            $el->get_text_representation($person_data_db[$el->getMysqlName()])."<br>";
+//    else echo $el->get_name() . " " . "Значение из базы цифрой: " . $person_data_db[$el->getMysqlName()] . " Название значения: " ."<br>";
 
 }
 ?>

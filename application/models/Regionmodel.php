@@ -53,10 +53,11 @@ class Regionmodel extends CI_Model {
         }
 
         return $temp_arr;
-
-
-
     }
+
+
+
+
 
 
     public function getRegionsByCountryId(int $countryId)

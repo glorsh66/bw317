@@ -24,6 +24,9 @@ public $time_elapsed =0;
 //Функция_отправить_письмо_через_базу
 public function send_mail($to,$subject,$text) : bool
 {
+//TODO:Убрать загрушку return TRUE;
+
+
 $from= $this->global_from;
 //Проверям пустые ли строки
 if (empty($from)){$this->error_send = "Sender adress is empty"; return FALSE;}
